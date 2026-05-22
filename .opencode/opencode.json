@@ -1,0 +1,28 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    ".opencode/plugins/graphify.js"
+  ],
+  "skills": {
+    "paths": [
+      ".opencode/skills/impeccable"
+    ]
+  },
+  "command": {
+    "impeccable": {
+      "description": "Design, redesign, critique, audit, or improve frontend interfaces",
+      "template": "Use the impeccable skill to design, redesign, shape, critique, audit, polish, clarify, distill, harden, optimize, adapt, animate, colorize, extract, or otherwise improve a frontend interface. Load the skill and follow its instructions."
+    }
+  },
+  "mcp": {
+    "laravel-boost": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "php",
+        "backend/artisan",
+        "boost:mcp"
+      ]
+    }
+  }
+}

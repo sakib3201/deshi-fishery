@@ -1,0 +1,92 @@
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile
+    container_name: deshi-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+    networks:
+      - deshi-network
+    depends_on:
+      - db
+      - redis
+      - gotenberg
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8080
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=deshi_fishery
+      - DB_USERNAME=deshi
+      - DB_PASSWORD=deshi_secret
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - GOTENBERG_URL=http://gotenberg:3000
+
+  nginx:
+    image: nginx:alpine
+    container_name: deshi-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/dist:/var/www/html/public/frontend:ro
+    networks:
+      - deshi-network
+    depends_on:
+      - app
+
+  db:
+    image: postgres:17-alpine
+    container_name: deshi-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: deshi_fishery
+      POSTGRES_USER: deshi
+      POSTGRES_PASSWORD: deshi_secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - deshi-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: deshi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - deshi-network
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: deshi-gotenberg
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    command: ["gotenberg", "--api-port=3000", "--api-timeout=30s"]
+    networks:
+      - deshi-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  deshi-network:
+    driver: bridge

@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+
+@theme {
+	--color-brand-primary: #050C9C;
+	--color-brand-secondary: #3572EF;
+	--color-brand-accent: #3ABEF9;
+	--color-brand-light: #A7E6FF;
+
+	--color-surface: #F0F9FF;
+	--color-surface-dark: #0F172A;
+	--color-surface-container: #d6f2ff;
+	--color-surface-container-high: #c7eeff;
+	--color-surface-container-low: #e5f6ff;
+	--color-surface-bright: #f3fbff;
+
+	--color-primary: #000265;
+	--color-primary-container: #050c9c;
+	--color-secondary: #0054cc;
+	--color-secondary-container: #2f6dea;
+	--color-on-surface: #001f28;
+	--color-on-surface-variant: #4a5568;
+	--color-background: #f3fbff;
+	--color-on-background: #001f28;
+	--color-outline-variant: #c6c5d6;
+	--color-success-green: #10B981;
+	--color-on-primary: #ffffff;
+	--color-on-secondary: #ffffff;
+	--color-chart-primary: #3572EF;
+	--color-chart-secondary: #3ABEF9;
+
+	--font-sans: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif;
+	--font-bengali: 'Noto Sans Bengali', 'Roboto', system-ui, sans-serif;
+}
+
+body {
+	font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif;
+}
+
+@layer utilities {
+	.glass-card {
+		background: rgba(255, 255, 255, 0.7);
+		backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.touch-target {
+		min-height: 56px;
+		min-width: 56px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

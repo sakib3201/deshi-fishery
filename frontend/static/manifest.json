@@ -1,0 +1,21 @@
+{
+	"short_name": "Deshi Fishery",
+	"name": "Deshi Fishery - মাছ চাষের সেরা assistant",
+	"description": "Fisheries management platform for Bangladeshi fish farmers. Manage ponds, track stock, and optimize your finances.",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#f3fbff",
+	"theme_color": "#050C9C",
+	"orientation": "portrait-primary",
+	"icons": [
+		{
+			"src": "/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any maskable"
+		}
+	],
+	"categories": ["business", "productivity", "finance"],
+	"lang": "en",
+	"dir": "ltr"
+}
