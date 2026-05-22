@@ -5,7 +5,11 @@
 
 	onMount(() => {
 		if (authStore.isAuthenticated) {
-			goto('/app/dashboard');
+			if (authStore.requiresOnboarding) {
+				goto('/app/onboarding');
+			} else {
+				goto('/app/dashboard');
+			}
 		}
 	});
 </script>
@@ -32,7 +36,11 @@
 					formData.get('email') as string,
 					formData.get('password') as string
 				);
-				await goto('/app/dashboard');
+				if (authStore.requiresOnboarding) {
+					await goto('/app/onboarding');
+				} else {
+					await goto('/app/dashboard');
+				}
 			} catch (err) {
 				// Error handled by store
 			}

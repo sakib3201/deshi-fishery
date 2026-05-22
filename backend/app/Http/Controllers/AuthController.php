@@ -42,7 +42,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        return $this->respondWithToken($user);
+        return $this->respondWithToken($user, requiresOnboarding: $user->farms()->count() === 0);
     }
 
     public function logout(Request $request): JsonResponse
@@ -70,9 +70,12 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
+        $user = $request->user();
+        $user->load('farms');
+
         return response()->json([
             'success' => true,
-            'data' => $request->user(),
+            'data' => $user,
         ]);
     }
 
@@ -93,7 +96,7 @@ class AuthController extends Controller
     /**
      * Build a successful JSON response containing an access token for the given user.
      */
-    private function respondWithToken(User $user, int $status = 200): JsonResponse
+    private function respondWithToken(User $user, int $status = 200, bool $requiresOnboarding = false): JsonResponse
     {
         $tokenResult = $user->createToken(self::TOKEN_NAME);
 
@@ -104,6 +107,7 @@ class AuthController extends Controller
                 'access_token' => $tokenResult->accessToken,
                 'refresh_token' => null,
                 'expires_in' => null,
+                'requires_onboarding' => $requiresOnboarding,
             ],
         ], $status);
     }

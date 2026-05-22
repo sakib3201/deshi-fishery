@@ -14,6 +14,18 @@
 			}
 			// Redirect authenticated users away from login/register
 			if (authStore.isAuthenticated && ($page.url.pathname === '/app/login' || $page.url.pathname === '/app/register')) {
+				if (authStore.requiresOnboarding) {
+					goto('/app/onboarding');
+				} else {
+					goto('/app/dashboard');
+				}
+			}
+			// Redirect to onboarding if required
+			if (authStore.isAuthenticated && authStore.requiresOnboarding && $page.url.pathname !== '/app/onboarding') {
+				goto('/app/onboarding');
+			}
+			// Redirect away from onboarding if not required
+			if (authStore.isAuthenticated && !authStore.requiresOnboarding && $page.url.pathname === '/app/onboarding') {
 				goto('/app/dashboard');
 			}
 		});

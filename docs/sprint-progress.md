@@ -14,7 +14,7 @@
 | Technical Architecture | 100% | ✅ Complete |
 | Frontend Initialization | 100% | ✅ Complete |
 | UI/UX Design | 0% | 🔄 Ready to start |
-| Implementation | 15% | 🔄 In Progress (Sprint 1) |
+| Implementation | 25% | 🔄 In Progress (Sprint 1) |
 | Testing & Deployment | 0% | ⏳ Pending |
 
 ---
@@ -27,18 +27,18 @@
 | # | Feature | OpenSpec ID | Status | Change Name | Notes |
 |---|---------|-------------|--------|-------------|-------|
 | 1 | Email/Password Auth | `AUTH-001` | ✅ Complete | `auth-001-email-password-auth` | Archived 2026-05-22. All 73 tasks done. 14 PHPUnit tests pass. |
-| 2 | Multi-Farm Tenancy | `AUTH-004` | 🔄 Ready to start | — | Next feature. No blockers. |
-| 3 | Farm CRUD | `FARM-001` | ⏳ Pending | — | Blocked until AUTH-004 complete |
+| 2 | Multi-Farm Tenancy | `AUTH-004` | ✅ Complete | `auth-004-multi-farm-tenancy` | Archived 2026-05-22. All 77 tasks done. 28 PHPUnit tests pass. |
+| 3 | Farm CRUD | `FARM-001` | 🔄 Ready to start | — | Next feature. No blockers. |
 | 4 | Pond CRUD | `POND-001` | ⏳ Pending | — | Blocked until FARM-001 complete |
 
 **Sprint 1 Definition of Done**:
 - [x] User can register with email/password
 - [x] User can login and receive tokens
 - [x] User can logout and tokens are revoked
-- [ ] User can create multiple farms
-- [ ] User can switch between farms
+- [x] User can create multiple farms
+- [x] User can switch between farms
 - [ ] User can CRUD ponds within a farm
-- [ ] All data is scoped by `farm_id`
+- [x] All data is scoped by `farm_id`
 - [x] Pest tests pass for all auth and farm/pond flows
 - [x] Playwright tests pass for login and farm creation
 
@@ -204,10 +204,11 @@ After completing each feature via the OpenSpec workflow:
 **Sprint 1 — Foundation**
 
 > ✅ Completed: `AUTH-001` Email/Password Auth (archived 2026-05-22)
-> 🔄 Next up: `AUTH-004` Multi-Farm Tenancy
+> ✅ Completed: `AUTH-004` Multi-Farm Tenancy (archived 2026-05-22)
+> 🔄 Next up: `FARM-001` Farm CRUD
 > Blocked by: Nothing
 
 ---
 
 *Last updated: 2026-05-22*
-*Next review: After AUTH-004 implementation complete*
+*Next review: After FARM-001 implementation complete*

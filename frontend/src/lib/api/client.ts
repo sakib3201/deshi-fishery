@@ -33,8 +33,17 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
 	return response.json();
 }
 
+export function setFarmId(farmId: string | null) {
+	if (farmId) {
+		localStorage.setItem('current_farm_id', farmId);
+	} else {
+		localStorage.removeItem('current_farm_id');
+	}
+}
+
 export const api = {
 	setToken,
+	setFarmId,
 	get: (endpoint: string) => fetchApi(endpoint, { method: 'GET' }),
 	post: (endpoint: string, body: unknown) =>
 		fetchApi(endpoint, { method: 'POST', body: JSON.stringify(body) }),

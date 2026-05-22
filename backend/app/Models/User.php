@@ -32,4 +32,16 @@ class User extends Authenticatable
             'current_farm_id' => 'integer',
         ];
     }
+
+    public function farms(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Farm::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function currentFarm(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Farm::class, 'current_farm_id');
+    }
 }

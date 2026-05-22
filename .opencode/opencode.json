@@ -5,13 +5,23 @@
   ],
   "skills": {
     "paths": [
-      ".opencode/skills/impeccable"
+      ".opencode/skills/impeccable",
+      ".opencode/skills/bruno-cli",
+      ".opencode/skills/bruno-workspace"
     ]
   },
   "command": {
     "impeccable": {
       "description": "Design, redesign, critique, audit, or improve frontend interfaces",
       "template": "Use the impeccable skill to design, redesign, shape, critique, audit, polish, clarify, distill, harden, optimize, adapt, animate, colorize, extract, or otherwise improve a frontend interface. Load the skill and follow its instructions."
+    },
+    "bruno-cli": {
+      "description": "Run Bruno API collections from the command line for CI/CD and headless testing",
+      "template": "Use the bruno-cli skill to run API collections via the `bru` command, integrate with CI/CD pipelines (GitHub Actions, Jenkins), generate test reports (HTML/JSON/JUnit), override environment variables, configure sandbox modes, or set up proxy/mTLS settings. Load the skill and follow its instructions."
+    },
+    "bruno-workspace": {
+      "description": "Create and manage Bruno API client workspaces, collections, requests, and environments",
+      "template": "Use the bruno-workspace skill to create or modify Bruno API collections, write .bru or .yml request files, set up workspaces with folders and environments, write API tests and assertions, configure variables at any scope, or organize collections for Git collaboration. Load the skill and follow its instructions."
     }
   },
   "mcp": {

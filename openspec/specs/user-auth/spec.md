@@ -39,7 +39,8 @@ The system SHALL authenticate registered users with their email and password, is
 - **WHEN** a registered user submits email "karim@example.com" and correct password "SecurePass123!"
 - **THEN** the system returns a 200 OK response with an access token (15-minute expiry) and a refresh token (7-day expiry)
 - **AND** sets an HTTP-only secure cookie containing the access token
-- **AND** returns the user object with role and current_farm_id
+- **AND** returns the user object with role, `current_farm_id`, and an array of the user's farms
+- **AND** includes `requires_onboarding` flag (true if user has no farms)
 
 #### Scenario: Login with invalid password
 - **WHEN** a registered user submits email "karim@example.com" and incorrect password "WrongPass123!"
@@ -107,6 +108,7 @@ The system SHALL allow authenticated users to retrieve their own profile informa
 #### Scenario: Retrieve own profile
 - **WHEN** an authenticated user sends a GET request to /api/v1/auth/me
 - **THEN** the system returns a 200 OK response with the user's profile (id, name, email, role, current_farm_id)
+- **AND** includes an array of the user's farms with id, name, and role on each farm
 - **AND** the password hash is excluded from the response
 
 #### Scenario: Retrieve profile without authentication

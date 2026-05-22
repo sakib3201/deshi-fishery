@@ -25,7 +25,7 @@ class AuthControllerTest extends TestCase
         $this->seed(PassportClientSeeder::class);
     }
 
-    private function createUser(array $overrides = []): User
+    public function createUser(array $overrides = []): User
     {
         return User::factory()->create(array_merge([
             'email' => self::TEST_EMAIL,

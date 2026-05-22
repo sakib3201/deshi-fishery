@@ -184,7 +184,8 @@ SPEC {ID}  {Title}
 4. `/opsx apply` — implement code that satisfies the spec
 5. Verify with tests asserting POSTCONDITION and INVARIANT
 6. `/opsx archive` — finalize and archive the completed change
-7. Commit spec + code together
+7. **After `/opsx archive`**: Update `docs/sprint-progress.md` — mark the feature as ✅ Complete, update the sprint checklist, and update the "Current Sprint Focus" section
+8. Commit spec + code together
 
 ---
 
