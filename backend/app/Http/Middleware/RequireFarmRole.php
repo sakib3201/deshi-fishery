@@ -17,26 +17,34 @@ class RequireFarmRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        $user = $request->user();
         $farmId = $request->header('X-Farm-ID');
 
         if ($farmId === null) {
             return $next($request);
         }
 
-        $farm = $user->farms()->where('farms.id', (int) $farmId)->first();
+        $farm = $request->user()?->farms()->where('farms.id', (int) $farmId)->first();
 
-        if (! $farm || ! in_array($farm->pivot->role, $roles, true)) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'Forbidden',
-                    'message' => 'You do not have permission to perform this action.',
-                    'details' => [],
-                ],
-            ], 403);
+        if ($farm === null) {
+            return $this->forbidden('You do not have access to this farm.');
+        }
+
+        if (! in_array($farm->pivot->role, $roles, true)) {
+            return $this->forbidden('You do not have permission to perform this action.');
         }
 
         return $next($request);
+    }
+
+    private function forbidden(string $message): Response
+    {
+        return response()->json([
+            'success' => false,
+            'error' => [
+                'code' => 'Forbidden',
+                'message' => $message,
+                'details' => [],
+            ],
+        ], 403);
     }
 }

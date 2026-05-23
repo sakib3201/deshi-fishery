@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import { AuthCard, AuthForm, AuthInput, AuthButton, AuthError } from '$lib/components/auth';
 
-	onMount(() => {
+	// Redirect authenticated users away from register
+	$effect(() => {
 		if (authStore.isAuthenticated) {
 			goto('/app/dashboard');
 		}
@@ -31,6 +31,10 @@
 			// Error handled by store
 		}
 	}
+
+	function clearError() {
+		authStore.error = null;
+	}
 </script>
 
 <svelte:head>
@@ -46,7 +50,7 @@
 			required
 			autocomplete="name"
 			disabled={authStore.loading}
-			oninput={() => { authStore.error = null; }}
+			oninput={clearError}
 			placeholder="Your name"
 			error={authStore.error}
 		/>
@@ -61,7 +65,7 @@
 			autocorrect="off"
 			inputmode="email"
 			disabled={authStore.loading}
-			oninput={() => { authStore.error = null; }}
+			oninput={clearError}
 			placeholder="you@example.com"
 			error={authStore.error}
 		/>
@@ -73,7 +77,7 @@
 			required
 			autocomplete="new-password"
 			disabled={authStore.loading}
-			oninput={() => { authStore.error = null; }}
+			oninput={clearError}
 			placeholder="••••••••"
 			error={authStore.error}
 		/>
@@ -85,7 +89,7 @@
 			required
 			autocomplete="new-password"
 			disabled={authStore.loading}
-			oninput={() => { authStore.error = null; }}
+			oninput={clearError}
 			placeholder="••••••••"
 			error={authStore.error}
 		/>

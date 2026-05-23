@@ -1,0 +1,29 @@
+meta {
+  name: Create Sale
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/sales
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}
+
+body:json {
+  {
+    "pond_id": {{pondId}},
+    "sale_type": "wholesale",
+    "date": "2026-05-23",
+    "fish_type": "Rui",
+    "avg_fish_weight_g": 250,
+    "quantity_kg": 100,
+    "rate_per_kg": 250,
+    "customer_name": "Ali Bhai",
+    "notes": "First wholesale sale"
+  }
+}

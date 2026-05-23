@@ -5,14 +5,15 @@
 		id: string;
 		name: string;
 		label: string;
+		type?: 'text' | 'email' | 'password';
 		value?: string;
 		placeholder?: string;
 		required?: boolean;
-		autocomplete?: string;
+		autocomplete?: HTMLInputElement['autocomplete'];
 		disabled?: boolean;
-		autocapitalize?: string;
-		autocorrect?: string;
-		inputmode?: string;
+		autocapitalize?: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
+		autocorrect?: 'on' | 'off';
+		inputmode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
 		error?: string | null;
 		oninput?: (e: Event) => void;
 		onchange?: (e: Event) => void;
@@ -22,6 +23,7 @@
 		id,
 		name,
 		label,
+		type = undefined,
 		value = $bindable(''),
 		placeholder = '',
 		required = false,
@@ -45,7 +47,7 @@
 		<input
 			{id}
 			{name}
-			type={isPassword ? (showPassword ? 'text' : 'password') : (name === 'email' ? 'email' : 'text')}
+			type={type ?? (isPassword ? (showPassword ? 'text' : 'password') : (name === 'email' ? 'email' : 'text'))}
 			{required}
 			{autocomplete}
 			{disabled}

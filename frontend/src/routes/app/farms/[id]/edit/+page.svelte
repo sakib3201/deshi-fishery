@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { api } from '$lib/api/client';
 	import { authStore } from '$lib/stores/auth.svelte';
-	import { ArrowLeft } from 'lucide-svelte';
+	import { PageHeader, FormCard, ActionButton } from '$lib/components/layout';
 
 	let farmId = $state(0);
 	let name = $state('');
@@ -38,7 +38,6 @@
 		e.preventDefault();
 		loading = true;
 		error = '';
-
 		try {
 			const response = await api.patch(`/farms/${farmId}`, { name, location });
 			if (response.success) {
@@ -52,10 +51,7 @@
 	}
 
 	async function handleDelete() {
-		if (!confirm('Are you sure you want to delete this farm? This action cannot be undone.')) {
-			return;
-		}
-
+		if (!confirm('Are you sure you want to delete this farm? This action cannot be undone.')) return;
 		try {
 			await api.delete(`/farms/${farmId}`);
 			goto('/app/farms');
@@ -63,39 +59,24 @@
 			error = err instanceof Error ? err.message : 'Failed to delete farm';
 		}
 	}
-
-	function goBack() {
-		goto('/app/farms');
-	}
 </script>
 
 <svelte:head>
 	<title>Edit Farm – Deshi Fishery</title>
 </svelte:head>
 
-<div class="mx-auto max-w-2xl px-4 py-8 sm:py-10">
-	<button
-		onclick={goBack}
-		class="inline-flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors mb-6 min-h-[44px]"
-	>
-		<ArrowLeft size={18} aria-hidden="true" />
-		Back to Farms
-	</button>
-
-	<h1 class="text-2xl sm:text-3xl font-bold text-on-surface mb-6">Edit Farm</h1>
-
+<PageHeader title="Edit Farm" backHref="/app/farms" backLabel="Back to Farms">
 	{#if initialLoading}
-		<div class="flex items-center gap-2 text-on-surface-variant py-8">
-			<div class="h-5 w-5 border-2 border-on-surface-variant/30 border-t-primary-container rounded-full animate-spin"></div>
+		<div class="flex items-center gap-2 py-8 text-on-surface-variant">
+			<div
+				class="h-5 w-5 animate-spin rounded-full border-2 border-on-surface-variant/30 border-t-primary-container"
+			></div>
 			Loading farm...
 		</div>
 	{:else}
-		<form
-			class="space-y-5 bg-surface-bright border border-outline-variant/30 rounded-xl p-6 sm:p-8"
-			onsubmit={handleSubmit}
-		>
+		<FormCard handleSubmit={handleSubmit}>
 			<div>
-				<label for="name" class="block text-sm font-medium text-on-surface mb-1.5">
+				<label for="name" class="mb-1.5 block text-sm font-medium text-on-surface">
 					Farm Name *
 				</label>
 				<input
@@ -103,51 +84,39 @@
 					type="text"
 					bind:value={name}
 					required
-					class="w-full px-4 py-3 min-h-[56px] bg-white dark:bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-mist-light text-on-surface"
+					class="min-h-[56px] w-full rounded-lg border border-outline-variant bg-white px-4 py-3 text-on-surface focus:border-secondary focus:outline-none focus:ring-2 focus:ring-mist-light dark:bg-surface-container"
 				/>
 			</div>
 
 			<div>
-				<label for="location" class="block text-sm font-medium text-on-surface mb-1.5">
+				<label for="location" class="mb-1.5 block text-sm font-medium text-on-surface">
 					Location
 				</label>
 				<input
 					id="location"
 					type="text"
 					bind:value={location}
-					class="w-full px-4 py-3 min-h-[56px] bg-white dark:bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-mist-light text-on-surface"
+					class="min-h-[56px] w-full rounded-lg border border-outline-variant bg-white px-4 py-3 text-on-surface focus:border-secondary focus:outline-none focus:ring-2 focus:ring-mist-light dark:bg-surface-container"
 				/>
 			</div>
 
 			{#if error}
-				<div class="rounded-lg bg-error-container border border-error/20 p-3" role="alert">
-					<p class="text-error text-sm font-medium">{error}</p>
+				<div class="rounded-lg border border-error/20 bg-error-container p-3" role="alert">
+					<p class="text-sm font-medium text-error">{error}</p>
 				</div>
 			{/if}
 
-			<div class="flex flex-col sm:flex-row gap-3 pt-2">
-				<button
-					type="button"
-					onclick={goBack}
-					class="inline-flex items-center justify-center h-14 px-6 rounded-lg border border-outline-variant text-on-surface font-medium hover:bg-surface-container transition-colors min-h-[56px]"
-				>
+			<div class="flex flex-col gap-3 pt-2 sm:flex-row">
+				<ActionButton variant="secondary" onclick={() => goto('/app/farms')} type="button">
 					Cancel
-				</button>
-				<button
-					type="submit"
-					disabled={loading || !name.trim()}
-					class="inline-flex items-center justify-center h-14 px-6 rounded-lg bg-primary-container text-white font-medium hover:brightness-110 transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed min-h-[56px]"
-				>
-					{loading ? 'Saving...' : 'Save Changes'}
-				</button>
-				<button
-					type="button"
-					onclick={handleDelete}
-					class="sm:ml-auto inline-flex items-center justify-center h-14 px-6 rounded-lg border border-error/30 text-error font-medium hover:bg-error-container transition-colors min-h-[56px]"
-				>
+				</ActionButton>
+				<ActionButton loading={loading} disabled={!name.trim()}>
+					Save Changes
+				</ActionButton>
+				<ActionButton variant="danger" onclick={handleDelete} type="button" class="sm:ml-auto">
 					Delete Farm
-				</button>
+				</ActionButton>
 			</div>
-		</form>
+		</FormCard>
 	{/if}
-</div>
+</PageHeader>

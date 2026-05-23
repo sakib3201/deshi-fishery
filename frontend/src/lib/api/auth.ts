@@ -43,6 +43,30 @@ export interface StockRelease {
 	pond?: Pond;
 }
 
+export interface Sale {
+	id: number;
+	farm_id: number;
+	pond_id: number;
+	sale_code: string;
+	sale_type: 'wholesale' | 'retail';
+	date: string;
+	fish_type: string;
+	avg_fish_weight_g: number;
+	quantity_kg: number;
+	rate_per_kg: number;
+	total_amount: number;
+	customer_name: string | null;
+	custom_tags: string[] | null;
+	payment_status: 'pending' | 'partial' | 'paid';
+	amount_paid: number;
+	amount_due: number;
+	notes: string | null;
+	created_by: number;
+	created_at: string;
+	updated_at: string;
+	pond?: Pond;
+}
+
 export interface AuthResponse {
 	success: boolean;
 	data: {

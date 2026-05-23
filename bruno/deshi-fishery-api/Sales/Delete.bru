@@ -1,0 +1,15 @@
+meta {
+  name: Delete Sale
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/sales/{{saleId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}

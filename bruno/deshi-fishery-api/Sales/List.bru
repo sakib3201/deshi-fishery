@@ -1,0 +1,22 @@
+meta {
+  name: List Sales
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/sales
+  body: none
+  auth: inherit
+}
+
+params:query {
+  sale_type: 
+  payment_status: 
+  from_date: 
+  to_date: 
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}

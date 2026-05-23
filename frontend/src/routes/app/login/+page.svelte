@@ -1,16 +1,12 @@
 <script lang="ts">
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import { AuthCard, AuthForm, AuthInput, AuthButton, AuthError } from '$lib/components/auth';
 
-	onMount(() => {
+	// Redirect authenticated users away from login
+	$effect(() => {
 		if (authStore.isAuthenticated) {
-			if (authStore.requiresOnboarding) {
-				goto('/app/onboarding');
-			} else {
-				goto('/app/dashboard');
-			}
+			goto(authStore.requiresOnboarding ? '/app/onboarding' : '/app/dashboard');
 		}
 	});
 
@@ -33,6 +29,10 @@
 			// Error handled by store
 		}
 	}
+
+	function clearError() {
+		authStore.error = null;
+	}
 </script>
 
 <svelte:head>
@@ -52,7 +52,7 @@
 			autocorrect="off"
 			inputmode="email"
 			disabled={authStore.loading}
-			oninput={() => { authStore.error = null; }}
+			oninput={clearError}
 			placeholder="you@example.com"
 			error={authStore.error}
 		/>
@@ -64,7 +64,7 @@
 			required
 			autocomplete="current-password"
 			disabled={authStore.loading}
-			oninput={() => { authStore.error = null; }}
+			oninput={clearError}
 			placeholder="••••••••"
 			error={authStore.error}
 		/>

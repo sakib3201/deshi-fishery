@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { themeStore, langStore } from '$lib/stores/ui.svelte';
@@ -16,7 +16,8 @@
 		Sun,
 		Moon,
 		Globe,
-		PackagePlus
+		PackagePlus,
+		Receipt
 	} from 'lucide-svelte';
 
 	let mobileMenuOpen = $state(false);
@@ -27,11 +28,12 @@
 		{ label: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard },
 		{ label: 'Farms', href: '/app/farms', icon: Home },
 		{ label: 'Ponds', href: '/app/ponds', icon: Droplets },
-		{ label: 'Stock Releases', href: '/app/stock-releases', icon: PackagePlus }
+		{ label: 'Stock Releases', href: '/app/stock-releases', icon: PackagePlus },
+		{ label: 'Sales', href: '/app/sales', icon: Receipt }
 	];
 
 	function isActive(path: string) {
-		return $page.url.pathname === path || $page.url.pathname.startsWith(path + '/');
+		return page.url.pathname === path || page.url.pathname.startsWith(path + '/');
 	}
 
 	function handleLogout() {

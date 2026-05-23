@@ -1,38 +1,40 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { authStore } from '$lib/stores/auth.svelte';
-	import { onMount } from 'svelte';
 	import { AppNavbar, AppFooter } from '$lib/components/layout';
 	import { themeStore, langStore } from '$lib/stores/ui.svelte';
 
 	let { children } = $props();
 
-	onMount(() => {
+	// Initialize stores once on first client render
+	let initialized = $state(false);
+	$effect(() => {
+		if (initialized) return;
+		initialized = true;
 		themeStore.init();
 		langStore.init();
-		authStore.init().then(() => {
-			// Redirect unauthenticated users to login
-			if (!authStore.isAuthenticated && $page.url.pathname !== '/app/login' && $page.url.pathname !== '/app/register') {
-				goto('/app/login');
-			}
-			// Redirect authenticated users away from login/register
-			if (authStore.isAuthenticated && ($page.url.pathname === '/app/login' || $page.url.pathname === '/app/register')) {
-				if (authStore.requiresOnboarding) {
-					goto('/app/onboarding');
-				} else {
-					goto('/app/dashboard');
-				}
-			}
-			// Redirect to onboarding if required
-			if (authStore.isAuthenticated && authStore.requiresOnboarding && $page.url.pathname !== '/app/onboarding') {
-				goto('/app/onboarding');
-			}
-			// Redirect away from onboarding if not required
-			if (authStore.isAuthenticated && !authStore.requiresOnboarding && $page.url.pathname === '/app/onboarding') {
-				goto('/app/dashboard');
-			}
-		});
+		authStore.init();
+	});
+
+	// Reactive auth redirects — run whenever auth state or pathname changes
+	$effect(() => {
+		const pathname = page.url.pathname;
+		const isAuth = authStore.isAuthenticated;
+		const needsOnboarding = authStore.requiresOnboarding;
+
+		if (!isAuth && pathname !== '/app/login' && pathname !== '/app/register') {
+			goto('/app/login');
+		}
+		if (isAuth && (pathname === '/app/login' || pathname === '/app/register')) {
+			goto(needsOnboarding ? '/app/onboarding' : '/app/dashboard');
+		}
+		if (isAuth && needsOnboarding && pathname !== '/app/onboarding') {
+			goto('/app/onboarding');
+		}
+		if (isAuth && !needsOnboarding && pathname === '/app/onboarding') {
+			goto('/app/dashboard');
+		}
 	});
 </script>
 

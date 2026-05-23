@@ -5,16 +5,8 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { langStore } from '$lib/stores/ui.svelte';
 	import { formatNumber as formatNum, formatDate as formatDt } from '$lib/utils/formatters';
-	import {
-		ArrowLeft,
-		Calendar,
-		Fish,
-		Scale,
-		Banknote,
-		Loader2,
-		Trash2,
-		Pencil
-	} from 'lucide-svelte';
+	import { PageHeader, DataCard } from '$lib/components/layout';
+	import { Calendar, Fish, Loader2, Trash2, Pencil } from 'lucide-svelte';
 
 	interface Release {
 		id: number;
@@ -29,7 +21,7 @@
 		pond?: { pond_number: string };
 	}
 
-	let release = $state<Release | null>(null);
+	let release = $state.raw<Release | null>(null);
 	let loading = $state(true);
 	let error = $state('');
 	let deleteLoading = $state(false);
@@ -47,7 +39,6 @@
 			loading = false;
 			return;
 		}
-
 		try {
 			const response = await stockReleases.get(id);
 			if (response.success) {
@@ -66,10 +57,6 @@
 		}
 	});
 
-	function goBack() {
-		goto('/app/stock-releases');
-	}
-
 	function navigateToEdit() {
 		if (release) {
 			goto(`/app/stock-releases/${release.id}/edit`);
@@ -78,11 +65,7 @@
 
 	async function handleDelete() {
 		if (!release) return;
-
-		if (!confirm(`Delete this ${release.species} release? This cannot be undone.`)) {
-			return;
-		}
-
+		if (!confirm(`Delete this ${release.species} release? This cannot be undone.`)) return;
 		deleteLoading = true;
 		try {
 			await stockReleases.delete(release.id);
@@ -106,46 +89,42 @@
 	<title>{release ? `${release.species} Release` : 'Stock Release'} – Deshi Fishery</title>
 </svelte:head>
 
-<div class="mx-auto max-w-2xl px-4 py-8 sm:py-10">
-	<button
-		onclick={goBack}
-		class="text-on-surface-variant hover:text-on-surface mb-6 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium transition-colors"
-	>
-		<ArrowLeft size={18} aria-hidden="true" />
-		Back to Stock Releases
-	</button>
-
+<PageHeader
+	title={release ? `${release.species} Release` : 'Stock Release'}
+	backHref="/app/stock-releases"
+	backLabel="Back to Stock Releases"
+>
 	{#if loading}
-		<div class="bg-surface-bright border-outline-variant/30 animate-pulse rounded-xl border p-8">
-			<div class="bg-surface-container mb-4 h-8 w-1/2 rounded"></div>
-			<div class="bg-surface-container mb-6 h-4 w-1/3 rounded"></div>
+		<div class="animate-pulse rounded-xl border border-outline-variant/30 bg-surface-bright p-8">
+			<div class="mb-4 h-8 w-1/2 rounded bg-surface-container"></div>
+			<div class="mb-6 h-4 w-1/3 rounded bg-surface-container"></div>
 			<div class="space-y-3">
-				<div class="bg-surface-container h-4 w-full rounded"></div>
-				<div class="bg-surface-container h-4 w-3/4 rounded"></div>
-				<div class="bg-surface-container h-4 w-1/2 rounded"></div>
+				<div class="h-4 w-full rounded bg-surface-container"></div>
+				<div class="h-4 w-3/4 rounded bg-surface-container"></div>
+				<div class="h-4 w-1/2 rounded bg-surface-container"></div>
 			</div>
 		</div>
 	{:else if error}
-		<div class="bg-error-container border-error/20 rounded-xl border p-4" role="alert">
-			<p class="text-error font-medium">{error}</p>
-			<button
-				onclick={goBack}
-				class="border-outline-variant text-on-surface hover:bg-surface-container mt-3 inline-flex h-11 items-center justify-center rounded-lg border px-4 font-medium transition-colors"
+		<div class="rounded-xl border border-error/20 bg-error-container p-4" role="alert">
+			<p class="font-medium text-error">{error}</p>
+			<a
+				href="/app/stock-releases"
+				class="mt-3 inline-flex h-11 items-center justify-center rounded-lg border border-outline-variant px-4 font-medium text-on-surface transition-colors hover:bg-surface-container"
 			>
 				Go Back
-			</button>
+			</a>
 		</div>
 	{:else if release}
-		<div class="bg-surface-bright border-outline-variant/30 rounded-xl border p-6 sm:p-8">
+		<div class="rounded-xl border border-outline-variant/30 bg-surface-bright p-6 sm:p-8">
 			<div class="mb-6 flex items-start justify-between">
 				<div>
 					<div class="mb-2 flex items-center gap-2">
 						<div
-							class="bg-primary-container/10 text-primary-container flex h-10 w-10 items-center justify-center rounded-xl"
+							class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-container/10 text-primary-container"
 						>
 							<Fish size={20} aria-hidden="true" />
 						</div>
-						<h1 class="text-on-surface text-2xl font-bold">{release.species}</h1>
+						<h1 class="text-2xl font-bold text-on-surface">{release.species}</h1>
 					</div>
 					<p class="text-on-surface-variant">
 						Released into {release.pond?.pond_number || `Pond #${release.pond_id}`}
@@ -154,7 +133,7 @@
 				<div class="flex gap-2">
 					<button
 						onclick={navigateToEdit}
-						class="border-outline-variant text-on-surface hover:bg-surface-container inline-flex h-11 items-center justify-center gap-1.5 rounded-lg border px-4 text-sm font-medium transition-colors"
+						class="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg border border-outline-variant px-4 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container"
 					>
 						<Pencil size={16} aria-hidden="true" />
 						Edit
@@ -162,7 +141,7 @@
 					<button
 						onclick={handleDelete}
 						disabled={deleteLoading}
-						class="border-error/30 text-error hover:bg-error-container inline-flex h-11 items-center justify-center gap-1.5 rounded-lg border px-4 text-sm font-medium transition-colors disabled:opacity-50"
+						class="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg border border-error/30 px-4 text-sm font-medium text-error transition-colors hover:bg-error-container disabled:opacity-50"
 					>
 						{#if deleteLoading}
 							<Loader2 size={16} class="animate-spin" aria-hidden="true" />
@@ -175,39 +154,26 @@
 			</div>
 
 			<div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-				<div class="bg-surface-container/50 rounded-lg p-4">
-					<p class="text-on-surface-variant mb-1 text-sm">Quantity</p>
-					<p class="text-on-surface text-xl font-bold">{formatNumber(release.quantity)} fish</p>
-				</div>
-				<div class="bg-surface-container/50 rounded-lg p-4">
-					<p class="text-on-surface-variant mb-1 text-sm">Average Weight</p>
-					<p class="text-on-surface text-xl font-bold">{release.avg_weight_gram} g</p>
-				</div>
-				<div class="bg-surface-container/50 rounded-lg p-4">
-					<p class="text-on-surface-variant mb-1 text-sm">Total Cost</p>
-					<p class="text-on-surface text-xl font-bold">৳{formatNumber(release.cost_bdt)}</p>
-				</div>
-				<div class="bg-surface-container/50 rounded-lg p-4">
-					<p class="text-on-surface-variant mb-1 text-sm">Release Date</p>
-					<p class="text-on-surface flex items-center gap-1.5 text-xl font-bold">
-						<Calendar size={18} aria-hidden="true" />
-						{formatDate(release.release_date)}
-					</p>
-				</div>
+				<DataCard label="Quantity" value={`${formatNumber(release.quantity)} fish`} />
+				<DataCard label="Average Weight" value={`${release.avg_weight_gram} g`} />
+				<DataCard label="Total Cost" value={`৳${formatNumber(release.cost_bdt)}`} />
+				<DataCard label="Release Date" value={formatDate(release.release_date)}>
+					{#snippet icon()}<Calendar size={18} aria-hidden="true" />{/snippet}
+				</DataCard>
 			</div>
 
 			{#if release.notes}
-				<div class="border-outline-variant/20 border-t pt-4">
-					<p class="text-on-surface-variant mb-1 text-sm">Notes</p>
-					<p class="text-on-surface whitespace-pre-wrap">{release.notes}</p>
+				<div class="border-t border-outline-variant/20 pt-4">
+					<p class="mb-1 text-sm text-on-surface-variant">Notes</p>
+					<p class="whitespace-pre-wrap text-on-surface">{release.notes}</p>
 				</div>
 			{/if}
 
-			<div class="border-outline-variant/20 mt-4 border-t pt-4">
-				<p class="text-on-surface-variant text-xs">
+			<div class="mt-4 border-t border-outline-variant/20 pt-4">
+				<p class="text-xs text-on-surface-variant">
 					Recorded on {formatDt(new Date(release.created_at), langStore.lang)}
 				</p>
 			</div>
 		</div>
 	{/if}
-</div>
+</PageHeader>

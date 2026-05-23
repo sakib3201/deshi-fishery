@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		Verified,
 		ArrowRight,
@@ -17,25 +16,19 @@
 		Sun,
 		Moon,
 		Fish,
-		Waves,
 		User
 	} from '@lucide/svelte';
+	import { browser } from '$app/environment';
+	import { translations, getLandingLang, setLandingLang, type Lang } from '$lib/i18n/landing';
 
-	// Language state with localStorage persistence
-	let lang = $state<'en' | 'bn'>('en');
+	let lang = $state<Lang>(getLandingLang());
 	let mobileMenuOpen = $state(false);
 	let darkMode = $state(false);
 	let darkModeInitialized = $state(false);
 
-	// Initialize from localStorage and system preference
-	onMount(() => {
-		// Language
-		const savedLang = localStorage.getItem('df-lang');
-		if (savedLang === 'en' || savedLang === 'bn') {
-			lang = savedLang;
-		}
-
-		// Dark mode: check localStorage first, then system preference
+	// Initialize dark mode from localStorage and system preference
+	$effect(() => {
+		if (!browser || darkModeInitialized) return;
 		const savedDark = localStorage.getItem('df-dark');
 		if (savedDark !== null) {
 			darkMode = savedDark === 'true';
@@ -47,207 +40,22 @@
 
 	// Persist language
 	$effect(() => {
-		localStorage.setItem('df-lang', lang);
+		setLandingLang(lang);
 	});
 
 	// Persist and apply dark mode
 	$effect(() => {
-		if (!darkModeInitialized) return;
+		if (!browser || !darkModeInitialized) return;
 		localStorage.setItem('df-dark', String(darkMode));
-		if (darkMode) {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
+		document.documentElement.classList.toggle('dark', darkMode);
 	});
 
-	// Translations
-	const t = {
-		en: {
-			header: {
-				dashboard: 'Dashboard',
-				ponds: 'Ponds',
-				inventory: 'Inventory',
-				reports: 'Reports',
-				login: 'Login',
-				register: 'Register'
-			},
-			hero: {
-				trustBadge: 'Trusted by 10,000+ farmers across Bangladesh',
-				title: 'The Best Assistant for Fish Farming',
-				subtitle:
-					'Manage ponds, track stock, and know your profits. Works without internet. Built for Bangladeshi fish farmers.',
-				ctaPrimary: 'Start Using for Free'
-			},
-			offline: {
-				title: 'Works Without Internet',
-				description:
-					'Record feedings, update stock, and check pond data even when your connection drops. Everything syncs automatically when you are back online.',
-				points: [
-					'Record data without internet',
-					'Auto-sync when connection returns',
-					'Nothing gets lost'
-				],
-				offlineCardTitle: 'Working Offline',
-				offlineCardSubtitle: 'Will sync when online'
-			},
-			features: {
-				title: 'Everything You Need to Run Your Farm',
-				subtitle: 'Track stock, manage ponds, and see your profits. All in one place.',
-				pondManagement: {
-					title: 'Pond Management',
-					description:
-						'Track water quality, feeding schedules, and fish health for every pond. Know which ponds need attention before problems cost you money.'
-				},
-				stockTracking: {
-					title: 'Stock Tracking',
-					description:
-						'See how much fish you have, how fast they are growing, and when they are ready for sale.',
-					cta: 'See How It Works'
-				},
-				financial: {
-					title: 'Know Your Profits',
-					description:
-						'Track expenses, sales, and profit for each pond. See which ponds make money and which do not.'
-				},
-				reports: {
-					title: 'Reports for Banks and Partners',
-					description:
-						'Generate clean PDF and Excel reports in one tap. Ready for bank loans, partnerships, or tax filing.',
-					tags: ['PDF', 'EXCEL', 'SYNC']
-				}
-			},
-			cta: {
-				title: 'Join 10,000+ Farmers Already Using Deshi Fishery',
-				testimonial: {
-					quote: '"Since switching to Deshi Fishery, I have cut feed waste by 30% and finally know which ponds are profitable."',
-					name: 'Rahat Ali',
-					role: 'Farm Owner',
-					location: 'Mymensingh District',
-					ponds: '12 ponds, 8 acres'
-				}
-			},
-			pricing: {
-				title: 'Free. No Surprises.',
-				subtitle: 'Every feature is free. No credit card needed. No hidden fees. No paid tiers.',
-				features: [
-					'Unlimited ponds and stock records',
-					'Full offline mode',
-					'PDF and Excel reports',
-					'Bengali and English',
-					'Phone and desktop access'
-				],
-				cta: 'Create Free Account'
-			},
-			footer: {
-				brand: 'Deshi Fishery',
-				copyright: '\u00A9 2024 Deshi Fishery. Built for fish farmers in Bangladesh.',
-				quickLinks: 'Quick Links',
-				about: 'About Us',
-				support: 'Get Help',
-				privacy: 'Privacy Policy',
-				accessibility: 'Accessibility',
-				terms: 'Terms of Service',
-				languageToggle: 'Bengali / English'
-			}
-		},
-		bn: {
-			header: {
-				dashboard: 'ড্যাশবোর্ড',
-				ponds: 'পুকুর',
-				inventory: 'ইনভেন্টরি',
-				reports: 'রিপোর্ট',
-				login: 'লগইন',
-				register: 'নিবন্ধন'
-			},
-			hero: {
-				trustBadge: 'বাংলাদেশের ১০,০০০+ কৃষকের বিশ্বাস',
-				title: 'মাছ চাষের সেরা সহায়ক',
-				subtitle:
-					'পুকুর পরিচালনা, স্টক ট্র্যাকিং এবং লাভ জানুন। ইন্টারনেট ছাড়াই কাজ করে। বাংলাদেশের মৎস্য চাষিদের জন্য তৈরি।',
-				ctaPrimary: 'বিনামূল্যে ব্যবহার শুরু করুন'
-			},
-			offline: {
-				title: 'ইন্টারনেট ছাড়াই কাজ করে',
-				description:
-					'খাবার দেওয়া রেকর্ড করুন, স্টক আপডেট করুন এবং পুকুরের তথ্য দেখুন ইন্টারনেট না থাকলেও। অনলাইনে আসলে সবকিছু স্বয়ংক্রিয়ভাবে সিঙ্ক হয়ে যাবে।',
-				points: [
-					'ইন্টারনেট ছাড়াই ডেটা রেকর্ড করুন',
-					'কানেকশন ফিরলে অটো সিঙ্ক',
-					'কিছুই হারাবে না'
-				],
-				offlineCardTitle: 'অফলাইনে কাজ করছে',
-				offlineCardSubtitle: 'অনলাইনে আসলে সিঙ্ক হবে'
-			},
-			features: {
-				title: 'খামার চালানোর যা কিছু দরকার',
-				subtitle: 'স্টক ট্র্যাক করুন, পুকুর পরিচালনা করুন এবং লাভ দেখুন। সবকিছু এক জায়গায়।',
-				pondManagement: {
-					title: 'পুকুর পরিচালনা',
-					description:
-						'প্রতিটি পুকুরের পানির মান, খাবারের সময়সূচি এবং মাছের স্বাস্থ্য ট্র্যাক করুন। সমস্যা বড় হওয়ার আগেই জেনে নিন কোন পুকুরে মনোযোগ দরকার।'
-				},
-				stockTracking: {
-					title: 'স্টক ট্র্যাকিং',
-					description:
-						'কত মাছ আছে, কত দ্রুত বড় হচ্ছে এবং কখন বিক্রির জন্য প্রস্তুত তা জানুন।',
-					cta: 'কিভাবে কাজ করে দেখুন'
-				},
-				financial: {
-					title: 'লাভ জানুন',
-					description:
-						'প্রতিটি পুকুরের খরচ, বিক্রি এবং লাভ ট্র্যাক করুন। কোন পুকুর লাভজনক এবং কোনটি নয় তা দেখুন।'
-				},
-				reports: {
-					title: 'ব্যাংক ও পার্টনারদের জন্য রিপোর্ট',
-					description:
-						'এক ট্যাপে পরিষ্কার PDF এবং Excel রিপোর্ট তৈরি করুন। ব্যাংক লোন, পার্টনারশিপ বা ট্যাক্স ফাইলিং এর জন্য প্রস্তুত।',
-					tags: ['PDF', 'EXCEL', 'SYNC']
-				}
-			},
-			cta: {
-				title: '১০,০০০+ কৃষক ইতিমধ্যে দেশি ফিশারি ব্যবহার করছেন',
-				testimonial: {
-					quote: '"দেশি ফিশারি ব্যবহার শুরু করার পর আমার খাবারের অপচয় ৩০% কমে গেছে এবং কোন পুকুর লাভজনক তা এখন আমি জানি।"',
-					name: 'রাহাত আলী',
-					role: 'খামার মালিক',
-					location: 'ময়মনসিংহ জেলা',
-					ponds: '১২টি পুকুর, ৮ একর'
-				}
-			},
-			pricing: {
-				title: 'বিনামূল্যে। কোনো শর্ত নেই।',
-				subtitle: 'সব ফিচার বিনামূল্যে। ক্রেডিট কার্ড লাগবে না। কোনো লুকানো ফি নেই। কোনো পেইড টিয়ার নেই।',
-				features: [
-					'আনলিমিটেড পুকুর ও স্টক রেকর্ড',
-					'সম্পূর্ণ অফলাইন মোড',
-					'PDF ও Excel রিপোর্ট',
-					'বাংলা ও ইংরেজি',
-					'ফোন ও ডেস্কটপ অ্যাক্সেস'
-				],
-				cta: 'বিনামূল্যে অ্যাকাউন্ট তৈরি করুন'
-			},
-			footer: {
-				brand: 'দেশি ফিশারি',
-				copyright: '\u00A9 ২০২৪ দেশি ফিশারি। বাংলাদেশের মাছ চাষিদের জন্য তৈরি।',
-				quickLinks: 'দ্রুত লিংক',
-				about: 'আমাদের সম্পর্কে',
-				support: 'সাহায্য নিন',
-				privacy: 'গোপনীয়তা নীতি',
-				accessibility: 'অ্যাক্সেসিবিলিটি',
-				terms: 'সেবার শর্তাবলী',
-				languageToggle: 'English / বাংলা'
-			}
-		}
-	};
-
-	let currentLang = $derived(t[lang] ?? t['en']);
+	let currentLang = $derived(translations[lang]);
 
 	// Scroll animation with reduced motion support
 	function initScrollAnimation(node: HTMLElement) {
-		const prefersReducedMotion =
-			typeof window !== 'undefined' &&
-			window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (!browser) return { destroy() {} };
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		if (prefersReducedMotion) {
 			node.classList.add('opacity-100', 'translate-y-0');
@@ -319,7 +127,6 @@
 			<div class="hidden items-center gap-lg md:flex">
 				<a
 					href="/app/dashboard"
-					aria-current="page"
 					class="touch-target border-b-2 border-secondary pb-1 font-label-lg font-bold text-secondary transition-transform active:scale-[0.98]"
 				>
 					{currentLang.header.dashboard}

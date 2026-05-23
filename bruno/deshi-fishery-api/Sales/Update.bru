@@ -1,0 +1,21 @@
+meta {
+  name: Update Sale
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/sales/{{saleId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}
+
+body:json {
+  {
+    "amount_paid": 25000
+  }
+}

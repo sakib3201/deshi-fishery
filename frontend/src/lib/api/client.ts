@@ -77,6 +77,72 @@ export const api = {
 	delete: (endpoint: string) => fetchApi(endpoint, { method: 'DELETE' })
 };
 
+export const sales = {
+	list: (params?: {
+		sale_type?: string;
+		payment_status?: string;
+		from_date?: string;
+		to_date?: string;
+		cursor?: string;
+		per_page?: number;
+	}) => {
+		const searchParams = new URLSearchParams();
+		if (params?.sale_type) searchParams.set('sale_type', params.sale_type);
+		if (params?.payment_status) searchParams.set('payment_status', params.payment_status);
+		if (params?.from_date) searchParams.set('from_date', params.from_date);
+		if (params?.to_date) searchParams.set('to_date', params.to_date);
+		if (params?.cursor) searchParams.set('cursor', params.cursor);
+		if (params?.per_page) searchParams.set('per_page', String(params.per_page));
+		const query = searchParams.toString();
+		return api.get(`/sales${query ? `?${query}` : ''}`) as Promise<{
+			success: boolean;
+			data: {
+				data: import('./auth').Sale[];
+				next_cursor: string | null;
+			};
+		}>;
+	},
+	create: (
+		data: Omit<
+			import('./auth').Sale,
+			| 'id'
+			| 'created_at'
+			| 'updated_at'
+			| 'farm_id'
+			| 'created_by'
+			| 'sale_code'
+			| 'total_amount'
+			| 'amount_due'
+			| 'payment_status'
+			| 'amount_paid'
+			| 'custom_tags'
+		>
+	) =>
+		api.post('/sales', data) as Promise<{
+			success: boolean;
+			data: import('./auth').Sale;
+		}>,
+	get: (id: number) =>
+		api.get(`/sales/${id}`) as Promise<{
+			success: boolean;
+			data: import('./auth').Sale;
+		}>,
+	update: (
+		id: number,
+		data: Partial<
+			Omit<
+				import('./auth').Sale,
+				'id' | 'created_at' | 'updated_at' | 'farm_id' | 'created_by' | 'sale_code'
+			>
+		>
+	) =>
+		api.patch(`/sales/${id}`, data) as Promise<{
+			success: boolean;
+			data: import('./auth').Sale;
+		}>,
+	delete: (id: number) => api.delete(`/sales/${id}`) as Promise<{ success: boolean }>
+};
+
 export const stockReleases = {
 	list: (params?: { pond_id?: number; species?: string; cursor?: string; per_page?: number }) => {
 		const searchParams = new URLSearchParams();

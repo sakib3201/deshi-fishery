@@ -31,4 +31,9 @@ class Farm extends Model
     {
         return $this->hasMany(StockRelease::class);
     }
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { auth, type Farm } from '$lib/api/auth';
 import { api } from '$lib/api/client';
 
@@ -29,56 +30,46 @@ function getUserFriendlyError(err: unknown): string {
 	return ERROR_MESSAGES[msg] || msg || 'Something went wrong. Please try again.';
 }
 
+function readStorage(key: string): string | null {
+	return browser ? localStorage.getItem(key) : null;
+}
+
+function writeStorage(key: string, value: string | null) {
+	if (!browser) return;
+	if (value === null) {
+		localStorage.removeItem(key);
+	} else {
+		localStorage.setItem(key, value);
+	}
+}
+
 function createAuthStore() {
-	// Initialize from localStorage (SSR-safe)
-	let accessToken = $state<string | null>(
-		typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null
-	);
+	// Read token/farm once to avoid multiple localStorage hits
+	const storedToken = readStorage(TOKEN_KEY);
+	const storedFarmId = readStorage(FARM_ID_KEY);
 
-	// Sync API client on init (using untracked initial value)
-	const initialToken = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
-	if (initialToken) {
-		api.setToken(initialToken);
-	}
-	const initialFarmId = typeof window !== 'undefined' ? localStorage.getItem(FARM_ID_KEY) : null;
-	if (initialFarmId) {
-		api.setFarmId(initialFarmId);
-	}
+	// Sync API client eagerly so requests work before init() completes
+	if (storedToken) api.setToken(storedToken);
+	if (storedFarmId) api.setFarmId(storedFarmId);
 
-	// Restore farm ID from localStorage immediately so currentFarmId is available
-	// before init() completes (needed for form submissions on hard refresh)
-	const initialFarmIdNum =
-		typeof window !== 'undefined'
-			? localStorage.getItem(FARM_ID_KEY)
-				? parseInt(localStorage.getItem(FARM_ID_KEY)!, 10)
-				: null
-			: null;
-
-	let user = $state<User | null>(null);
+	let accessToken = $state<string | null>(storedToken);
+	let user = $state.raw<User | null>(null);
 	let loading = $state(false);
 	let error = $state<string | null>(null);
 	let requiresOnboarding = $state(false);
 
 	const isAuthenticated = $derived(!!accessToken && !!user);
-	const currentFarmId = $derived(user?.current_farm_id ?? initialFarmIdNum ?? null);
+	const currentFarmId = $derived(user?.current_farm_id ?? (storedFarmId ? parseInt(storedFarmId, 10) : null));
 	const farms = $derived(user?.farms ?? []);
 
 	function setToken(token: string) {
 		accessToken = token;
-		if (typeof window !== 'undefined') {
-			localStorage.setItem(TOKEN_KEY, token);
-		}
+		writeStorage(TOKEN_KEY, token);
 		api.setToken(token);
 	}
 
 	function setFarmId(farmId: number | null) {
-		if (typeof window !== 'undefined') {
-			if (farmId) {
-				localStorage.setItem(FARM_ID_KEY, String(farmId));
-			} else {
-				localStorage.removeItem(FARM_ID_KEY);
-			}
-		}
+		writeStorage(FARM_ID_KEY, farmId ? String(farmId) : null);
 		api.setFarmId(farmId ? String(farmId) : null);
 	}
 
@@ -98,7 +89,7 @@ function createAuthStore() {
 	}
 
 	async function login(email: string, password: string) {
-		if (!navigator.onLine) {
+		if (browser && !navigator.onLine) {
 			error = 'No internet connection. Please check your network and try again.';
 			throw new Error('Offline');
 		}
@@ -123,7 +114,7 @@ function createAuthStore() {
 		password: string,
 		passwordConfirmation: string
 	) {
-		if (!navigator.onLine) {
+		if (browser && !navigator.onLine) {
 			error = 'No internet connection. Please check your network and try again.';
 			throw new Error('Offline');
 		}
@@ -151,10 +142,8 @@ function createAuthStore() {
 		accessToken = null;
 		user = null;
 		requiresOnboarding = false;
-		if (typeof window !== 'undefined') {
-			localStorage.removeItem(TOKEN_KEY);
-			localStorage.removeItem(FARM_ID_KEY);
-		}
+		writeStorage(TOKEN_KEY, null);
+		writeStorage(FARM_ID_KEY, null);
 		api.setToken(null);
 		api.setFarmId(null);
 	}
@@ -185,7 +174,6 @@ function createAuthStore() {
 		}
 	}
 
-	// Re-export for components that need to sync farm ID explicitly
 	function syncFarmId() {
 		const farmId = currentFarmId;
 		if (farmId) {
@@ -220,6 +208,9 @@ function createAuthStore() {
 		},
 		get error() {
 			return error;
+		},
+		set error(value: string | null) {
+			error = value;
 		},
 		get isAuthenticated() {
 			return isAuthenticated;

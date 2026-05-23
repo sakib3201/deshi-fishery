@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-
-	onMount(() => {
+	$effect(() => {
 		authStore.logout();
 		goto('/app/login');
 	});

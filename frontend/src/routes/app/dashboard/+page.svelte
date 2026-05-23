@@ -44,32 +44,34 @@
 		{ label: 'Total Stock', value: '0 kg', icon: Fish, iconBg: 'bg-accent-emerald text-accent-emerald-text' },
 		{ label: "This Month's Sales", value: '\u09F3 0', icon: DollarSign, iconBg: 'bg-accent-amber text-accent-amber-text' },
 	];
+
+	let currentFarmName = $derived(
+		authStore.farms.find((f) => f.id === authStore.currentFarmId)?.name || 'Select Farm'
+	);
 </script>
 
 <svelte:head>
 	<title>Dashboard – Deshi Fishery</title>
 </svelte:head>
 
-<div class="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-10">
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
 	<!-- Header -->
 	<div class="mb-8">
-		<h1 class="text-2xl sm:text-3xl font-bold text-on-surface mb-2">Dashboard</h1>
+		<h1 class="mb-2 text-2xl font-bold text-on-surface sm:text-3xl">Dashboard</h1>
 		<p class="text-on-surface-variant">Welcome back, {authStore.user?.name || 'User'}</p>
 
 		<!-- Farm Switcher -->
 		{#if authStore.currentFarmId}
 			<div class="relative mt-3 inline-block" data-testid="farm-switcher">
 				<button
-					onclick={() => showFarmSwitcher = !showFarmSwitcher}
-					class="flex items-center gap-2 rounded-lg bg-surface-container px-4 py-2.5 text-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors min-h-[44px]"
-					aria-label="Current farm: {authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}. Click to switch farms."
+					onclick={() => (showFarmSwitcher = !showFarmSwitcher)}
+					class="flex min-h-[44px] items-center gap-2 rounded-lg bg-surface-container px-4 py-2.5 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high"
+					aria-label="Current farm: {currentFarmName}. Click to switch farms."
 					aria-expanded={showFarmSwitcher}
 					aria-haspopup="listbox"
 				>
 					<Waves size={18} class="text-primary-container" aria-hidden="true" />
-					<span class="font-medium" data-testid="current-farm-name">
-						{authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}
-					</span>
+					<span class="font-medium" data-testid="current-farm-name">{currentFarmName}</span>
 					{#if showFarmSwitcher}
 						<ChevronUp size={16} aria-hidden="true" />
 					{:else}
@@ -79,33 +81,36 @@
 
 				{#if showFarmSwitcher}
 					<div
-						class="absolute top-full left-0 mt-2 w-64 bg-surface-bright border border-outline-variant/30 rounded-xl shadow-elevated z-dropdown py-1.5"
+						class="absolute top-full left-0 z-dropdown mt-2 w-64 rounded-xl border border-outline-variant/30 bg-surface-bright py-1.5 shadow-elevated"
 						role="listbox"
 						aria-label="Select a farm"
 					>
 						<div class="py-1">
-							{#each authStore.farms as farm}
+							{#each authStore.farms as farm (farm.id)}
 								<button
 									onclick={() => handleFarmSwitch(farm.id)}
-									class="w-full text-left px-4 py-2.5 hover:bg-surface-container flex items-center justify-between transition-colors min-h-[44px]"
+									class="flex min-h-[44px] w-full items-center justify-between px-4 py-2.5 text-left text-sm text-on-surface transition-colors hover:bg-surface-container"
 									role="option"
 									aria-selected={farm.id === authStore.currentFarmId}
 									data-testid="farm-option-{farm.id}"
 								>
-									<span class="text-sm text-on-surface">{farm.name}</span>
+									<span>{farm.name}</span>
 									{#if farm.id === authStore.currentFarmId}
-										<span class="text-xs text-primary-container font-medium" aria-label="Selected">✓</span>
+										<span class="text-xs font-medium text-primary-container" aria-label="Selected"
+											>✓</span
+										>
 									{/if}
 								</button>
 							{/each}
 						</div>
 						<div class="border-t border-outline-variant/20 pt-1">
-							<button
-								onclick={() => { showFarmSwitcher = false; navigateToFarms(); }}
-								class="w-full text-left px-4 py-2.5 text-sm text-primary-container hover:bg-surface-container transition-colors min-h-[44px] font-medium"
+							<a
+								href="/app/farms"
+								class="block min-h-[44px] px-4 py-2.5 text-sm font-medium text-primary-container transition-colors hover:bg-surface-container"
+								onclick={() => (showFarmSwitcher = false)}
 							>
 								Manage Farms →
-							</button>
+							</a>
 						</div>
 					</div>
 				{/if}
@@ -118,32 +123,33 @@
 	</div>
 
 	<!-- Stats Grid -->
-	<div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-10">
+	<div class="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
 		{#each stats as stat}
-			<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
-				<div class="flex items-start justify-between mb-4">
+			<div
+				class="rounded-xl border border-outline-variant/30 bg-surface-bright p-6 transition-shadow duration-200 hover:shadow-md"
+			>
+				<div class="mb-4 flex items-start justify-between">
 					<div class="flex h-11 w-11 items-center justify-center rounded-xl {stat.iconBg}">
 						<stat.icon size={22} aria-hidden="true" />
 					</div>
 				</div>
-				<p class="text-sm font-medium text-on-surface-variant mb-1">{stat.label}</p>
-				<p class="text-3xl font-bold text-on-surface tracking-tight">{stat.value}</p>
+				<p class="mb-1 text-sm font-medium text-on-surface-variant">{stat.label}</p>
+				<p class="text-3xl font-bold tracking-tight text-on-surface">{stat.value}</p>
 			</div>
 		{/each}
 	</div>
 
 	<!-- Quick Actions -->
 	<div class="mb-10">
-		<h2 class="text-xl font-bold text-on-surface mb-4">Quick Actions</h2>
-		<div class="grid gap-4 grid-cols-2 lg:grid-cols-4">
+		<h2 class="mb-4 text-xl font-bold text-on-surface">Quick Actions</h2>
+		<div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
 			{#each quickActions as action}
 				<button
 					onclick={() => !action.disabled && navigateTo(action.href)}
 					disabled={action.disabled}
-					class="flex flex-col items-center gap-3 rounded-xl border border-outline-variant/30 bg-surface-bright p-5 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none min-h-[120px] justify-center"
+					class="flex min-h-[120px] flex-col items-center justify-center gap-3 rounded-xl border border-outline-variant/30 bg-surface-bright p-5 transition-all duration-200 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-none"
 				>
-					<div class="flex h-12 w-12 items-center justify-center rounded-xl {action.color}"
-					>
+					<div class="flex h-12 w-12 items-center justify-center rounded-xl {action.color}">
 						<action.icon size={24} aria-hidden="true" />
 					</div>
 					<span class="text-sm font-medium text-on-surface">{action.label}</span>
@@ -153,16 +159,20 @@
 	</div>
 
 	<!-- Recent Activity Placeholder -->
-	<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-6">
-		<h2 class="text-xl font-bold text-on-surface mb-4">Recent Activity</h2>
-		<div class="text-center py-10">
-			<div class="flex justify-center mb-3">
-				<div class="flex h-12 w-12 items-center justify-center rounded-full bg-surface-container text-on-surface-variant">
+	<div class="rounded-xl border border-outline-variant/30 bg-surface-bright p-6">
+		<h2 class="mb-4 text-xl font-bold text-on-surface">Recent Activity</h2>
+		<div class="py-10 text-center">
+			<div class="mb-3 flex justify-center">
+				<div
+					class="flex h-12 w-12 items-center justify-center rounded-full bg-surface-container text-on-surface-variant"
+				>
 					<TrendingUp size={24} aria-hidden="true" />
 				</div>
 			</div>
 			<p class="text-on-surface-variant">No recent activity to show.</p>
-			<p class="text-sm text-on-surface-variant/70 mt-1">Record sales, feed, or expenses to see them here.</p>
+			<p class="mt-1 text-sm text-on-surface-variant/70">
+				Record sales, feed, or expenses to see them here.
+			</p>
 		</div>
 	</div>
 </div>

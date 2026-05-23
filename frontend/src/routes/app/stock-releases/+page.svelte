@@ -4,7 +4,8 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { langStore } from '$lib/stores/ui.svelte';
 	import { formatNumber as formatNum, formatDate as formatDt } from '$lib/utils/formatters';
-	import { PackagePlus, Calendar, Fish, ArrowRight, Loader2 } from 'lucide-svelte';
+	import { ListPageLayout, ListState, ActionButton } from '$lib/components/layout';
+	import { PackagePlus, Calendar, Fish, ArrowRight } from 'lucide-svelte';
 
 	interface Release {
 		id: number;
@@ -17,7 +18,7 @@
 		pond?: { pond_number: string };
 	}
 
-	let releases = $state<Release[]>([]);
+	let releases = $state.raw<Release[]>([]);
 	let loading = $state(true);
 	let error = $state('');
 
@@ -61,113 +62,73 @@
 	<title>Stock Releases – Deshi Fishery</title>
 </svelte:head>
 
-<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-	<!-- Header -->
-	<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-		<div>
-			<h1 class="text-on-surface text-2xl font-bold sm:text-3xl">Stock Releases</h1>
-			<p class="text-on-surface-variant mt-1">Track fish fry releases into your ponds</p>
-		</div>
-		<button
-			onclick={navigateToNew}
-			class="bg-primary-container inline-flex h-14 min-h-[56px] items-center justify-center gap-2 rounded-lg px-6 font-medium text-white transition-all duration-150 hover:brightness-110 active:scale-[0.98]"
-		>
+<ListPageLayout
+	title="Stock Releases"
+	description="Track fish fry releases into your ponds"
+>
+	{#snippet action()}
+		<ActionButton onclick={navigateToNew}>
 			<PackagePlus size={20} aria-hidden="true" />
 			Record Release
-		</button>
-	</div>
+		</ActionButton>
+	{/snippet}
 
-	<!-- Error -->
-	{#if error}
-		<div
-			class="bg-error-container border-error/20 mb-6 rounded-xl border p-4"
-			role="alert"
-			aria-live="polite"
-		>
-			<p class="text-error font-medium">{error}</p>
-		</div>
-	{/if}
-
-	<!-- Loading -->
-	{#if loading}
-		<div class="bg-surface-bright border-outline-variant/20 overflow-hidden rounded-xl border">
-			<div class="animate-pulse">
-				{#each [1, 2, 3] as _}
-					<div class="border-outline-variant/10 flex items-center gap-4 border-b p-4">
-						<div class="bg-surface-container h-10 w-10 shrink-0 rounded-lg"></div>
-						<div class="flex-1 space-y-2">
-							<div class="bg-surface-container h-4 w-1/3 rounded"></div>
-							<div class="bg-surface-container h-3 w-1/4 rounded"></div>
-						</div>
-						<div class="bg-surface-container h-8 w-20 rounded"></div>
-					</div>
-				{/each}
-			</div>
-		</div>
-	{:else if releases.length === 0}
-		<!-- Empty State -->
-		<div class="bg-surface-bright border-outline-variant/30 rounded-xl border p-10 text-center">
-			<div class="mb-4 flex justify-center">
-				<div
-					class="bg-surface-container text-on-surface-variant flex h-14 w-14 items-center justify-center rounded-2xl"
-				>
-					<Fish size={28} aria-hidden="true" />
-				</div>
-			</div>
-			<h2 class="text-on-surface mb-2 text-xl font-bold">No stock releases yet</h2>
-			<p class="text-on-surface-variant mx-auto mb-6 max-w-md">
-				Record your first fry release to start tracking stock levels and growth.
-			</p>
-			<button
-				onclick={navigateToNew}
-				class="bg-primary-container inline-flex h-14 min-h-[56px] items-center justify-center gap-2 rounded-lg px-8 font-medium text-white transition-all duration-150 hover:brightness-110 active:scale-[0.98]"
+	<ListState
+		{loading}
+		{error}
+		empty={!loading && releases.length === 0}
+		emptyTitle="No stock releases yet"
+		emptyDescription="Record your first fry release to start tracking stock levels and growth."
+	>
+		{#snippet emptyIcon()}
+			<div
+				class="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-container text-on-surface-variant"
 			>
+				<Fish size={28} aria-hidden="true" />
+			</div>
+		{/snippet}
+		{#snippet emptyAction()}
+			<ActionButton onclick={navigateToNew}>
 				<PackagePlus size={20} aria-hidden="true" />
 				Record First Release
-			</button>
-		</div>
-	{:else}
-		<div class="bg-surface-bright border-outline-variant/30 overflow-hidden rounded-xl border">
+			</ActionButton>
+		{/snippet}
+
+		<div class="overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-bright">
 			<table class="w-full text-left">
-				<thead class="bg-surface-container/50 border-outline-variant/20 border-b">
+				<thead class="border-b border-outline-variant/20 bg-surface-container/50">
 					<tr>
-						<th class="text-on-surface-variant px-4 py-3 text-sm font-semibold">Pond</th>
-						<th class="text-on-surface-variant px-4 py-3 text-sm font-semibold">Species</th>
-						<th class="text-on-surface-variant px-4 py-3 text-right text-sm font-semibold"
-							>Quantity</th
-						>
-						<th class="text-on-surface-variant px-4 py-3 text-sm font-semibold">Date</th>
-						<th class="text-on-surface-variant px-4 py-3 text-right text-sm font-semibold"
-							>Cost (৳)</th
-						>
-						<th class="text-on-surface-variant px-4 py-3 text-sm font-semibold"></th>
+						<th class="px-4 py-3 text-sm font-semibold text-on-surface-variant">Pond</th>
+						<th class="px-4 py-3 text-sm font-semibold text-on-surface-variant">Species</th>
+						<th class="px-4 py-3 text-right text-sm font-semibold text-on-surface-variant">Quantity</th>
+						<th class="px-4 py-3 text-sm font-semibold text-on-surface-variant">Date</th>
+						<th class="px-4 py-3 text-right text-sm font-semibold text-on-surface-variant">Cost (৳)</th>
+						<th class="px-4 py-3 text-sm font-semibold text-on-surface-variant"></th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each releases as release (release.id)}
-						<tr
-							class="border-outline-variant/10 hover:bg-surface-container/30 border-b transition-colors"
-						>
-							<td class="text-on-surface px-4 py-3 text-sm font-medium">
+						<tr class="border-b border-outline-variant/10 transition-colors hover:bg-surface-container/30">
+							<td class="px-4 py-3 text-sm font-medium text-on-surface">
 								{release.pond?.pond_number || `Pond #${release.pond_id}`}
 							</td>
-							<td class="text-on-surface px-4 py-3 text-sm">{release.species}</td>
-							<td class="text-on-surface px-4 py-3 text-right text-sm font-medium">
+							<td class="px-4 py-3 text-sm text-on-surface">{release.species}</td>
+							<td class="px-4 py-3 text-right text-sm font-medium text-on-surface">
 								{formatNumber(release.quantity)}
 							</td>
-							<td class="text-on-surface-variant px-4 py-3 text-sm">
+							<td class="px-4 py-3 text-sm text-on-surface-variant">
 								<div class="flex items-center gap-1.5">
 									<Calendar size={14} aria-hidden="true" />
 									{formatDate(release.release_date)}
 								</div>
 							</td>
-							<td class="text-on-surface px-4 py-3 text-right text-sm">
+							<td class="px-4 py-3 text-right text-sm text-on-surface">
 								{formatNumber(release.cost_bdt)}
 							</td>
 							<td class="px-4 py-3 text-right">
 								<button
 									onclick={() => navigateToDetail(release.id)}
-									class="text-primary-container hover:text-primary inline-flex items-center gap-1 text-sm font-medium transition-colors"
+									class="inline-flex items-center gap-1 text-sm font-medium text-primary-container transition-colors hover:text-primary"
 								>
 									View
 									<ArrowRight size={14} aria-hidden="true" />
@@ -178,5 +139,5 @@
 				</tbody>
 			</table>
 		</div>
-	{/if}
-</div>
+	</ListState>
+</ListPageLayout>
