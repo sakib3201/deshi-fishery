@@ -33,16 +33,16 @@
 	}
 
 	const quickActions = [
-		{ label: 'Add Pond', href: '/app/ponds/new', icon: Droplets, color: 'bg-sky-100 text-sky-700' },
-		{ label: 'Record Sale', href: '#', icon: DollarSign, color: 'bg-emerald-100 text-emerald-700', disabled: true },
-		{ label: 'Log Feed', href: '#', icon: Fish, color: 'bg-amber-100 text-amber-700', disabled: true },
-		{ label: 'Add Expense', href: '#', icon: TrendingUp, color: 'bg-rose-100 text-rose-700', disabled: true },
+		{ label: 'Add Pond', href: '/app/ponds/new', icon: Droplets, color: 'bg-accent-sky text-accent-sky-text' },
+		{ label: 'Record Sale', href: '#', icon: DollarSign, color: 'bg-accent-emerald text-accent-emerald-text', disabled: true },
+		{ label: 'Log Feed', href: '#', icon: Fish, color: 'bg-accent-amber text-accent-amber-text', disabled: true },
+		{ label: 'Add Expense', href: '#', icon: TrendingUp, color: 'bg-accent-rose text-accent-rose-text', disabled: true },
 	];
 
 	const stats = [
-		{ label: 'Total Ponds', value: '0', icon: Droplets, iconBg: 'bg-sky-100 text-sky-700' },
-		{ label: 'Total Stock', value: '0 kg', icon: Fish, iconBg: 'bg-emerald-100 text-emerald-700' },
-		{ label: "This Month's Sales", value: '\u09F3 0', icon: DollarSign, iconBg: 'bg-amber-100 text-amber-700' },
+		{ label: 'Total Ponds', value: '0', icon: Droplets, iconBg: 'bg-accent-sky text-accent-sky-text' },
+		{ label: 'Total Stock', value: '0 kg', icon: Fish, iconBg: 'bg-accent-emerald text-accent-emerald-text' },
+		{ label: "This Month's Sales", value: '\u09F3 0', icon: DollarSign, iconBg: 'bg-accent-amber text-accent-amber-text' },
 	];
 </script>
 

@@ -36,7 +36,7 @@
 	});
 </script>
 
-<div class="flex min-h-screen flex-col bg-surface text-on-surface dark:bg-surface-dark dark:text-on-background">
+<div class="flex min-h-screen flex-col bg-surface text-on-surface">
 	{#if authStore.isAuthenticated}
 		<AppNavbar />
 	{/if}

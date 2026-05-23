@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { api } from '$lib/api/client';
+	import { authStore } from '$lib/stores/auth.svelte';
 	import { ArrowLeft } from 'lucide-svelte';
 
 	let farmId = $state(0);
@@ -27,7 +28,7 @@
 
 	$effect(() => {
 		const idParam = page.params.id;
-		if (idParam) {
+		if (idParam && authStore.isAuthenticated && authStore.currentFarmId) {
 			farmId = parseInt(idParam, 10);
 			loadFarm();
 		}

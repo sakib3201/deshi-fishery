@@ -301,7 +301,7 @@
 <!-- Skip to main content link -->
 <a
 	href="#main-content"
-	class="sr-only focus:not-sr-only focus:absolute focus:z-[999] focus:bg-white focus:text-primary-container focus:p-4 focus:rounded-lg focus:shadow-lg"
+	class="sr-only focus:not-sr-only focus:absolute focus:z-[999] focus:bg-surface-bright focus:text-primary-container focus:p-4 focus:rounded-lg focus:shadow-lg"
 >
 	Skip to main content
 </a>
@@ -475,7 +475,7 @@
 		>
 			<div class="flex flex-col gap-6 text-white">
 				<div
-					class="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md"
+					class="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/20 bg-surface-bright/10 px-4 py-2 backdrop-blur-md"
 				>
 					<Verified size={18} class="shrink-0 text-white" />
 					<span class="text-base font-medium truncate">{currentLang.hero.trustBadge}</span>
@@ -499,7 +499,7 @@
 				<div class="flex flex-wrap gap-4 pt-4">
 					<a
 						href="/app/register"
-						class="touch-target inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-primary-container shadow-xl transition-transform active:scale-[0.98] md:hover:scale-[1.02]"
+						class="touch-target inline-flex items-center gap-2 rounded-xl bg-surface-bright px-8 py-3.5 text-base font-semibold text-primary-container shadow-xl transition-transform active:scale-[0.98] md:hover:scale-[1.02]"
 					>
 						{currentLang.hero.ctaPrimary}
 						<ArrowRight size={20} />
@@ -582,7 +582,7 @@
 			<div class="flex-1 w-full max-w-md md:mt-8">
 				<div class="rounded-3xl border border-outline-variant/20 bg-surface-container-low p-6"
 				>
-					<div class="flex flex-col gap-6 rounded-2xl bg-white dark:bg-surface-container p-8 shadow-sm"
+					<div class="flex flex-col gap-6 rounded-2xl bg-surface-bright p-8 shadow-sm"
 					>
 						<div class="flex items-center gap-4"
 						>
@@ -627,7 +627,7 @@
 			>
 				<!-- Pond Management -->
 				<div
-					class="md:col-span-8 flex flex-col justify-between overflow-hidden rounded-3xl border border-outline-variant/30 bg-white dark:bg-surface-container p-8 shadow-sm transition-[opacity,transform] duration-500 lg:p-10"
+					class="md:col-span-8 flex flex-col justify-between overflow-hidden rounded-3xl border border-outline-variant/30 bg-surface-bright p-8 shadow-sm transition-[opacity,transform] duration-500 lg:p-10"
 					use:initScrollAnimation
 				>
 					<div class="flex flex-col gap-5"
@@ -666,7 +666,7 @@
 
 				<!-- Stock Tracking -->
 				<div
-					class="md:col-span-4 flex flex-col items-center justify-center gap-6 rounded-3xl border border-outline-variant/30 bg-white dark:bg-surface-container p-8 text-center shadow-lg transition-[opacity,transform] duration-500 lg:p-10"
+					class="md:col-span-4 flex flex-col items-center justify-center gap-6 rounded-3xl border border-outline-variant/30 bg-surface-bright p-8 text-center shadow-lg transition-[opacity,transform] duration-500 lg:p-10"
 					use:initScrollAnimation
 				>
 					<div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary-container/10"
@@ -692,7 +692,7 @@
 
 				<!-- Financial Reliability -->
 				<div
-					class="md:col-span-4 flex flex-col gap-5 rounded-3xl border border-outline-variant/30 bg-white dark:bg-surface-container p-8 shadow-sm transition-[opacity,transform] duration-500 lg:p-10"
+					class="md:col-span-4 flex flex-col gap-5 rounded-3xl border border-outline-variant/30 bg-surface-bright p-8 shadow-sm transition-[opacity,transform] duration-500 lg:p-10"
 					use:initScrollAnimation
 				>
 					<div
@@ -715,7 +715,7 @@
 
 				<!-- Seasonal Reports -->
 				<div
-					class="md:col-span-8 flex items-start gap-8 rounded-3xl border border-outline-variant/30 bg-white dark:bg-surface-container p-8 shadow-sm transition-[opacity,transform] duration-500 lg:p-10"
+					class="md:col-span-8 flex items-start gap-8 rounded-3xl border border-outline-variant/30 bg-surface-bright p-8 shadow-sm transition-[opacity,transform] duration-500 lg:p-10"
 					use:initScrollAnimation
 				>
 					<div class="flex flex-1 min-w-0 flex-col gap-4"
@@ -760,7 +760,7 @@
 			</h2>
 
 			<!-- Testimonial Card -->
-			<div class="mx-auto w-full rounded-3xl border border-outline-variant/20 bg-white dark:bg-surface-container p-8 shadow-sm md:p-12"
+			<div class="mx-auto w-full rounded-3xl border border-outline-variant/20 bg-surface-bright p-8 shadow-sm md:p-12"
 			>
 				<div class="flex flex-col items-center gap-6 md:flex-row md:items-start md:text-left"
 				>

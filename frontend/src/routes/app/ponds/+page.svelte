@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/api/client';
+	import { authStore } from '$lib/stores/auth.svelte';
 	import { Droplets, Ruler, Plus, Loader2 } from 'lucide-svelte';
 
 	interface Pond {
@@ -26,7 +27,11 @@
 		}
 	}
 
-	loadPonds();
+	$effect(() => {
+		if (authStore.isAuthenticated && authStore.currentFarmId) {
+			loadPonds();
+		}
+	});
 
 	function navigateToNewPond() {
 		goto('/app/ponds/new');
@@ -118,7 +123,7 @@
 				<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
 					<div class="flex items-start justify-between mb-3">
 						<div class="flex items-center gap-3">
-							<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-sky-700 shrink-0">
+							<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-sky text-accent-sky-text shrink-0">
 								<Droplets size={22} aria-hidden="true" />
 							</div>
 							<h2 class="text-lg font-semibold text-on-surface">{pond.pond_number}</h2>

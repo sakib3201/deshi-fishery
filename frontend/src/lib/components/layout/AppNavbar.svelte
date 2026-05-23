@@ -63,7 +63,7 @@
 <!-- Skip Link -->
 <a
 	href="#main-content"
-	class="sr-only focus:not-sr-only focus:absolute focus:z-[700] focus:bg-white focus:text-primary-container focus:px-4 focus:py-3 focus:rounded-lg focus:shadow-lg focus:top-2 focus:left-2"
+	class="sr-only focus:not-sr-only focus:absolute focus:z-[700] focus:bg-surface-bright focus:text-primary-container focus:px-4 focus:py-3 focus:rounded-lg focus:shadow-lg focus:top-2 focus:left-2"
 >
 	Skip to main content
 </a>
@@ -140,7 +140,7 @@
 
 					{#if profileMenuOpen}
 						<div
-							class="absolute right-0 top-full mt-2 w-56 rounded-xl bg-white shadow-elevated border border-outline-variant/30 py-1.5 z-dropdown"
+							class="absolute right-0 top-full mt-2 w-56 rounded-xl bg-surface-bright shadow-elevated border border-outline-variant/30 py-1.5 z-dropdown"
 							role="menu"
 							aria-label="User menu"
 						>

@@ -10,6 +10,6 @@
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </svelte:head>
 
-<div class="min-h-screen bg-surface text-slate-900 dark:bg-surface-dark dark:text-slate-100">
+<div class="min-h-screen bg-surface text-on-surface">
 	{@render children()}
 </div>

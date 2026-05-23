@@ -32,6 +32,18 @@
 	--color-chart-primary: #3572EF;
 	--color-chart-secondary: #3ABEF9;
 
+	--color-accent-sky: #E0F2FE;
+	--color-accent-sky-text: #0369A1;
+	--color-accent-emerald: #D1FAE5;
+	--color-accent-emerald-text: #047857;
+	--color-accent-amber: #FEF3C7;
+	--color-accent-amber-text: #B45309;
+	--color-accent-rose: #FEE2E2;
+	--color-accent-rose-text: #BE123C;
+
+	--color-mist-light: #A7E6FF;
+	--color-mist: #3ABEF9;
+
 	--font-sans: 'Open Sans', 'Noto Sans Bengali', system-ui, sans-serif;
 	--font-bengali: 'Noto Sans Bengali', system-ui, sans-serif;
 }
@@ -64,6 +76,19 @@ body {
 
 		/* Outline for dark mode */
 		--color-outline: #475569;
+
+		/* Accent colors for dark mode */
+		--color-accent-sky: #1E3A5F;
+		--color-accent-sky-text: #7DD3FC;
+		--color-accent-emerald: #064E3B;
+		--color-accent-emerald-text: #34D399;
+		--color-accent-amber: #78350F;
+		--color-accent-amber-text: #FCD34D;
+		--color-accent-rose: #7F1D1D;
+		--color-accent-rose-text: #FCA5A5;
+
+		--color-mist-light: #1E3A5F;
+		--color-mist: #3ABEF9;
 	}
 
 	/* Touch and interaction improvements */

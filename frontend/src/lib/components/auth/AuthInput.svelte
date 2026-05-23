@@ -56,7 +56,7 @@
 			bind:value
 			{oninput}
 			{onchange}
-			class="h-14 w-full rounded-lg border border-outline-variant px-4 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 {isPassword ? 'pr-12' : ''}"
+			class="h-14 w-full rounded-lg border border-outline-variant px-4 text-base bg-white dark:bg-surface-container text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 {isPassword ? 'pr-12' : ''}"
 			{placeholder}
 		/>
 		{#if isPassword}

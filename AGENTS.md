@@ -305,7 +305,7 @@ When working in a directory, add context specific to that directory in an `AGENT
 
 Example local `AGENTS.md` locations:
 - `backend/AGENTS.md` — Laravel module boundaries, service patterns, repository conventions.
-- `frontend/AGENTS.md` — SvelteKit routing rules, API client patterns, component hierarchy.
+- `frontend/AGENTS.md` — SvelteKit routing rules, API client patterns, component hierarchy, dark mode rules.
 - `specs/AGENTS.md` — OpenSpec naming conventions, module ID prefixes, review checklist.
 
 ## Testing Patterns
@@ -386,6 +386,14 @@ Key files in the vault:
 | `UI-UX Design Questionnaire.md` | Visual design system questionnaire (completed) |
 | `docs/ui-design-system.md` | Concrete design tokens, components, Tailwind patterns |
 | `docs/sprint-progress.md` | Sprint progress tracker — feature implementation status |
+
+### Local AGENTS.md Files
+
+The following local `AGENTS.md` files supplement the root `AGENTS.md` with directory-specific conventions:
+
+- `frontend/AGENTS.md` — SvelteKit routing, component hierarchy, dark mode rules, design system usage.
+- `backend/AGENTS.md` — Laravel API conventions, Passport auth setup, multi-tenancy, RBAC.
+- `specs/AGENTS.md` — OpenSpec naming conventions, module ID prefixes, review checklist.
 
 ### In-Repo Copies
 

@@ -28,7 +28,11 @@
 		}
 	}
 
-	loadFarms();
+	$effect(() => {
+		if (authStore.isAuthenticated && authStore.currentFarmId) {
+			loadFarms();
+		}
+	});
 
 	function navigateToNewFarm() {
 		goto('/app/farms/new');

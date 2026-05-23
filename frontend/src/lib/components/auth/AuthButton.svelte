@@ -22,7 +22,7 @@
 
 	const variantClasses = {
 		primary: 'bg-primary-container text-white hover:brightness-110',
-		secondary: 'bg-surface-variant text-on-surface hover:bg-surface-variant/80',
+		secondary: 'bg-surface-container text-on-surface hover:bg-surface-container-high',
 		danger: 'bg-error text-white hover:brightness-110'
 	};
 </script>
