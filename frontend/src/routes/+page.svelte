@@ -11,80 +11,256 @@
 		Wallet,
 		BarChart3,
 		Menu,
+		X,
 		Globe,
-		Bell
+		Bell,
+		Info
 	} from '@lucide/svelte';
 
 	let lang = $state<'en' | 'bn'>('en');
 	let mobileMenuOpen = $state(false);
+	let bentoImageLoaded = $state(false);
+	let demoTooltipVisible = $state(false);
 
-	const features = [
-		{
-			icon: CloudOff,
-			title: 'Works Everywhere, Even Offline',
-			description:
-				"Don't let poor connectivity slow you down. Record feedings, update stock levels, and check pond data without an internet connection. Your data syncs automatically once you're back online.",
-			points: [
-				'Offline data entry for all features',
-				'Automatic background synchronization',
-				'Zero data loss during outages'
-			]
+	// Translations
+	const t = {
+		en: {
+			header: {
+				dashboard: 'Dashboard',
+				ponds: 'Ponds',
+				inventory: 'Inventory',
+				reports: 'Reports',
+				login: 'Login',
+				register: 'Register'
+			},
+			hero: {
+				trustBadge: 'Trusted by 10,000+ farmers across Bangladesh',
+				title: 'The Best Assistant for Fish Farming',
+				subtitle:
+					'Manage ponds, track stock, and know your profits. Works without internet. Built for Bangladeshi fish farmers.',
+				ctaPrimary: 'Start Using for Free',
+				ctaSecondary: 'Watch Demo',
+				demoTooltip: 'Demo video coming soon'
+			},
+			offline: {
+				title: 'Works Without Internet',
+				description:
+					'Record feedings, update stock, and check pond data even when your connection drops. Everything syncs automatically when you are back online.',
+				points: [
+					'Record data without internet',
+					'Auto-sync when connection returns',
+					'Nothing gets lost'
+				],
+				offlineCardTitle: 'Working Offline',
+				offlineCardSubtitle: 'Will sync when online'
+			},
+			features: {
+				title: 'Everything You Need to Run Your Farm',
+				subtitle:
+					'Track stock, manage ponds, and see your profits. All in one place.',
+				pondManagement: {
+					title: 'Pond Management',
+					description:
+						'Track water quality, feeding schedules, and fish health for every pond. Know which ponds need attention before problems cost you money.'
+				},
+				stockTracking: {
+					title: 'Stock Tracking',
+					description:
+						'See how much fish you have, how fast they are growing, and when they are ready for sale.',
+					cta: 'See How It Works'
+				},
+				financial: {
+					title: 'Know Your Profits',
+					description:
+						'Track expenses, sales, and profit for each pond. See which ponds make money and which do not.'
+				},
+				reports: {
+					title: 'Reports for Banks and Partners',
+					description:
+						'Generate clean PDF and Excel reports in one tap. Ready for bank loans, partnerships, or tax filing.',
+					tags: ['PDF', 'EXCEL', 'SYNC']
+				}
+			},
+		cta: {
+			title: 'Join 10,000+ Farmers Already Using Deshi Fishery',
+			testimonial: {
+				quote: '"Since switching to Deshi Fishery, I have cut feed waste by 30% and finally know which ponds are profitable."',
+				name: 'Rahat Ali',
+				role: 'Farm Owner',
+				location: 'Mymensingh District',
+				ponds: '12 ponds, 8 acres'
+			}
+		},
+		pricing: {
+			title: 'Free. No Surprises.',
+			subtitle: 'Every feature is free. No credit card needed. No hidden fees. No paid tiers.',
+			features: [
+				'Unlimited ponds and stock records',
+				'Full offline mode',
+				'PDF and Excel reports',
+				'Bengali and English',
+				'Phone and desktop access'
+			],
+			cta: 'Create Free Account'
+		},
+			footer: {
+				brand: 'Deshi Fishery',
+				copyright:
+					'\u00A9 2024 Deshi Fishery. Built for fish farmers in Bangladesh.',
+				quickLinks: 'Quick Links',
+				about: 'About Us',
+				support: 'Get Help',
+				privacy: 'Privacy Policy',
+				accessibility: 'Accessibility',
+				terms: 'Terms of Service',
+				languageToggle: 'Bengali / English'
+			}
+		},
+		bn: {
+			header: {
+				dashboard: 'ড্যাশবোর্ড',
+				ponds: 'পুকুর',
+				inventory: 'ইনভেন্টরি',
+				reports: 'রিপোর্ট',
+				login: 'লগইন',
+				register: 'নিবন্ধন'
+			},
+			hero: {
+				trustBadge: 'বাংলাদেশের ১০,০০০+ কৃষকের বিশ্বাস',
+				title: 'মাছ চাষের সেরা assistant',
+				subtitle:
+					'পুকুর পরিচালনা, স্টক ট্র্যাকিং এবং লাভ জানুন। ইন্টারনেট ছাড়াই কাজ করে। বাংলাদেশের মৎস্য চাষিদের জন্য তৈরি।',
+				ctaPrimary: 'বিনামূল্যে ব্যবহার শুরু করুন',
+				ctaSecondary: 'ডেমো দেখুন',
+				demoTooltip: 'ডেমো ভিডিও শীঘ্রই আসছে'
+			},
+			offline: {
+				title: 'ইন্টারনেট ছাড়াই কাজ করে',
+				description:
+					'খাবার দেওয়া রেকর্ড করুন, স্টক আপডেট করুন এবং পুকুরের তথ্য দেখুন ইন্টারনেট না থাকলেও। অনলাইনে আসলে সবকিছু স্বয়ংক্রিয়ভাবে সিঙ্ক হয়ে যাবে।',
+				points: [
+					'ইন্টারনেট ছাড়াই ডেটা রেকর্ড করুন',
+					'কানেকশন ফিরলে অটো সিঙ্ক',
+					'কিছুই হারাবে না'
+				],
+				offlineCardTitle: 'অফলাইনে কাজ করছে',
+				offlineCardSubtitle: 'অনলাইনে আসলে সিঙ্ক হবে'
+			},
+			features: {
+				title: 'খামার চালানোর যা কিছু দরকার',
+				subtitle:
+					'স্টক ট্র্যাক করুন, পুকুর পরিচালনা করুন এবং লাভ দেখুন। সবকিছু এক জায়গায়।',
+				pondManagement: {
+					title: 'পুকুর পরিচালনা',
+					description:
+						'প্রতিটি পুকুরের পানির মান, খাবারের সময়সূচি এবং মাছের স্বাস্থ্য ট্র্যাক করুন। সমস্যা বড় হওয়ার আগেই জেনে নিন কোন পুকুরে মনোযোগ দরকার।'
+				},
+				stockTracking: {
+					title: 'স্টক ট্র্যাকিং',
+					description:
+						'কত মাছ আছে, কত দ্রুত বড় হচ্ছে এবং কখন বিক্রির জন্য প্রস্তুত তা জানুন।',
+					cta: 'কিভাবে কাজ করে দেখুন'
+				},
+				financial: {
+					title: 'লাভ জানুন',
+					description:
+						'প্রতিটি পুকুরের খরচ, বিক্রি এবং লাভ ট্র্যাক করুন। কোন পুকুর লাভজনক এবং কোনটি নয় তা দেখুন।'
+				},
+				reports: {
+					title: 'ব্যাংক ও পার্টনারদের জন্য রিপোর্ট',
+					description:
+						'এক ট্যাপে পরিষ্কার PDF এবং Excel রিপোর্ট তৈরি করুন। ব্যাংক লোন, পার্টনারশিপ বা ট্যাক্স ফাইলিং এর জন্য প্রস্তুত।',
+					tags: ['PDF', 'EXCEL', 'SYNC']
+				}
+			},
+		cta: {
+			title: '১০,০০০+ কৃষক ইতিমধ্যে দেশি ফিশারি ব্যবহার করছেন',
+			testimonial: {
+				quote: '"দেশি ফিশারি ব্যবহার শুরু করার পর আমার খাবারের অপচয় ৩০% কমে গেছে এবং কোন পুকুর লাভজনক তা এখন আমি জানি।"',
+				name: 'রাহাত আলী',
+				role: 'খামার মালিক',
+				location: 'ময়মনসিংহ জেলা',
+				ponds: '১২টি পুকুর, ৮ একর'
+			}
+		},
+		pricing: {
+			title: 'বিনামূল্যে। কোনো শর্ত নেই।',
+			subtitle: 'সব ফিচার বিনামূল্যে। ক্রেডিট কার্ড লাগবে না। কোনো লুকানো ফি নেই। কোনো পেইড টিয়ার নেই।',
+			features: [
+				'আনলিমিটেড পুকুর ও স্টক রেকর্ড',
+				'সম্পূর্ণ অফলাইন মোড',
+				'PDF ও Excel রিপোর্ট',
+				'বাংলা ও ইংরেজি',
+				'ফোন ও ডেস্কটপ অ্যাক্সেস'
+			],
+			cta: 'বিনামূল্যে অ্যাকাউন্ট তৈরি করুন'
+		},
+			footer: {
+				brand: 'দেশি ফিশারি',
+				copyright:
+					'\u00A9 ২০২৪ দেশি ফিশারি। বাংলাদেশের মাছ চাষিদের জন্য তৈরি।',
+				quickLinks: 'দ্রুত লিংক',
+				about: 'আমাদের সম্পর্কে',
+				support: 'সাহায্য নিন',
+				privacy: 'গোপনীয়তা নীতি',
+				accessibility: 'অ্যাক্সেসিবিলিটি',
+				terms: 'সেবার শর্তাবলী',
+				languageToggle: 'English / বাংলা'
+			}
 		}
-	];
+	};
 
-	const bentoItems = [
-		{
-			span: 'md:col-span-8',
-			icon: Droplets,
-			iconColor: 'text-secondary',
-			iconBg: 'bg-secondary/10',
-			title: 'Intelligent Pond Management',
-			description:
-				'Monitor pH levels, oxygen, and temperature across all your ponds in real-time. Get instant alerts before problems arise.',
-			bg: 'bg-white',
-			textColor: 'text-primary-container',
-			minHeight: 'min-h-[400px]'
-		},
-		{
-			span: 'md:col-span-4',
-			icon: Package,
-			iconColor: 'text-chart-secondary',
-			iconBg: '',
-			title: 'Live Stock Tracking',
-			description:
-				'Automated feed calculations and growth rate predictions for every species.',
-			bg: 'bg-primary-container',
-			textColor: 'text-white',
-			minHeight: 'min-h-[400px]',
-			filled: true
-		},
-		{
-			span: 'md:col-span-4',
-			icon: Wallet,
-			iconColor: 'text-primary-container',
-			iconBg: 'bg-primary-container/10',
-			title: 'Financial Reliability',
-			description:
-				'Precise expense tracking and profit analysis built specifically for the Bangladeshi market.',
-			bg: 'bg-surface-container',
-			textColor: 'text-primary-container',
-			minHeight: 'min-h-[300px]'
-		},
-		{
-			span: 'md:col-span-8',
-			icon: BarChart3,
-			iconColor: 'text-primary-container',
-			iconBg: 'bg-white/40',
-			title: 'Seasonal Reports',
-			description:
-				'Generate comprehensive PDF reports for bank loans or partnership reviews with one click.',
-			bg: 'bg-surface-container-high',
-			textColor: 'text-primary-container',
-			minHeight: 'min-h-[300px]',
-			tags: ['PDF', 'EXCEL', 'SYNC']
+	let currentLang = $derived(t[lang]);
+
+	// Scroll animation with reduced motion support
+	function initScrollAnimation(node: HTMLElement) {
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (prefersReducedMotion) {
+			node.classList.add('opacity-100', 'translate-y-0');
+			node.classList.remove('opacity-0', 'translate-y-10');
+			return;
 		}
-	];
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('opacity-100', 'translate-y-0');
+						entry.target.classList.remove('opacity-0', 'translate-y-10');
+					}
+				});
+			},
+			{ threshold: 0.1 }
+		);
+		observer.observe(node);
+		return {
+			destroy() {
+				observer.disconnect();
+			}
+		};
+	}
+
+	// Image error handler
+	function handleImageError(event: Event, fallbackClass: string) {
+		const img = event.target as HTMLImageElement;
+		img.style.display = 'none';
+		const parent = img.parentElement;
+		if (parent) {
+			const fallback = document.createElement('div');
+			fallback.className = fallbackClass;
+			parent.appendChild(fallback);
+		}
+	}
+
+	// Close mobile menu on escape key
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape' && mobileMenuOpen) {
+			mobileMenuOpen = false;
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
 	<title>Deshi Fishery - মাছ চাষের সেরা assistant</title>
@@ -106,25 +282,30 @@
 
 			<div class="hidden items-center gap-lg md:flex">
 				<a
-					href="/dashboard"
+					href="/app/dashboard"
 					class="touch-target border-b-2 border-secondary pb-1 font-label-lg font-bold text-secondary transition-transform active:scale-95"
-					>Dashboard</a
 				>
+					{currentLang.header.dashboard}
+				</a>
 				<a
-					href="/ponds"
+					href="/app/ponds"
 					class="touch-target font-label-lg text-on-surface-variant transition-colors duration-200 hover:text-secondary-container active:scale-95"
-					>Ponds</a
 				>
+					{currentLang.header.ponds}
+				</a>
 				<a
-					href="/inventory"
+					href="/app/farms"
 					class="touch-target font-label-lg text-on-surface-variant transition-colors duration-200 hover:text-secondary-container active:scale-95"
-					>Inventory</a
 				>
-				<a
-					href="/reports"
-					class="touch-target font-label-lg text-on-surface-variant transition-colors duration-200 hover:text-secondary-container active:scale-95"
-					>Reports</a
+					{currentLang.header.inventory}
+				</a>
+				<span
+					class="touch-target font-label-lg text-on-surface-variant"
+					role="link"
+					aria-disabled="true"
 				>
+					{currentLang.header.reports}
+				</span>
 			</div>
 
 			<div class="flex items-center gap-md">
@@ -132,6 +313,7 @@
 					<button
 						class="touch-target text-on-surface-variant transition-colors hover:text-secondary"
 						aria-label="Change language"
+						onclick={() => (lang = lang === 'en' ? 'bn' : 'en')}
 					>
 						<Globe size={24} />
 					</button>
@@ -144,38 +326,80 @@
 				</div>
 				<div class="hidden items-center gap-sm sm:flex">
 					<a
-						href="/login"
+						href="/app/login"
 						class="touch-target px-md font-label-lg text-on-surface-variant transition-colors hover:text-primary"
-						>Login</a
 					>
+						{currentLang.header.login}
+					</a>
 					<a
-						href="/register"
+						href="/app/register"
 						class="touch-target rounded-full bg-primary-container px-md font-label-lg text-on-primary shadow-md transition-all hover:brightness-110"
-						>Register</a
 					>
+						{currentLang.header.register}
+					</a>
 				</div>
 				<div class="md:hidden">
 					<button
 						class="touch-target text-primary"
 						onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
 						aria-label="Toggle menu"
+						aria-expanded={mobileMenuOpen}
 					>
-						<Menu size={24} />
+						{#if mobileMenuOpen}
+							<X size={24} />
+						{:else}
+							<Menu size={24} />
+						{/if}
 					</button>
 				</div>
 			</div>
 		</nav>
 
 		{#if mobileMenuOpen}
-			<div class="border-t border-outline-variant/30 bg-surface px-margin-mobile py-sm md:hidden">
+			<div
+				class="mobile-menu border-t border-outline-variant/30 bg-surface px-margin-mobile py-sm md:hidden"
+				role="navigation"
+				aria-label="Mobile navigation"
+			>
 				<div class="flex flex-col gap-sm">
-					<a href="/dashboard" class="touch-target justify-start font-label-lg text-secondary">Dashboard</a>
-					<a href="/ponds" class="touch-target justify-start font-label-lg text-on-surface-variant">Ponds</a>
-					<a href="/inventory" class="touch-target justify-start font-label-lg text-on-surface-variant">Inventory</a>
-					<a href="/reports" class="touch-target justify-start font-label-lg text-on-surface-variant">Reports</a>
+					<a
+						href="/app/dashboard"
+						class="touch-target justify-start font-label-lg text-secondary"
+					>
+						{currentLang.header.dashboard}
+					</a>
+					<a
+						href="/app/ponds"
+						class="touch-target justify-start font-label-lg text-on-surface-variant"
+					>
+						{currentLang.header.ponds}
+					</a>
+					<a
+						href="/app/farms"
+						class="touch-target justify-start font-label-lg text-on-surface-variant"
+					>
+						{currentLang.header.inventory}
+					</a>
+					<span
+						class="touch-target justify-start font-label-lg text-on-surface-variant"
+						role="link"
+						aria-disabled="true"
+					>
+						{currentLang.header.reports}
+					</span>
 					<div class="flex gap-sm pt-sm">
-						<a href="/login" class="touch-target flex-1 justify-center rounded-lg border border-outline-variant font-label-lg text-on-surface-variant">Login</a>
-						<a href="/register" class="touch-target flex-1 justify-center rounded-full bg-primary-container font-label-lg text-on-primary">Register</a>
+						<a
+							href="/app/login"
+							class="touch-target flex-1 justify-center rounded-lg border border-outline-variant font-label-lg text-on-surface-variant"
+						>
+							{currentLang.header.login}
+						</a>
+						<a
+							href="/app/register"
+							class="touch-target flex-1 justify-center rounded-full bg-primary-container font-label-lg text-on-primary"
+						>
+							{currentLang.header.register}
+						</a>
 					</div>
 				</div>
 			</div>
@@ -183,70 +407,88 @@
 	</header>
 
 	<!-- Hero Section -->
-	<section class="relative flex min-h-[800px] items-center overflow-hidden">
-		<div class="absolute inset-0 z-0">
-			<img
-				alt="Deshi Fishery Farm"
-				class="h-full w-full object-cover brightness-75"
-				src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=2070&auto=format&fit=crop"
-			/>
-			<div class="absolute inset-0 bg-gradient-to-r from-primary-container/80 to-transparent"></div>
+	<section class="relative flex min-h-[600px] items-center overflow-hidden bg-primary-container lg:min-h-[700px]">
+		<!-- Decorative background pattern -->
+		<div class="absolute inset-0 z-0 opacity-10">
+			<svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<defs>
+					<pattern id="hero-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+						<circle cx="30" cy="30" r="1.5" fill="currentColor" class="text-white" />
+					</pattern>
+				</defs>
+				<rect width="100%" height="100%" fill="url(#hero-pattern)" />
+			</svg>
 		</div>
+		<div class="absolute inset-0 bg-gradient-to-br from-primary-container via-primary-container to-secondary/30"></div>
 
 		<div
-			class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-xl px-margin-mobile md:px-margin-desktop lg:grid-cols-2"
+			class="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-12 px-margin-mobile py-16 md:px-margin-desktop md:py-24 lg:grid-cols-2 lg:gap-16 lg:py-32"
 		>
-			<div class="space-y-md text-white">
+			<div class="flex flex-col gap-6 text-white">
 				<div
-					class="inline-flex items-center gap-xs rounded-full border border-white/20 bg-white/10 px-sm py-xs backdrop-blur-md"
+					class="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md"
 				>
 					<Verified size={16} class="text-white" />
-					<span class="text-sm uppercase tracking-wider">Trusted by 10,000+ Farmers</span>
+					<span class="text-sm uppercase tracking-wider">{currentLang.hero.trustBadge}</span>
 				</div>
 
-				<h1 class="font-bengali text-5xl font-bold leading-tight">
-					মাছ চাষের সেরা <span class="text-chart-secondary">assistant</span>
+				<h1 class="font-bengali text-4xl font-bold leading-tight md:text-5xl lg:text-[3.5rem]">
+					{#if lang === 'bn'}
+						মাছ চাষের সেরা <span class="text-chart-secondary">assistant</span>
+					{:else}
+						{currentLang.hero.title}
+					{/if}
 				</h1>
 
-				<p class="max-w-xl font-body-lg text-white/90">
-					Empower your aquaculture business with data-driven insights. Manage ponds, track stock,
-					and optimize your finances with Bangladesh's most reliable fishery management platform.
+				<p class="max-w-lg text-lg leading-relaxed text-white/90 md:text-xl">
+					{currentLang.hero.subtitle}
 				</p>
 
-				<div class="flex flex-wrap gap-md pt-md">
+				<div class="flex flex-wrap gap-4 pt-2">
 					<a
-						href="/register"
-						class="touch-target inline-flex items-center gap-xs rounded-xl bg-primary-container px-xl font-bold text-white shadow-xl transition-transform hover:scale-105"
+						href="/app/register"
+						class="touch-target inline-flex items-center gap-2 rounded-xl bg-white px-8 font-bold text-primary-container shadow-xl transition-transform hover:scale-105"
 					>
-						Get Started
+						{currentLang.hero.ctaPrimary}
 						<ArrowRight size={20} />
 					</a>
-					<button
-						class="touch-target rounded-xl border border-white/20 bg-white/10 px-xl font-bold text-white backdrop-blur-md transition-all hover:bg-white/20"
-					>
-						<Play size={20} class="mr-2 inline" />
-						Watch Demo
-					</button>
+					<div class="relative">
+						<button
+							class="touch-target inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-8 font-bold text-white backdrop-blur-md transition-all hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+							disabled
+							aria-describedby="demo-tooltip"
+							onmouseenter={() => (demoTooltipVisible = true)}
+							onmouseleave={() => (demoTooltipVisible = false)}
+							onfocus={() => (demoTooltipVisible = true)}
+							onblur={() => (demoTooltipVisible = false)}
+						>
+							<Play size={20} />
+							{currentLang.hero.ctaSecondary}
+						</button>
+						{#if demoTooltipVisible}
+							<div
+								id="demo-tooltip"
+								role="tooltip"
+								class="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-white px-3 py-1 text-sm font-medium text-primary-container shadow-lg"
+							>
+								{currentLang.hero.demoTooltip}
+								<div class="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-white"></div>
+							</div>
+						{/if}
+					</div>
 				</div>
 			</div>
 
 			<div class="hidden lg:block">
-				<div class="glass-card relative rounded-3xl p-lg shadow-2xl">
-					<div
-						class="absolute -right-6 -top-6 flex flex-col items-center rounded-2xl bg-success-green px-md py-sm shadow-lg"
-					>
-						<span class="text-2xl font-bold">98%</span>
-						<span class="text-[10px] uppercase">Accuracy</span>
-					</div>
-
-					<div class="space-y-md">
+				<div class="glass-card relative rounded-3xl p-8 shadow-2xl">
+					<div class="flex flex-col gap-6">
 						<div class="flex items-center justify-between">
 							<span class="text-xl font-bold text-primary-container">Pond Analysis</span>
 							<BarChart3 size={24} class="text-secondary" />
 						</div>
 
 						<div
-							class="flex h-48 w-full items-end justify-between gap-xs rounded-xl bg-surface-container-low p-md"
+							class="flex h-48 w-full items-end justify-between gap-3 rounded-xl bg-surface-container-low p-6"
 						>
 							<div class="w-8 rounded-t-lg bg-chart-primary" style="height: 60%"></div>
 							<div class="w-8 rounded-t-lg bg-chart-secondary" style="height: 85%"></div>
@@ -255,12 +497,12 @@
 							<div class="w-8 rounded-t-lg bg-chart-primary" style="height: 95%"></div>
 						</div>
 
-						<div class="grid grid-cols-2 gap-md">
-							<div class="rounded-lg bg-surface-container p-md">
+						<div class="grid grid-cols-2 gap-4">
+							<div class="rounded-lg bg-surface-container p-4">
 								<span class="block text-xs opacity-70">Stock Level</span>
 								<span class="text-xl font-bold text-chart-primary">4,250 kg</span>
 							</div>
-							<div class="rounded-lg bg-surface-container p-md">
+							<div class="rounded-lg bg-surface-container p-4">
 								<span class="block text-xs opacity-70">Projected Profit</span>
 								<span class="text-xl font-bold text-success-green">৳ 2.4L</span>
 							</div>
@@ -272,54 +514,46 @@
 	</section>
 
 	<!-- Offline Feature Section -->
-	<section class="border-y border-outline-variant/30 bg-white py-xl">
+	<section class="section-padding border-y border-outline-variant/30 bg-white">
 		<div
-			class="mx-auto flex max-w-7xl flex-col items-center gap-xl px-margin-mobile md:flex-row md:px-margin-desktop"
+			class="mx-auto flex max-w-7xl flex-col items-center gap-12 px-margin-mobile md:flex-row md:px-margin-desktop lg:gap-16"
 		>
-			<div class="flex-1 space-y-md">
+			<div class="flex-1 flex flex-col gap-6">
 				<div
 					class="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-container/10 text-primary-container"
 				>
 					<CloudOff size={40} />
 				</div>
-				<h2 class="font-headline-lg text-primary-container">Works Everywhere, Even Offline</h2>
-				<p class="font-body-lg text-on-surface-variant">
-					Don't let poor connectivity slow you down. Record feedings, update stock levels, and check
-					pond data without an internet connection. Your data syncs automatically once you're back
-					online.
+				<h2 class="font-headline-lg text-primary-container">{currentLang.offline.title}</h2>
+				<p class="max-w-lg text-lg leading-relaxed text-on-surface-variant">
+					{currentLang.offline.description}
 				</p>
-				<ul class="space-y-sm">
-					<li class="flex items-center gap-sm text-on-surface">
-						<CheckCircle size={20} class="text-success-green" />
-						Offline data entry for all features
-					</li>
-					<li class="flex items-center gap-sm text-on-surface">
-						<CheckCircle size={20} class="text-success-green" />
-						Automatic background synchronization
-					</li>
-					<li class="flex items-center gap-sm text-on-surface">
-						<CheckCircle size={20} class="text-success-green" />
-						Zero data loss during outages
-					</li>
+				<ul class="flex flex-col gap-4">
+					{#each currentLang.offline.points as point, i (i)}
+						<li class="flex items-start gap-3 text-on-surface">
+							<CheckCircle size={20} class="mt-0.5 shrink-0 text-success-green" />
+							<span class="leading-relaxed">{point}</span>
+						</li>
+					{/each}
 				</ul>
 			</div>
 
-			<div class="flex-1 rounded-3xl border border-outline-variant/20 bg-surface-container-low p-md">
-				<div class="space-y-md rounded-2xl bg-white p-lg shadow-sm">
-					<div class="flex items-center gap-md">
+			<div class="flex-1 w-full max-w-md rounded-3xl border border-outline-variant/20 bg-surface-container-low p-6">
+				<div class="flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-sm">
+					<div class="flex items-center gap-4">
 						<div
-							class="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-600"
+							class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-warning-amber/20 text-warning-amber"
 						>
-							<RefreshCw size={20} />
+							<RefreshCw size={24} />
 						</div>
-						<div>
-							<p class="font-bold">Offline Mode Active</p>
-							<p class="text-sm opacity-70">Changes will sync later</p>
+						<div class="min-w-0">
+							<p class="truncate text-lg font-bold">{currentLang.offline.offlineCardTitle}</p>
+							<p class="truncate text-sm opacity-70">{currentLang.offline.offlineCardSubtitle}</p>
 						</div>
 					</div>
-					<div class="space-y-sm">
-						<div class="h-12 w-full animate-pulse rounded-lg bg-surface-container"></div>
-						<div class="h-12 w-full animate-pulse rounded-lg bg-surface-container"></div>
+					<div class="flex flex-col gap-4">
+						<div class="h-14 w-full animate-pulse rounded-xl bg-surface-container"></div>
+						<div class="h-14 w-full animate-pulse rounded-xl bg-surface-container"></div>
 					</div>
 				</div>
 			</div>
@@ -327,129 +561,293 @@
 	</section>
 
 	<!-- Features Bento Grid -->
-	<section class="bg-surface-bright py-xl">
+	<section class="section-padding bg-surface-bright">
 		<div class="mx-auto max-w-7xl px-margin-mobile md:px-margin-desktop">
-			<div class="mb-xl text-center">
-				<h2 class="mb-xs font-headline-lg text-primary-container">
-					Professional Tools for Modern Farmers
+			<div class="mb-16 text-center md:mb-20">
+				<h2 class="mb-4 font-headline-lg text-primary-container">
+					{currentLang.features.title}
 				</h2>
-				<p class="mx-auto max-w-2xl font-body-lg text-on-surface-variant">
-					Designed to simplify the complexities of large-scale aquaculture with intuitive digital
-					management.
+				<p class="mx-auto max-w-2xl text-lg leading-relaxed text-on-surface-variant">
+					{currentLang.features.subtitle}
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-md md:grid-cols-12">
-				{#each bentoItems as item (item.title)}
-					<div
-						class="group {item.span} {item.bg} {item.textColor} {item.minHeight} flex flex-col overflow-hidden rounded-3xl border border-outline-variant/30 p-lg shadow-sm transition-all duration-700"
-					>
-						{#if item.filled}
-							<item.icon size={48} class="mb-md {item.iconColor}" fill="currentColor" />
-						{:else}
-							<div
-								class="mb-md flex h-12 w-12 items-center justify-center rounded-2xl {item.iconBg} {item.iconColor}"
-							>
-								<item.icon size={32} />
-							</div>
-						{/if}
-
-						<h3 class="font-headline-md {item.filled ? 'mb-xs' : 'mb-xs text-primary-container'}">
-							{item.title}
+			<div class="grid grid-cols-1 gap-6 md:grid-cols-12 lg:gap-8">
+				<!-- Pond Management -->
+				<div
+					class="md:col-span-8 flex min-h-[420px] flex-col justify-between overflow-hidden rounded-3xl border border-outline-variant/30 bg-white p-8 shadow-sm transition-all duration-700 lg:p-10"
+					use:initScrollAnimation
+				>
+					<div class="flex flex-col gap-4">
+						<div
+							class="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary/10 text-secondary"
+						>
+							<Droplets size={32} />
+						</div>
+						<h3 class="font-headline-md text-primary-container">
+							{currentLang.features.pondManagement.title}
 						</h3>
-						<p class="{item.filled ? 'opacity-80' : 'text-on-surface-variant'} font-body-md">
-							{item.description}
+						<p class="max-w-md leading-relaxed text-on-surface-variant">
+							{currentLang.features.pondManagement.description}
 						</p>
-
-						{#if item.tags}
-							<div class="mt-md flex gap-xs">
-								{#each item.tags as tag (tag)}
-									<span class="rounded-lg bg-white/50 px-sm py-xs text-xs font-bold">{tag}</span>
-								{/each}
-							</div>
-						{/if}
-
-						{#if item.filled}
-							<a
-								href="/inventory"
-								class="touch-target mt-md self-center rounded-full border border-white/30 bg-white/20 px-lg transition-colors hover:bg-white/30"
-							>
-								Explore Inventory
-							</a>
-						{/if}
 					</div>
-				{/each}
+					<div class="mt-8">
+						<div class="flex h-52 w-full items-center justify-center rounded-2xl border border-outline-variant/20 bg-surface-container">
+							<div class="text-center">
+								<Droplets size={40} class="mx-auto mb-3 text-secondary/40" />
+								<p class="text-sm text-on-surface-variant/60">Pond Dashboard</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Stock Tracking -->
+				<div
+					class="md:col-span-4 flex min-h-[420px] flex-col items-center justify-center gap-6 rounded-3xl bg-primary-container p-8 text-center text-white shadow-lg transition-all duration-700 lg:p-10"
+					use:initScrollAnimation
+				>
+					<Package size={48} class="text-chart-secondary" fill="currentColor" />
+					<div class="flex flex-col gap-3">
+						<h3 class="font-headline-md">{currentLang.features.stockTracking.title}</h3>
+						<p class="max-w-xs leading-relaxed opacity-80">
+							{currentLang.features.stockTracking.description}
+						</p>
+					</div>
+					<a
+						href="/app/farms"
+						class="touch-target mt-2 rounded-full border border-white/30 bg-white/20 px-8 transition-colors hover:bg-white/30"
+					>
+						{currentLang.features.stockTracking.cta}
+					</a>
+				</div>
+
+				<!-- Financial Reliability -->
+				<div
+					class="md:col-span-4 flex min-h-[320px] flex-col gap-6 rounded-3xl border border-outline-variant/30 bg-surface-container p-8 shadow-sm transition-all duration-700 lg:p-10"
+					use:initScrollAnimation
+				>
+					<div
+						class="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-container/10 text-primary-container"
+					>
+						<Wallet size={32} />
+					</div>
+					<div class="flex flex-col gap-3">
+						<h3 class="font-headline-md text-primary-container">
+							{currentLang.features.financial.title}
+						</h3>
+						<p class="leading-relaxed text-on-surface-variant">
+							{currentLang.features.financial.description}
+						</p>
+					</div>
+				</div>
+
+				<!-- Seasonal Reports -->
+				<div
+					class="md:col-span-8 flex min-h-[320px] items-center gap-8 rounded-3xl border border-outline-variant/30 bg-surface-container-high p-8 shadow-sm transition-all duration-700 lg:p-10"
+					use:initScrollAnimation
+				>
+					<div class="flex flex-1 min-w-0 flex-col gap-4">
+						<h3 class="font-headline-md text-primary-container">
+							{currentLang.features.reports.title}
+						</h3>
+						<p class="leading-relaxed text-on-surface-variant">
+							{currentLang.features.reports.description}
+						</p>
+						<div class="mt-2 flex flex-wrap gap-3">
+							{#each currentLang.features.reports.tags as tag (tag)}
+								<span class="rounded-lg bg-white/60 px-4 py-2 text-xs font-bold">{tag}</span>
+							{/each}
+						</div>
+					</div>
+					<div
+						class="hidden h-28 w-28 shrink-0 items-center justify-center rounded-full bg-white/50 sm:flex lg:h-32 lg:w-32"
+					>
+						<BarChart3 size={48} class="text-primary-container" />
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- Language Toggle / CTA Section -->
-	<section class="bg-surface-container-low py-xl">
-		<div class="mx-auto max-w-4xl space-y-md px-margin-mobile text-center md:px-margin-desktop">
-			<h2 class="font-bengali text-3xl text-primary-container">
-				আপনার খামারের ডিজিটাল রূপান্তর শুরু করুন
+	<!-- Testimonial Section -->
+	<section class="section-padding bg-surface-container-low">
+		<div class="mx-auto flex max-w-4xl flex-col items-center gap-10 px-margin-mobile text-center md:px-margin-desktop lg:gap-12">
+			<h2 class="max-w-2xl font-bengali text-2xl leading-snug text-primary-container md:text-3xl">
+				{currentLang.cta.title}
 			</h2>
-			<div class="flex items-center justify-center gap-md">
+
+			<!-- Testimonial Card -->
+			<div class="mx-auto w-full max-w-2xl rounded-3xl border border-outline-variant/20 bg-white p-8 shadow-sm md:p-10">
+				<div class="flex flex-col items-center gap-6 md:flex-row md:items-start md:text-left">
+					<!-- Avatar placeholder -->
+					<div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-container/10">
+						<span class="text-xl font-bold text-primary-container">
+							{currentLang.cta.testimonial.name.charAt(0)}
+						</span>
+					</div>
+					<div class="flex flex-col gap-4">
+						<p class="text-lg leading-relaxed italic text-on-surface">
+							{currentLang.cta.testimonial.quote}
+						</p>
+						<div class="text-sm text-on-surface-variant">
+							<p class="font-bold text-primary-container">{currentLang.cta.testimonial.name}</p>
+							<p>{currentLang.cta.testimonial.role} · {currentLang.cta.testimonial.location}</p>
+							<p class="text-xs opacity-70">{currentLang.cta.testimonial.ponds}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Language Toggle -->
+			<div class="flex items-center justify-center gap-4">
 				<button
-					class="touch-target rounded-full px-xl font-bold shadow-md transition-all {lang === 'en'
+					class="touch-target rounded-full px-8 font-bold shadow-md transition-all {lang === 'en'
 						? 'bg-primary-container text-white'
-						: 'border border-outline-variant bg-white font-label-lg text-on-surface hover:bg-surface'}"
+						: 'border border-outline-variant bg-white text-on-surface hover:bg-surface'}"
 					onclick={() => (lang = 'en')}
+					aria-pressed={lang === 'en'}
 				>
 					English
 				</button>
 				<button
-					class="touch-target rounded-full px-xl font-bold shadow-md transition-all {lang === 'bn'
+					class="touch-target rounded-full px-8 font-bold shadow-md transition-all {lang === 'bn'
 						? 'bg-primary-container text-white'
-						: 'border border-outline-variant bg-white font-label-lg text-on-surface hover:bg-surface'}"
+						: 'border border-outline-variant bg-white text-on-surface hover:bg-surface'}"
 					onclick={() => (lang = 'bn')}
+					aria-pressed={lang === 'bn'}
 				>
 					বাংলা
 				</button>
 			</div>
-			<p class="pt-md font-body-md italic text-on-surface-variant opacity-80">
-				"Deshi Fishery has doubled my production efficiency in just six months." - Rahat Ali, Farm
-				Owner
-			</p>
+		</div>
+	</section>
+
+	<!-- Pricing / Reassurance Section -->
+	<section class="section-padding bg-white">
+		<div class="mx-auto flex max-w-4xl flex-col items-center gap-10 px-margin-mobile text-center md:px-margin-desktop lg:gap-12">
+			<div class="flex flex-col gap-4">
+				<h2 class="font-headline-lg text-primary-container">
+					{currentLang.pricing.title}
+				</h2>
+				<p class="mx-auto max-w-xl text-lg leading-relaxed text-on-surface-variant">
+					{currentLang.pricing.subtitle}
+				</p>
+			</div>
+
+			<div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{#each currentLang.pricing.features as feature (feature)}
+					<div class="flex items-center gap-4 rounded-xl border border-outline-variant/20 bg-surface-container-low p-5">
+						<CheckCircle size={22} class="shrink-0 text-success-green" />
+						<span class="text-left leading-relaxed text-on-surface">{feature}</span>
+					</div>
+				{/each}
+			</div>
+
+			<a
+				href="/app/register"
+				class="touch-target inline-flex items-center gap-2 rounded-xl bg-primary-container px-10 font-bold text-white shadow-xl transition-transform hover:scale-105"
+			>
+				{currentLang.pricing.cta}
+				<ArrowRight size={20} />
+			</a>
 		</div>
 	</section>
 
 	<!-- Footer -->
 	<footer class="mt-auto w-full bg-primary text-white">
 		<div
-			class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-lg px-margin-mobile py-xl md:grid-cols-3 md:px-margin-desktop"
+			class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-margin-mobile py-16 md:grid-cols-3 md:px-margin-desktop lg:gap-16"
 		>
-			<div class="flex flex-col gap-md">
-				<span class="text-2xl font-bold">Deshi Fishery</span>
-				<p class="font-body-md text-white/70">
-					© 2024 Deshi Fishery. All rights reserved. Designed for the Bangladeshi Aquaculture
-					Community.
+			<div class="flex flex-col gap-5">
+				<span class="text-2xl font-bold">{currentLang.footer.brand}</span>
+				<p class="leading-relaxed text-white/70">
+					{currentLang.footer.copyright}
 				</p>
 			</div>
-			<div class="flex flex-col gap-sm">
-				<h4 class="mb-xs font-bold">Quick Links</h4>
-				<a href="/about" class="touch-target justify-start text-white/70 transition-colors hover:text-white"
-					>About Us</a
+			<div class="flex flex-col gap-3">
+				<h4 class="mb-1 text-sm font-bold uppercase tracking-wider text-white/50">{currentLang.footer.quickLinks}</h4>
+				<a
+					href="/about"
+					class="touch-target justify-start text-white/70 transition-colors hover:text-white"
 				>
-				<a href="/support" class="touch-target justify-start text-white/70 transition-colors hover:text-white"
-					>Contact Support</a
+					{currentLang.footer.about}
+				</a>
+				<a
+					href="/support"
+					class="touch-target justify-start text-white/70 transition-colors hover:text-white"
 				>
-				<a href="/privacy" class="touch-target justify-start text-white/70 transition-colors hover:text-white"
-					>Privacy Policy</a
+					{currentLang.footer.support}
+				</a>
+				<a
+					href="/privacy"
+					class="touch-target justify-start text-white/70 transition-colors hover:text-white"
 				>
+					{currentLang.footer.privacy}
+				</a>
 			</div>
-			<div class="flex flex-col gap-sm">
-				<h4 class="mb-xs font-bold">Accessibility</h4>
-				<a href="/terms" class="touch-target justify-start text-white/70 transition-colors hover:text-white"
-					>Terms of Service</a
+			<div class="flex flex-col gap-3">
+				<h4 class="mb-1 text-sm font-bold uppercase tracking-wider text-white/50">{currentLang.footer.accessibility}</h4>
+				<a
+					href="/terms"
+					class="touch-target justify-start text-white/70 transition-colors hover:text-white"
 				>
+					{currentLang.footer.terms}
+				</a>
 				<button
 					class="touch-target justify-start font-bold underline"
 					onclick={() => (lang = lang === 'en' ? 'bn' : 'en')}
 				>
-					{lang === 'en' ? 'Bengali' : 'English'} / {lang === 'en' ? 'English' : 'বাংলা'}
+					{currentLang.footer.languageToggle}
 				</button>
 			</div>
 		</div>
 	</footer>
 </div>
+
+<style>
+	:global(.glass-card) {
+		background: rgba(255, 255, 255, 0.7);
+		backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+	}
+
+	:global(.touch-target) {
+		min-height: 56px;
+		min-width: 56px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* Mobile menu animation */
+	.mobile-menu {
+		animation: slideDown 200ms ease-out;
+	}
+
+	@keyframes slideDown {
+		from {
+			opacity: 0;
+			transform: translateY(-8px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Reduced motion support */
+	@media (prefers-reduced-motion: reduce) {
+		.mobile-menu {
+			animation: none;
+		}
+	}
+
+	/* Line clamp utility */
+	:global(.line-clamp-2) {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+</style>
