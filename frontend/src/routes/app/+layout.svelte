@@ -32,6 +32,6 @@
 	});
 </script>
 
-<div class="min-h-screen bg-surface text-slate-900">
+<div class="min-h-screen bg-surface text-on-surface dark:bg-surface-dark dark:text-on-background">
 	{@render children()}
 </div>

@@ -24,7 +24,7 @@ class AuthController extends Controller
             'role' => 'owner',
         ]);
 
-        return $this->respondWithToken($user, 201);
+        return $this->respondWithToken($user, 201, requiresOnboarding: $user->farms()->count() === 0);
     }
 
     public function login(LoginRequest $request): JsonResponse

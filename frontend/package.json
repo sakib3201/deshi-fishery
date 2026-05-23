@@ -16,6 +16,7 @@
 		"test": "npm run test:e2e"
 	},
 	"devDependencies": {
+		"@axe-core/cli": "^4.11.3",
 		"@eslint/compat": "^2.0.4",
 		"@eslint/js": "^10.0.1",
 		"@playwright/test": "^1.59.1",
@@ -44,6 +45,7 @@
 		"@lucide/svelte": "^1.16.0",
 		"clsx": "^2.1.1",
 		"layerchart": "^1.0.13",
+		"lucide-svelte": "^1.0.1",
 		"tailwind-merge": "^3.6.0"
 	}
 }

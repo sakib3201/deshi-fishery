@@ -35,7 +35,7 @@ export default {
 				background: '#f3fbff',
 				'on-background': '#001f28',
 				'outline-variant': '#c6c5d6',
-				'success-green': '#10B981',
+				'success-green': '#047857',
 				'on-primary': '#ffffff',
 				'on-secondary': '#ffffff',
 				'chart-primary': '#3572EF',

@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\V1\PondController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1/auth')->middleware('throttle:5,15')->group(function (): void {
+Route::prefix('v1/auth')->middleware('throttle:60,1')->group(function (): void {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 

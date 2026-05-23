@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Authentication', () => {
-	test('user can register and redirect to login', async ({ page }) => {
+	test('user can register and is automatically logged in', async ({ page }) => {
 		await page.goto('/app/register');
 		await page.waitForSelector('input[name="name"]', { timeout: 10000 });
 
@@ -11,8 +11,9 @@ test.describe('Authentication', () => {
 		await page.fill('input[name="password_confirmation"]', 'password123');
 		await page.click('button[type="submit"]');
 
-		// Should redirect to login page
-		await expect(page).toHaveURL('/app/login', { timeout: 10000 });
+		// After successful registration, user is automatically logged in
+		// Should redirect to onboarding (since no farm exists yet)
+		await expect(page).toHaveURL('/app/onboarding', { timeout: 10000 });
 	});
 
 	test('user can login with valid credentials', async ({ page }) => {
@@ -25,6 +26,11 @@ test.describe('Authentication', () => {
 		await page.fill('input[name="password"]', 'password123');
 		await page.fill('input[name="password_confirmation"]', 'password123');
 		await page.click('button[type="submit"]');
+		// Registration auto-logs in and redirects to onboarding
+		await expect(page).toHaveURL('/app/onboarding', { timeout: 10000 });
+
+		// Logout first
+		await page.goto('/app/logout');
 		await expect(page).toHaveURL('/app/login', { timeout: 10000 });
 
 		// Now login
@@ -32,8 +38,8 @@ test.describe('Authentication', () => {
 		await page.fill('input[name="password"]', 'password123');
 		await page.click('button[type="submit"]');
 
-		// Should redirect to dashboard
-		await expect(page).toHaveURL('/app/dashboard', { timeout: 10000 });
+		// Should redirect to onboarding (no farm yet)
+		await expect(page).toHaveURL('/app/onboarding', { timeout: 10000 });
 	});
 
 	test('login with invalid credentials shows error', async ({ page }) => {
@@ -43,12 +49,12 @@ test.describe('Authentication', () => {
 		await page.fill('input[name="password"]', 'wrongpassword');
 		await page.click('button[type="submit"]');
 
-		// Should show error message
-		await expect(page.locator('text=Login failed')).toBeVisible({ timeout: 10000 });
+		// Should show error message with AlertCircle icon
+		await expect(page.locator('text=The provided credentials are incorrect')).toBeVisible({ timeout: 10000 });
 	});
 
 	test('logout clears session and redirects to login', async ({ page }) => {
-		// Register and login first
+		// Register (auto-login)
 		await page.goto('/app/register');
 		await page.waitForSelector('input[name="name"]', { timeout: 10000 });
 		const email = `test${Date.now()}@example.com`;
@@ -57,15 +63,10 @@ test.describe('Authentication', () => {
 		await page.fill('input[name="password"]', 'password123');
 		await page.fill('input[name="password_confirmation"]', 'password123');
 		await page.click('button[type="submit"]');
-		await expect(page).toHaveURL('/app/login', { timeout: 10000 });
+		await expect(page).toHaveURL('/app/onboarding', { timeout: 10000 });
 
-		await page.fill('input[name="email"]', email);
-		await page.fill('input[name="password"]', 'password123');
-		await page.click('button[type="submit"]');
-		await expect(page).toHaveURL('/app/dashboard', { timeout: 10000 });
-
-		// Logout
-		await page.click('text=Logout');
+		// Logout via navigation
+		await page.goto('/app/logout');
 
 		// Should redirect to login
 		await expect(page).toHaveURL('/app/login', { timeout: 10000 });

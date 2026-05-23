@@ -23,14 +23,29 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
 		headers.set('X-Farm-ID', farmId);
 	}
 
-	const response = await fetch(url, { ...options, headers });
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-	if (!response.ok) {
-		const error = await response.json().catch(() => ({ error: { message: 'Unknown error' } }));
-		throw new Error(error.error?.message || `HTTP ${response.status}`);
+	try {
+		const response = await fetch(url, { ...options, headers, signal: controller.signal });
+
+		if (!response.ok) {
+			const error = await response.json().catch(() => ({ error: { message: 'Unknown error' } }));
+			throw new Error(error.error?.message || `HTTP ${response.status}`);
+		}
+
+		return response.json();
+	} catch (err) {
+		if (err instanceof TypeError) {
+			throw new Error('Network error. Please check your connection.');
+		}
+		if ((err as Error).name === 'AbortError') {
+			throw new Error('Request timed out. Please try again.');
+		}
+		throw err;
+	} finally {
+		clearTimeout(timeoutId);
 	}
-
-	return response.json();
 }
 
 let currentFarmId: string | null = null;

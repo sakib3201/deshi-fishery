@@ -22,8 +22,12 @@
 	--color-background: #f3fbff;
 	--color-on-background: #001f28;
 	--color-outline-variant: #c6c5d6;
-	--color-success-green: #10B981;
+	--color-success-green: #047857;
 	--color-on-primary: #ffffff;
+	--color-error: #DC2626;
+	--color-error-container: #FEE2E2;
+	--color-on-error: #FFFFFF;
+	--color-outline: #6B7280;
 	--color-on-secondary: #ffffff;
 	--color-chart-primary: #3572EF;
 	--color-chart-secondary: #3ABEF9;
@@ -49,6 +53,17 @@ body {
 		--color-on-surface: #F1F5F9;
 		--color-on-surface-variant: #94A3B8;
 		--color-outline-variant: #334155;
+
+		/* Error tokens for dark mode */
+		--color-error: #EF4444;
+		--color-error-container: #7F1D1D;
+		--color-on-error: #FFFFFF;
+
+		/* Fix primary container for dark mode visibility */
+		--color-primary-container: #3ABEF9;
+
+		/* Outline for dark mode */
+		--color-outline: #475569;
 	}
 
 	/* Touch and interaction improvements */
@@ -72,6 +87,13 @@ body {
 		overflow-wrap: break-word;
 		word-break: break-word;
 		line-height: 1.6;
+	}
+
+	:lang(bn) {
+		font-family: 'Noto Sans Bengali', system-ui, sans-serif;
+		line-height: 1.6;
+		overflow-wrap: break-word;
+		word-break: break-word;
 	}
 }
 

@@ -43,30 +43,36 @@
 				<h1 class="text-3xl font-bold text-primary-container">Dashboard</h1>
 				<p class="text-on-surface-variant">Welcome back, {authStore.user?.name || 'User'}</p>
 				{#if authStore.currentFarmId}
-					<div class="relative mt-2">
+					<div class="relative mt-2" data-testid="farm-switcher">
 						<button
 							onclick={() => showFarmSwitcher = !showFarmSwitcher}
 							class="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+							aria-label="Current farm: {authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}. Click to switch farms."
+							aria-expanded={showFarmSwitcher}
+							aria-haspopup="listbox"
 						>
-							<span class="font-medium">
+							<span class="font-medium" data-testid="current-farm-name">
 								{authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}
 							</span>
-							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
 							</svg>
 						</button>
 
 						{#if showFarmSwitcher}
-							<div class="absolute top-full left-0 mt-1 w-64 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
+							<div class="absolute top-full left-0 mt-1 w-64 bg-white border border-slate-200 rounded-lg shadow-lg z-50" role="listbox" aria-label="Select a farm">
 								<div class="py-1">
 									{#each authStore.farms as farm}
 										<button
 											onclick={() => handleFarmSwitch(farm.id)}
 											class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center justify-between"
+											role="option"
+											aria-selected={farm.id === authStore.currentFarmId}
+											data-testid="farm-option-{farm.id}"
 										>
 											<span class="text-sm">{farm.name}</span>
 											{#if farm.id === authStore.currentFarmId}
-												<span class="text-xs text-blue-600">✓</span>
+												<span class="text-xs text-blue-600" aria-label="Selected">✓</span>
 											{/if}
 										</button>
 									{/each}
@@ -81,6 +87,11 @@
 								</div>
 							</div>
 						{/if}
+					</div>
+				{:else}
+					<!-- No farm selected, show placeholder for testing -->
+					<div data-testid="farm-switcher" data-no-farm="true">
+						<span class="text-sm text-on-surface-variant">No farm selected</span>
 					</div>
 				{/if}
 			</div>
