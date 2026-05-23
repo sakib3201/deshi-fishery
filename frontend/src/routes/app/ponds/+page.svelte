@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/api/client';
+	import { Droplets, Ruler, Plus, Loader2 } from 'lucide-svelte';
 
 	interface Pond {
 		id: number;
@@ -36,7 +37,7 @@
 	}
 
 	async function handleDelete(id: number, pondNumber: string) {
-		if (!confirm(`Are you sure you want to delete ${pondNumber}?`)) {
+		if (!confirm(`Delete "${pondNumber}"? All stock history for this pond will be lost. This cannot be undone.`)) {
 			return;
 		}
 
@@ -50,56 +51,102 @@
 </script>
 
 <svelte:head>
-	<title>Ponds — Deshi Fishery</title>
+	<title>Ponds – Deshi Fishery</title>
 </svelte:head>
 
-<div class="max-w-4xl mx-auto px-4 py-8">
-	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-2xl font-bold">Ponds</h1>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-10">
+	<!-- Header -->
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+		<div>
+			<h1 class="text-2xl sm:text-3xl font-bold text-on-surface">Ponds</h1>
+			<p class="text-on-surface-variant mt-1">Manage your farm ponds and track stock</p>
+		</div>
 		<button
 			onclick={navigateToNewPond}
-			class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+			class="inline-flex items-center justify-center gap-2 h-14 px-6 rounded-lg bg-primary-container text-white font-medium hover:brightness-110 transition-all duration-150 active:scale-[0.98] min-h-[56px]"
 		>
-			+ Add Pond
+			<Plus size={20} aria-hidden="true" />
+			Add Pond
 		</button>
 	</div>
 
+	<!-- Error -->
+	{#if error}
+		<div class="mb-6 rounded-xl bg-error-container border border-error/20 p-4" role="alert" aria-live="polite">
+			<p class="text-error font-medium">{error}</p>
+		</div>
+	{/if}
+
+	<!-- Loading -->
 	{#if loading}
-		<p class="text-slate-600">Loading ponds...</p>
-	{:else if error}
-		<p class="text-red-600" role="alert">{error}</p>
+		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+			{#each [1, 2, 3] as _}
+				<div class="bg-white border border-outline-variant/20 rounded-xl p-6 animate-pulse">
+					<div class="flex items-center gap-3 mb-4">
+						<div class="h-11 w-11 rounded-xl bg-surface-container"></div>
+						<div class="h-5 bg-surface-container rounded w-3/4"></div>
+					</div>
+					<div class="h-4 bg-surface-container rounded w-1/2 mb-4"></div>
+					<div class="flex gap-2">
+						<div class="h-10 bg-surface-container rounded w-16"></div>
+						<div class="h-10 bg-surface-container rounded w-16"></div>
+					</div>
+				</div>
+			{/each}
+		</div>
 	{:else if ponds.length === 0}
-		<div class="text-center py-12 bg-slate-50 rounded-lg">
-			<p class="text-slate-600 mb-4">No ponds found for this farm.</p>
+		<!-- Empty State -->
+		<div class="bg-white border border-outline-variant/30 rounded-xl p-10 text-center">
+			<div class="flex justify-center mb-4">
+				<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-container text-on-surface-variant">
+					<Droplets size={28} aria-hidden="true" />
+				</div>
+			</div>
+			<h2 class="text-xl font-bold text-on-surface mb-2">No ponds yet</h2>
+			<p class="text-on-surface-variant mb-6 max-w-md mx-auto">Add your first pond to start tracking stock, feed, and harvest data.</p>
 			<button
 				onclick={navigateToNewPond}
-				class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+				class="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-lg bg-primary-container text-white font-medium hover:brightness-110 transition-all duration-150 active:scale-[0.98] min-h-[56px]"
 			>
+				<Plus size={20} aria-hidden="true" />
 				Add Your First Pond
 			</button>
 		</div>
 	{:else}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each ponds as pond (pond.id)}
-				<div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-					<div class="flex justify-between items-start mb-2">
-						<h2 class="text-lg font-semibold">{pond.pond_number}</h2>
+				<div class="bg-white border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
+					<div class="flex items-start justify-between mb-3">
+						<div class="flex items-center gap-3">
+							<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-sky-700 shrink-0">
+								<Droplets size={22} aria-hidden="true" />
+							</div>
+							<h2 class="text-lg font-semibold text-on-surface">{pond.pond_number}</h2>
+						</div>
 					</div>
+
 					{#if pond.size}
-						<p class="text-slate-600 text-sm mb-4">{pond.size} acres</p>
+						<p class="text-sm text-on-surface-variant mb-4 flex items-center gap-1.5">
+							<Ruler size={14} aria-hidden="true" />
+							{pond.size} acres
+						</p>
 					{:else}
-						<p class="text-slate-400 text-sm mb-4">No size specified</p>
+						<p class="text-sm text-on-surface-variant/60 mb-4 flex items-center gap-1.5">
+							<Ruler size={14} aria-hidden="true" />
+							No size specified
+						</p>
 					{/if}
-					<div class="flex gap-2">
+
+					<div class="flex flex-col sm:flex-row gap-2">
 						<button
 							onclick={() => navigateToEditPond(pond.id)}
-							class="text-sm text-blue-600 hover:text-blue-800 px-3 py-1 border border-blue-200 rounded-md hover:bg-blue-50 transition-colors"
+							class="inline-flex items-center justify-center gap-1.5 h-11 px-4 rounded-lg border border-outline-variant text-sm font-medium text-on-surface hover:bg-surface-container transition-colors min-h-[44px]"
 						>
 							Edit
 						</button>
 						<button
 							onclick={() => handleDelete(pond.id, pond.pond_number)}
-							class="text-sm text-red-600 hover:text-red-800 px-3 py-1 border border-red-200 rounded-md hover:bg-red-50 transition-colors"
+							class="inline-flex items-center justify-center gap-1.5 h-11 px-4 rounded-lg border border-error/30 text-sm font-medium text-error hover:bg-error-container transition-colors min-h-[44px]"
 						>
 							Delete
 						</button>

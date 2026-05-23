@@ -1,26 +1,22 @@
 <script lang="ts">
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import {
+		Droplets,
+		Fish,
+		TrendingUp,
+		DollarSign,
+		ChevronDown,
+		ChevronUp,
+		Waves
+	} from 'lucide-svelte';
 
 	let showFarmSwitcher = $state(false);
-
-	onMount(() => {
-		if (!authStore.isAuthenticated) {
-			goto('/app/login');
-		}
-	});
-
-	function handleLogout() {
-		authStore.logout();
-		goto('/app/login');
-	}
 
 	async function handleFarmSwitch(farmId: number) {
 		showFarmSwitcher = false;
 		try {
 			await authStore.switchFarm(farmId);
-			// Refresh page to reload data for new farm
 			window.location.reload();
 		} catch (err) {
 			console.error('Failed to switch farm:', err);
@@ -28,108 +24,145 @@
 	}
 
 	function navigateToFarms() {
+		showFarmSwitcher = false;
 		goto('/app/farms');
 	}
+
+	function navigateTo(path: string) {
+		goto(path);
+	}
+
+	const quickActions = [
+		{ label: 'Add Pond', href: '/app/ponds/new', icon: Droplets, color: 'bg-sky-100 text-sky-700' },
+		{ label: 'Record Sale', href: '#', icon: DollarSign, color: 'bg-emerald-100 text-emerald-700', disabled: true },
+		{ label: 'Log Feed', href: '#', icon: Fish, color: 'bg-amber-100 text-amber-700', disabled: true },
+		{ label: 'Add Expense', href: '#', icon: TrendingUp, color: 'bg-rose-100 text-rose-700', disabled: true },
+	];
+
+	const stats = [
+		{ label: 'Total Ponds', value: '0', icon: Droplets, iconBg: 'bg-sky-100 text-sky-700' },
+		{ label: 'Total Stock', value: '0 kg', icon: Fish, iconBg: 'bg-emerald-100 text-emerald-700' },
+		{ label: "This Month's Sales", value: '\u09F3 0', icon: DollarSign, iconBg: 'bg-amber-100 text-amber-700' },
+	];
 </script>
 
 <svelte:head>
-	<title>Dashboard - Deshi Fishery</title>
+	<title>Dashboard – Deshi Fishery</title>
 </svelte:head>
 
-<div class="min-h-screen bg-surface p-6">
-	<div class="mx-auto max-w-7xl">
-		<div class="mb-8 flex items-center justify-between">
-			<div>
-				<h1 class="text-3xl font-bold text-primary-container">Dashboard</h1>
-				<p class="text-on-surface-variant">Welcome back, {authStore.user?.name || 'User'}</p>
-				{#if authStore.currentFarmId}
-					<div class="relative mt-2" data-testid="farm-switcher">
-						<button
-							onclick={() => showFarmSwitcher = !showFarmSwitcher}
-							class="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
-							aria-label="Current farm: {authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}. Click to switch farms."
-							aria-expanded={showFarmSwitcher}
-							aria-haspopup="listbox"
-						>
-							<span class="font-medium" data-testid="current-farm-name">
-								{authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}
-							</span>
-							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-							</svg>
-						</button>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-10">
+	<!-- Header -->
+	<div class="mb-8">
+		<h1 class="text-2xl sm:text-3xl font-bold text-on-surface mb-2">Dashboard</h1>
+		<p class="text-on-surface-variant">Welcome back, {authStore.user?.name || 'User'}</p>
 
-						{#if showFarmSwitcher}
-							<div class="absolute top-full left-0 mt-1 w-64 bg-white border border-slate-200 rounded-lg shadow-lg z-50" role="listbox" aria-label="Select a farm">
-								<div class="py-1">
-									{#each authStore.farms as farm}
-										<button
-											onclick={() => handleFarmSwitch(farm.id)}
-											class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center justify-between"
-											role="option"
-											aria-selected={farm.id === authStore.currentFarmId}
-											data-testid="farm-option-{farm.id}"
-										>
-											<span class="text-sm">{farm.name}</span>
-											{#if farm.id === authStore.currentFarmId}
-												<span class="text-xs text-blue-600" aria-label="Selected">✓</span>
-											{/if}
-										</button>
-									{/each}
-								</div>
-								<div class="border-t border-slate-100 py-1">
-									<button
-										onclick={() => { showFarmSwitcher = false; navigateToFarms(); }}
-										class="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-slate-50"
-									>
-										Manage Farms →
-									</button>
-								</div>
-							</div>
-						{/if}
-					</div>
-				{:else}
-					<!-- No farm selected, show placeholder for testing -->
-					<div data-testid="farm-switcher" data-no-farm="true">
-						<span class="text-sm text-on-surface-variant">No farm selected</span>
+		<!-- Farm Switcher -->
+		{#if authStore.currentFarmId}
+			<div class="relative mt-3 inline-block" data-testid="farm-switcher">
+				<button
+					onclick={() => showFarmSwitcher = !showFarmSwitcher}
+					class="flex items-center gap-2 rounded-lg bg-surface-container px-4 py-2.5 text-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors min-h-[44px]"
+					aria-label="Current farm: {authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}. Click to switch farms."
+					aria-expanded={showFarmSwitcher}
+					aria-haspopup="listbox"
+				>
+					<Waves size={18} class="text-primary-container" aria-hidden="true" />
+					<span class="font-medium" data-testid="current-farm-name">
+						{authStore.farms.find(f => f.id === authStore.currentFarmId)?.name || 'Select Farm'}
+					</span>
+					{#if showFarmSwitcher}
+						<ChevronUp size={16} aria-hidden="true" />
+					{:else}
+						<ChevronDown size={16} aria-hidden="true" />
+					{/if}
+				</button>
+
+				{#if showFarmSwitcher}
+					<div
+						class="absolute top-full left-0 mt-2 w-64 bg-white border border-outline-variant/30 rounded-xl shadow-elevated z-dropdown py-1.5"
+						role="listbox"
+						aria-label="Select a farm"
+					>
+						<div class="py-1">
+							{#each authStore.farms as farm}
+								<button
+									onclick={() => handleFarmSwitch(farm.id)}
+									class="w-full text-left px-4 py-2.5 hover:bg-surface-container flex items-center justify-between transition-colors min-h-[44px]"
+									role="option"
+									aria-selected={farm.id === authStore.currentFarmId}
+									data-testid="farm-option-{farm.id}"
+								>
+									<span class="text-sm text-on-surface">{farm.name}</span>
+									{#if farm.id === authStore.currentFarmId}
+										<span class="text-xs text-primary-container font-medium" aria-label="Selected">✓</span>
+									{/if}
+								</button>
+							{/each}
+						</div>
+						<div class="border-t border-outline-variant/20 pt-1">
+							<button
+								onclick={() => { showFarmSwitcher = false; navigateToFarms(); }}
+								class="w-full text-left px-4 py-2.5 text-sm text-primary-container hover:bg-surface-container transition-colors min-h-[44px] font-medium"
+							>
+								Manage Farms →
+							</button>
+						</div>
 					</div>
 				{/if}
 			</div>
-			<div class="flex gap-3">
-			<button
-				onclick={() => goto('/app/ponds')}
-				class="h-12 rounded-lg bg-slate-100 px-6 font-medium text-slate-700 transition-colors hover:bg-slate-200"
-			>
-				Ponds
-			</button>
-			<button
-				onclick={navigateToFarms}
-				class="h-12 rounded-lg bg-slate-100 px-6 font-medium text-slate-700 transition-colors hover:bg-slate-200"
-			>
-				Farms
-			</button>
-				<button
-					onclick={handleLogout}
-					class="h-12 rounded-lg bg-error px-6 font-medium text-white transition-colors hover:bg-error/90"
-				>
-					Logout
-				</button>
+		{:else}
+			<div data-testid="farm-switcher" data-no-farm="true" class="mt-3">
+				<span class="text-sm text-on-surface-variant">No farm selected</span>
 			</div>
-		</div>
+		{/if}
+	</div>
 
-		<div class="grid gap-6 md:grid-cols-3">
-			<div class="rounded-2xl bg-white p-6 shadow-sm">
-				<h3 class="text-lg font-medium text-on-surface-variant">Total Ponds</h3>
-				<p class="mt-2 text-3xl font-bold text-primary-container">0</p>
+	<!-- Stats Grid -->
+	<div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-10">
+		{#each stats as stat}
+			<div class="bg-white border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
+				<div class="flex items-start justify-between mb-4">
+					<div class="flex h-11 w-11 items-center justify-center rounded-xl {stat.iconBg}">
+						<stat.icon size={22} aria-hidden="true" />
+					</div>
+				</div>
+				<p class="text-sm font-medium text-on-surface-variant mb-1">{stat.label}</p>
+				<p class="text-3xl font-bold text-on-surface tracking-tight">{stat.value}</p>
 			</div>
-			<div class="rounded-2xl bg-white p-6 shadow-sm">
-				<h3 class="text-lg font-medium text-on-surface-variant">Total Stock</h3>
-				<p class="mt-2 text-3xl font-bold text-primary-container">0 kg</p>
+		{/each}
+	</div>
+
+	<!-- Quick Actions -->
+	<div class="mb-10">
+		<h2 class="text-xl font-bold text-on-surface mb-4">Quick Actions</h2>
+		<div class="grid gap-4 grid-cols-2 lg:grid-cols-4">
+			{#each quickActions as action}
+				<button
+					onclick={() => !action.disabled && navigateTo(action.href)}
+					disabled={action.disabled}
+					class="flex flex-col items-center gap-3 rounded-xl border border-outline-variant/30 bg-white p-5 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none min-h-[120px] justify-center"
+				>
+					<div class="flex h-12 w-12 items-center justify-center rounded-xl {action.color}"
+					>
+						<action.icon size={24} aria-hidden="true" />
+					</div>
+					<span class="text-sm font-medium text-on-surface">{action.label}</span>
+				</button>
+			{/each}
+		</div>
+	</div>
+
+	<!-- Recent Activity Placeholder -->
+	<div class="bg-white border border-outline-variant/30 rounded-xl p-6">
+		<h2 class="text-xl font-bold text-on-surface mb-4">Recent Activity</h2>
+		<div class="text-center py-10">
+			<div class="flex justify-center mb-3">
+				<div class="flex h-12 w-12 items-center justify-center rounded-full bg-surface-container text-on-surface-variant">
+					<TrendingUp size={24} aria-hidden="true" />
+				</div>
 			</div>
-			<div class="rounded-2xl bg-white p-6 shadow-sm">
-				<h3 class="text-lg font-medium text-on-surface-variant">This Month's Sales</h3>
-				<p class="mt-2 text-3xl font-bold text-primary-container">৳ 0</p>
-			</div>
+			<p class="text-on-surface-variant">No recent activity to show.</p>
+			<p class="text-sm text-on-surface-variant/70 mt-1">Record sales, feed, or expenses to see them here.</p>
 		</div>
 	</div>
 </div>

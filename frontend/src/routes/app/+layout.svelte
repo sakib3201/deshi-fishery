@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { onMount } from 'svelte';
+	import { AppNavbar, AppFooter } from '$lib/components/layout';
 
 	let { children } = $props();
 
@@ -32,6 +33,16 @@
 	});
 </script>
 
-<div class="min-h-screen bg-surface text-on-surface dark:bg-surface-dark dark:text-on-background">
-	{@render children()}
+<div class="flex min-h-screen flex-col bg-surface text-on-surface dark:bg-surface-dark dark:text-on-background">
+	{#if authStore.isAuthenticated}
+		<AppNavbar />
+	{/if}
+
+	<main id="main-content" class="flex-1">
+		{@render children()}
+	</main>
+
+	{#if authStore.isAuthenticated}
+		<AppFooter />
+	{/if}
 </div>

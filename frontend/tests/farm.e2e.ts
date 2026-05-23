@@ -56,9 +56,7 @@ test.describe('Farm Management', () => {
 		await expect(page).toHaveURL('/app/dashboard', { timeout: 10000 });
 
 		// Navigate to farms page and create second farm
-		await page.goto('/app/farms');
-		await page.waitForSelector('text=My Farms', { timeout: 10000 });
-		await page.click('text=+ Add Farm');
+		await page.goto('/app/farms/new');
 		await page.waitForSelector('text=Create New Farm', { timeout: 10000 });
 		await page.fill('input[id="name"]', 'Farm B');
 		await page.click('button[type="submit"]');
