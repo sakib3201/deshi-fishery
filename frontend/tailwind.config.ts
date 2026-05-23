@@ -42,18 +42,19 @@ export default {
 				'chart-secondary': '#3ABEF9'
 			},
 			fontFamily: {
-				sans: ['Roboto', 'Noto Sans Bengali', 'system-ui', 'sans-serif'],
-				bengali: ['Noto Sans Bengali', 'Roboto', 'system-ui', 'sans-serif'],
-				headline: ['Roboto', 'system-ui', 'sans-serif'],
-				body: ['Roboto', 'system-ui', 'sans-serif'],
-				label: ['Noto Sans Bengali', 'Roboto', 'system-ui', 'sans-serif']
+				sans: ['Open Sans', 'Noto Sans Bengali', 'system-ui', 'sans-serif'],
+				bengali: ['Noto Sans Bengali', 'system-ui', 'sans-serif'],
+				headline: ['Open Sans', 'system-ui', 'sans-serif'],
+				body: ['Open Sans', 'system-ui', 'sans-serif'],
+				label: ['Noto Sans Bengali', 'Open Sans', 'system-ui', 'sans-serif']
 			},
-			screens: {
-				sm: '640px',
-				md: '768px',
-				lg: '1024px',
-				xl: '1280px'
-			},
+	screens: {
+			xs: '360px',
+			sm: '640px',
+			md: '768px',
+			lg: '1024px',
+			xl: '1280px'
+		},
 			spacing: {
 				base: '4px',
 				xs: '8px',
