@@ -2,7 +2,7 @@
 	import { Fish, Heart } from 'lucide-svelte';
 </script>
 
-<footer class="border-t border-outline-variant/30 bg-white">
+<footer class="border-t border-outline-variant/30 bg-surface-bright">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 py-6">
 		<div class="flex flex-col sm:flex-row items-center justify-between gap-4">
 			<!-- Brand -->

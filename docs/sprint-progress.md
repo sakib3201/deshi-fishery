@@ -13,8 +13,8 @@
 | Requirements Gathering | 100% | ✅ Complete |
 | Technical Architecture | 100% | ✅ Complete |
 | Frontend Initialization | 100% | ✅ Complete |
-| UI/UX Design | 0% | 🔄 Ready to start |
-| Implementation | 25% | 🔄 In Progress (Sprint 1) |
+| UI/UX Design | 100% | ✅ Complete |
+| Implementation | 35% | 🔄 In Progress (Sprint 2) |
 | Testing & Deployment | 0% | ⏳ Pending |
 
 ---
@@ -41,6 +41,9 @@
 - [x] All data is scoped by `farm_id`
 - [x] Pest tests pass for all auth and farm/pond flows
 - [x] Playwright tests pass for login and farm creation
+- [x] Admin panel has persistent navigation with theme/language toggles
+- [x] Dark mode works across all admin pages
+- [x] Design system tokens used consistently (no hardcoded colors)
 
 ---
 
@@ -201,15 +204,13 @@ After completing each feature via the OpenSpec workflow:
 
 ## Current Sprint Focus
 
-**Sprint 1 — Foundation**
+**Sprint 2 — Core Operations**
 
-> ✅ Completed: `AUTH-001` Email/Password Auth (archived 2026-05-22)
-> ✅ Completed: `AUTH-004` Multi-Farm Tenancy (archived 2026-05-22)
-> ✅ Completed: `FARM-001` Farm CRUD (implemented 2026-05-23)
-> 🔄 Next up: `POND-001` Pond CRUD
+> ✅ Completed: Sprint 1 — Foundation (all 4 features done)
+> 🔄 Next up: `STOCK-001` Fry Release
 > Blocked by: Nothing
 
 ---
 
 *Last updated: 2026-05-23*
-*Next review: After POND-001 implementation complete*
+*Next review: After STOCK-001 implementation complete*

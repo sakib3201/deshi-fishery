@@ -102,6 +102,57 @@ docker compose up -d
 
 ## Key Conventions
 
+### Design System (Tailwind CSS v4)
+
+The project uses **Tailwind CSS v4 with CSS-based theming** (`@theme` in `app.css`). All colors are defined as CSS custom properties, not static Tailwind classes.
+
+**Critical: Never use hardcoded Tailwind colors like `bg-white`, `text-slate-600`, `border-slate-300`, `bg-blue-600`, `focus:ring-blue-500`, etc. These do NOT adapt to dark mode.**
+
+Always use the project's design tokens:
+
+| Token | Light | Dark | Usage |
+|-------|-------|------|-------|
+| `bg-surface` | `#F0F9FF` | `#0F172A` | Page background |
+| `bg-surface-bright` | `#f3fbff` | `#1E293B` | Cards, elevated surfaces |
+| `bg-surface-container` | `#d6f2ff` | `#1E293B` | Input backgrounds, hover states |
+| `bg-surface-container-high` | `#c7eeff` | `#334155` | Active states, dropdowns |
+| `text-on-surface` | `#001f28` | `#F1F5F9` | Primary text |
+| `text-on-surface-variant` | `#4a5568` | `#94A3B8` | Secondary text |
+| `border-outline-variant` | `#c6c5d6` | `#334155` | Borders |
+| `bg-primary-container` | `#050c9c` | `#3ABEF9` | Primary buttons |
+| `text-primary` | `#000265` | — | Links, accents |
+| `bg-error` / `text-error` | `#DC2626` | `#EF4444` | Errors |
+| `bg-error-container` | `#FEE2E2` | `#7F1D1D` | Error banners |
+
+**Dark mode implementation**: The `.dark` class on `<html>` switches CSS custom property values. Components should use a single token (e.g., `bg-surface-bright`) and let the CSS handle the switch. Do NOT use `dark:bg-*` Tailwind classes.
+
+**Form inputs pattern**:
+```svelte
+<input class="bg-white dark:bg-surface-container border border-outline-variant text-on-surface ..." />
+```
+
+**Card pattern**:
+```svelte
+<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-6">
+```
+
+### Shared Components
+
+Auth pages use shared components from `$lib/components/auth/`:
+- `AuthCard` — skip link + centered card container
+- `AuthForm` — form wrapper with `aria-busy`
+- `AuthInput` — label + input + password toggle + error linking
+- `AuthButton` — loading spinner + variant support
+- `AuthError` — error message banner
+
+Layout components from `$lib/components/layout/`:
+- `AppNavbar` — sticky header with nav, profile dropdown, theme toggle, language toggle
+- `AppFooter` — brand + copyright + quick links
+
+UI state stores from `$lib/stores/ui.svelte.ts`:
+- `themeStore` — light/dark mode with `localStorage` persistence
+- `langStore` — en/bn language toggle with `localStorage` persistence
+
 ### API
 - Base path: `/api/v1/`
 - Resource names: plural nouns (`/ponds`, `/sales`, `/expenses`)
@@ -144,6 +195,8 @@ docker compose up -d
 - Forms: outlined inputs, 56px min touch targets, numeric keypads where possible.
 - Currency formatting: `formatCurrency(amount, locale)` — BDT symbol always.
 - Numbers: Bengali numerals (০-৯) when Bangla selected; Arabic (0-9) when English.
+- **Never use hardcoded Tailwind colors** (`bg-white`, `text-slate-*`, `bg-blue-*`, etc.) — always use design tokens from `app.css`.
+- **Dark mode**: CSS custom properties switch automatically via `.dark` class on `<html>`. Do not use `dark:` Tailwind modifiers except for explicit input backgrounds (`bg-white dark:bg-surface-container`).
 
 ### Code Quality
 - PHP: PSR-12, `declare(strict_types=1);`, return type hints on all methods.

@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
+	import { themeStore, langStore } from '$lib/stores/ui.svelte';
 	import {
 		LayoutDashboard,
 		Home,
@@ -11,7 +12,10 @@
 		Menu,
 		X,
 		ChevronDown,
-		Fish
+		Fish,
+		Sun,
+		Moon,
+		Globe
 	} from 'lucide-svelte';
 
 	let mobileMenuOpen = $state(false);
@@ -91,8 +95,33 @@
 				{/each}
 			</nav>
 
-			<!-- Right side: Profile + Mobile menu -->
-			<div class="flex items-center gap-2">
+			<!-- Right side: Toggles + Profile + Mobile menu -->
+			<div class="flex items-center gap-1 sm:gap-2">
+				<!-- Theme Toggle -->
+				<button
+					onclick={() => themeStore.toggle()}
+					class="flex h-10 w-10 items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150"
+					aria-label={themeStore.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+					title={themeStore.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+				>
+					{#if themeStore.theme === 'dark'}
+						<Sun size={20} aria-hidden="true" />
+					{:else}
+						<Moon size={20} aria-hidden="true" />
+					{/if}
+				</button>
+
+				<!-- Language Toggle -->
+				<button
+					onclick={() => langStore.toggle()}
+					class="flex h-10 items-center justify-center gap-1 rounded-lg px-2.5 text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150 min-w-[44px]"
+					aria-label={langStore.lang === 'bn' ? 'Switch to English' : 'Switch to Bengali'}
+					title={langStore.lang === 'bn' ? 'Switch to English' : 'Switch to Bengali'}
+				>
+					<Globe size={18} aria-hidden="true" />
+					<span class="hidden sm:inline">{langStore.lang === 'bn' ? 'বাংলা' : 'EN'}</span>
+				</button>
+
 				<!-- Profile Dropdown -->
 				<div class="relative" bind:this={profileMenuRef}>
 					<button
@@ -179,7 +208,28 @@
 						{item.label}
 					</a>
 				{/each}
-				<div class="border-t border-outline-variant/20 pt-2 mt-2">
+				<div class="border-t border-outline-variant/20 pt-2 mt-2 space-y-1">
+					<!-- Mobile Theme Toggle -->
+					<button
+						onclick={() => { themeStore.toggle(); }}
+						class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150 min-h-[56px]"
+					>
+						{#if themeStore.theme === 'dark'}
+							<Sun size={22} aria-hidden="true" />
+							Switch to Light Mode
+						{:else}
+							<Moon size={22} aria-hidden="true" />
+							Switch to Dark Mode
+						{/if}
+					</button>
+					<!-- Mobile Language Toggle -->
+					<button
+						onclick={() => { langStore.toggle(); }}
+						class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150 min-h-[56px]"
+					>
+						<Globe size={22} aria-hidden="true" />
+						{langStore.lang === 'bn' ? 'Switch to English' : 'Switch to Bengali (বাংলা)'}
+					</button>
 					<button
 						onclick={handleLogout}
 						class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-error hover:bg-error-container transition-colors duration-150 min-h-[56px]"

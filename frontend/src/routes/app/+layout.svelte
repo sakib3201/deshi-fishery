@@ -4,10 +4,13 @@
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { onMount } from 'svelte';
 	import { AppNavbar, AppFooter } from '$lib/components/layout';
+	import { themeStore, langStore } from '$lib/stores/ui.svelte';
 
 	let { children } = $props();
 
 	onMount(() => {
+		themeStore.init();
+		langStore.init();
 		authStore.init().then(() => {
 			// Redirect unauthenticated users to login
 			if (!authStore.isAuthenticated && $page.url.pathname !== '/app/login' && $page.url.pathname !== '/app/register') {

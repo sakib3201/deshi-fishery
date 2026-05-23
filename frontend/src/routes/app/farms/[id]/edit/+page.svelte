@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { api } from '$lib/api/client';
+	import { ArrowLeft } from 'lucide-svelte';
 
 	let farmId = $state(0);
 	let name = $state('');
@@ -68,62 +69,80 @@
 </script>
 
 <svelte:head>
-	<title>Edit Farm — Deshi Fishery</title>
+	<title>Edit Farm – Deshi Fishery</title>
 </svelte:head>
 
-<div class="max-w-2xl mx-auto px-4 py-8">
-	<button onclick={goBack} class="text-slate-600 hover:text-slate-800 mb-4">← Back to Farms</button>
+<div class="mx-auto max-w-2xl px-4 py-8 sm:py-10">
+	<button
+		onclick={goBack}
+		class="inline-flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors mb-6 min-h-[44px]"
+	>
+		<ArrowLeft size={18} aria-hidden="true" />
+		Back to Farms
+	</button>
 
-	<h1 class="text-2xl font-bold mb-6">Edit Farm</h1>
+	<h1 class="text-2xl sm:text-3xl font-bold text-on-surface mb-6">Edit Farm</h1>
 
 	{#if initialLoading}
-		<p class="text-slate-600">Loading farm...</p>
+		<div class="flex items-center gap-2 text-on-surface-variant py-8">
+			<div class="h-5 w-5 border-2 border-on-surface-variant/30 border-t-primary-container rounded-full animate-spin"></div>
+			Loading farm...
+		</div>
 	{:else}
-		<form onsubmit={handleSubmit} class="space-y-4 bg-white border border-slate-200 rounded-lg p-6">
+		<form
+			class="space-y-5 bg-surface-bright border border-outline-variant/30 rounded-xl p-6 sm:p-8"
+			onsubmit={handleSubmit}
+		>
 			<div>
-				<label for="name" class="block text-sm font-medium text-slate-700 mb-1">Farm Name *</label>
+				<label for="name" class="block text-sm font-medium text-on-surface mb-1.5">
+					Farm Name *
+				</label>
 				<input
 					id="name"
 					type="text"
 					bind:value={name}
 					required
-					class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					class="w-full px-4 py-3 min-h-[56px] bg-white dark:bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-mist-light text-on-surface"
 				/>
 			</div>
 
 			<div>
-				<label for="location" class="block text-sm font-medium text-slate-700 mb-1">Location</label>
+				<label for="location" class="block text-sm font-medium text-on-surface mb-1.5">
+					Location
+				</label>
 				<input
 					id="location"
 					type="text"
 					bind:value={location}
-					class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					class="w-full px-4 py-3 min-h-[56px] bg-white dark:bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-mist-light text-on-surface"
 				/>
 			</div>
 
 			{#if error}
-				<p class="text-red-600 text-sm" role="alert">{error}</p>
+				<div class="rounded-lg bg-error-container border border-error/20 p-3" role="alert">
+					<p class="text-error text-sm font-medium">{error}</p>
+				</div>
 			{/if}
 
-			<div class="flex gap-3 pt-2">
+			<div class="flex flex-col sm:flex-row gap-3 pt-2">
 				<button
 					type="button"
 					onclick={goBack}
-					class="px-4 py-2 border border-slate-300 rounded-md hover:bg-slate-50 transition-colors"
+					class="inline-flex items-center justify-center h-14 px-6 rounded-lg border border-outline-variant text-on-surface font-medium hover:bg-surface-container transition-colors min-h-[56px]"
 				>
 					Cancel
 				</button>
 				<button
 					type="submit"
 					disabled={loading || !name.trim()}
-					class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+					class="inline-flex items-center justify-center h-14 px-6 rounded-lg bg-primary-container text-white font-medium hover:brightness-110 transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed min-h-[56px]"
 				>
 					{loading ? 'Saving...' : 'Save Changes'}
 				</button>
 				<button
 					type="button"
 					onclick={handleDelete}
-					class="ml-auto text-red-600 hover:text-red-800 px-4 py-2 border border-red-200 rounded-md hover:bg-red-50 transition-colors"
+					class="sm:ml-auto inline-flex items-center justify-center h-14 px-6 rounded-lg border border-error/30 text-error font-medium hover:bg-error-container transition-colors min-h-[56px]"
 				>
 					Delete Farm
 				</button>

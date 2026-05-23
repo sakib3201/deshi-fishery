@@ -79,7 +79,7 @@
 
 				{#if showFarmSwitcher}
 					<div
-						class="absolute top-full left-0 mt-2 w-64 bg-white border border-outline-variant/30 rounded-xl shadow-elevated z-dropdown py-1.5"
+						class="absolute top-full left-0 mt-2 w-64 bg-surface-bright border border-outline-variant/30 rounded-xl shadow-elevated z-dropdown py-1.5"
 						role="listbox"
 						aria-label="Select a farm"
 					>
@@ -120,7 +120,7 @@
 	<!-- Stats Grid -->
 	<div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-10">
 		{#each stats as stat}
-			<div class="bg-white border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
+			<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
 				<div class="flex items-start justify-between mb-4">
 					<div class="flex h-11 w-11 items-center justify-center rounded-xl {stat.iconBg}">
 						<stat.icon size={22} aria-hidden="true" />
@@ -140,7 +140,7 @@
 				<button
 					onclick={() => !action.disabled && navigateTo(action.href)}
 					disabled={action.disabled}
-					class="flex flex-col items-center gap-3 rounded-xl border border-outline-variant/30 bg-white p-5 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none min-h-[120px] justify-center"
+					class="flex flex-col items-center gap-3 rounded-xl border border-outline-variant/30 bg-surface-bright p-5 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none min-h-[120px] justify-center"
 				>
 					<div class="flex h-12 w-12 items-center justify-center rounded-xl {action.color}"
 					>
@@ -153,7 +153,7 @@
 	</div>
 
 	<!-- Recent Activity Placeholder -->
-	<div class="bg-white border border-outline-variant/30 rounded-xl p-6">
+	<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-6">
 		<h2 class="text-xl font-bold text-on-surface mb-4">Recent Activity</h2>
 		<div class="text-center py-10">
 			<div class="flex justify-center mb-3">

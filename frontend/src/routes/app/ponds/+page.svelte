@@ -81,7 +81,7 @@
 	{#if loading}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each [1, 2, 3] as _}
-				<div class="bg-white border border-outline-variant/20 rounded-xl p-6 animate-pulse">
+				<div class="bg-surface-bright border border-outline-variant/20 rounded-xl p-6 animate-pulse">
 					<div class="flex items-center gap-3 mb-4">
 						<div class="h-11 w-11 rounded-xl bg-surface-container"></div>
 						<div class="h-5 bg-surface-container rounded w-3/4"></div>
@@ -96,7 +96,7 @@
 		</div>
 	{:else if ponds.length === 0}
 		<!-- Empty State -->
-		<div class="bg-white border border-outline-variant/30 rounded-xl p-10 text-center">
+		<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-10 text-center">
 			<div class="flex justify-center mb-4">
 				<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-container text-on-surface-variant">
 					<Droplets size={28} aria-hidden="true" />
@@ -115,7 +115,7 @@
 	{:else}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each ponds as pond (pond.id)}
-				<div class="bg-white border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
+				<div class="bg-surface-bright border border-outline-variant/30 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
 					<div class="flex items-start justify-between mb-3">
 						<div class="flex items-center gap-3">
 							<div class="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-sky-700 shrink-0">
