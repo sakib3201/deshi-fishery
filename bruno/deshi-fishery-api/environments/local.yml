@@ -5,3 +5,6 @@ variables:
   - name: apiVersion
     value: v1
     type: string
+  - name: pondId
+    value: ''
+    type: string

@@ -1,0 +1,19 @@
+meta {
+  name: Delete Pond
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/{{apiVersion}}/ponds/{{pondId}}
+  body: none
+  auth: bearer
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

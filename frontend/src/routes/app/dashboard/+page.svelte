@@ -85,12 +85,18 @@
 				{/if}
 			</div>
 			<div class="flex gap-3">
-				<button
-					onclick={navigateToFarms}
-					class="h-12 rounded-lg bg-slate-100 px-6 font-medium text-slate-700 transition-colors hover:bg-slate-200"
-				>
-					Farms
-				</button>
+			<button
+				onclick={() => goto('/app/ponds')}
+				class="h-12 rounded-lg bg-slate-100 px-6 font-medium text-slate-700 transition-colors hover:bg-slate-200"
+			>
+				Ponds
+			</button>
+			<button
+				onclick={navigateToFarms}
+				class="h-12 rounded-lg bg-slate-100 px-6 font-medium text-slate-700 transition-colors hover:bg-slate-200"
+			>
+				Farms
+			</button>
 				<button
 					onclick={handleLogout}
 					class="h-12 rounded-lg bg-error px-6 font-medium text-white transition-colors hover:bg-error/90"

@@ -1,0 +1,19 @@
+meta {
+  name: List Ponds
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/{{apiVersion}}/ponds
+  body: none
+  auth: bearer
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

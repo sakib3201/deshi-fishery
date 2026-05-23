@@ -1,0 +1,26 @@
+meta {
+  name: Update Pond
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/api/{{apiVersion}}/ponds/{{pondId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "pond_number": "Pond 1 Updated",
+    "size": 0.75
+  }
+}

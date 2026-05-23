@@ -29,7 +29,7 @@
 | 1 | Email/Password Auth | `AUTH-001` | ✅ Complete | `auth-001-email-password-auth` | Archived 2026-05-22. All 73 tasks done. 14 PHPUnit tests pass. |
 | 2 | Multi-Farm Tenancy | `AUTH-004` | ✅ Complete | `auth-004-multi-farm-tenancy` | Archived 2026-05-22. All 77 tasks done. 28 PHPUnit tests pass. |
 | 3 | Farm CRUD | `FARM-001` | ✅ Complete | `farm-001-farm-crud` | Implemented 2026-05-23. All 24 tasks done. 17 PHPUnit tests pass. |
-| 4 | Pond CRUD | `POND-001` | 🔄 Ready to start | — | Next feature. No blockers. |
+| 4 | Pond CRUD | `POND-001` | ✅ Complete | `pond-001-pond-crud` | Archived 2026-05-23. All 47 tasks done. 16 PHPUnit tests pass. |
 
 **Sprint 1 Definition of Done**:
 - [x] User can register with email/password
@@ -37,7 +37,7 @@
 - [x] User can logout and tokens are revoked
 - [x] User can create multiple farms
 - [x] User can switch between farms
-- [ ] User can CRUD ponds within a farm
+- [x] User can CRUD ponds within a farm
 - [x] All data is scoped by `farm_id`
 - [x] Pest tests pass for all auth and farm/pond flows
 - [x] Playwright tests pass for login and farm creation

@@ -240,6 +240,8 @@ For multi-step tasks, state a brief plan:
 3. [Step] → verify: [check]
 ```
 
+**PHP Lint Check**: After editing or touching any PHP file, run `php -l the_file_being_edited.php` to ensure no syntax errors exist before proceeding.
+
 ### 5. Add and Update Local Context
 When working in a directory, add context specific to that directory in an `AGENTS.md` file so needed context gets loaded at runtime.
 
