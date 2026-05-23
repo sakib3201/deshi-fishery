@@ -1,328 +1,258 @@
 ---
-title: DESIGN.md — Deshi Fishery
-tags:
-  - design
-  - agentic-engineering
-  - deshi-fishery
-  - spec-driven
-status: active
-created: 2026-05-22
-related:
-  - 00 - Deshi Fishery Index
-  - 05 - Technical Architecture
-  - 09 - Agent & Testing Quick Reference
-  - docs/ui-design-system
-custom-width: 100
+name: Deshi Fishery
+description: Fisheries management platform for Bangladeshi fish farmers
+colors:
+  deep-monsoon-navy: "#000265"
+  primary-container: "#050C9C"
+  secondary-blue: "#3572EF"
+  sky-accent: "#3ABEF9"
+  mist-light: "#A7E6FF"
+  surface-base: "#F0F9FF"
+  surface-container: "#d6f2ff"
+  surface-container-high: "#c7eeff"
+  surface-container-low: "#e5f6ff"
+  surface-bright: "#f3fbff"
+  text-primary: "#001f28"
+  text-muted: "#4a5568"
+  border-subtle: "#c6c5d6"
+  success-green: "#10B981"
+  danger-red: "#DC2626"
+  warning-amber: "#EAB308"
+  white: "#FFFFFF"
+typography:
+  display:
+    fontFamily: "'Roboto', 'Noto Sans Bengali', system-ui, sans-serif"
+    fontSize: "clamp(1.875rem, 5vw, 3rem)"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "normal"
+  headline:
+    fontFamily: "'Roboto', 'Noto Sans Bengali', system-ui, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 700
+    lineHeight: 1.3
+    letterSpacing: "normal"
+  title:
+    fontFamily: "'Roboto', 'Noto Sans Bengali', system-ui, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: "normal"
+  body:
+    fontFamily: "'Roboto', 'Noto Sans Bengali', system-ui, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: "normal"
+  label:
+    fontFamily: "'Noto Sans Bengali', 'Roboto', system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 500
+    lineHeight: 1.375
+    letterSpacing: "normal"
+rounded:
+  sm: "4px"
+  md: "8px"
+  lg: "12px"
+  xl: "16px"
+  "2xl": "24px"
+  full: "9999px"
+spacing:
+  xs: "8px"
+  sm: "16px"
+  md: "24px"
+  lg: "32px"
+  xl: "48px"
+  touch: "56px"
+components:
+  button-primary:
+    backgroundColor: "{colors.primary-container}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.md}"
+    padding: "12px 24px"
+  button-primary-hover:
+    backgroundColor: "#040a7a"
+  button-secondary:
+    backgroundColor: "{colors.secondary-blue}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.md}"
+    padding: "12px 24px"
+  button-outline:
+    backgroundColor: "transparent"
+    textColor: "{colors.primary-container}"
+    rounded: "{rounded.md}"
+    padding: "12px 24px"
+  button-outline-hover:
+    backgroundColor: "{colors.primary-container}"
+    textColor: "{colors.white}"
+  card-summary:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.text-primary}"
+    rounded: "{rounded.lg}"
+    padding: "24px"
+  card-data:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.text-primary}"
+    rounded: "{rounded.md}"
+    padding: "16px"
+  input-outlined:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.text-primary}"
+    rounded: "{rounded.md}"
+    padding: "12px 16px"
 ---
 
-# DESIGN.md — Deshi Fishery
+# Design System: Deshi Fishery
 
-> [!info] Purpose
-> This is the **single source of truth** for the Deshi Fishery project. The agent MUST read this file before every session. It contains everything needed to understand the project, navigate the codebase, and implement features correctly.
+## 1. Overview
 
----
+**Creative North Star: "The Fisherman's Companion"**
 
-## 1. Project Identity
+Deshi Fishery is designed to feel like a trusted partner standing beside a fish farmer at the pond's edge. The interface is warm, unhurried, and rooted in the rural Bangladeshi context where it is used. Every element is sized for real hands, real sunlight, and real urgency. There is no corporate sterility here, no futuristic gloss. The design speaks the language of ledgers, water, and weather: clear numbers, solid surfaces, and a palette drawn from the monsoon sky.
 
-| | |
-|---|---|
-| **Name** | Deshi Fishery |
-| **Tagline** | মাছ চাষের সেরা assistant ("The best assistant for fish farming") |
-| **Domain** | Fisheries management platform for Bangladeshi fish farmers |
-| **Audience** | Fish farm owners, managers, and field workers in rural Bangladesh |
-| **Scale** | MVP, solopreneur-built, < 100 users |
-| **Primary Language** | English (default), Bengali (Bangla) toggle |
-| **Currency** | Bangladeshi Taka (BDT) — ৳ |
+The system rejects everything that would alienate a 50-year-old farm owner using an entry-level Android phone outdoors. No tiny fields. No dense tables without hierarchy. No neon accents, sci-fi gradients, or glassmorphism as decoration. No government-form density. The interface must feel like a natural extension of the farm itself: dependable, local, and immediately understood.
 
-### Brand Personality
-- **Friendly / approachable** — not corporate or intimidating
-- **Traditional / rooted in rural Bangladesh** — respects the user's context
-- **Clear and trustworthy** — financial data must feel reliable
+**Key Characteristics:**
+- Light mode by default for daylight readability; dark mode available for nighttime use
+- 56px minimum touch targets on all interactive elements
+- Ocean blue palette rooted in water and sky, never cold or corporate
+- Bengali and English bilingual support with Bengali numerals in Bangla mode
+- Offline-first: the app feels fully functional without connectivity
+- Progressive disclosure: the essential number or action first, details one tap away
 
----
+## 2. Colors
 
-## 2. Stack Overview
+The palette is built around Deep Monsoon Navy, a color family that carries authority without coldness. It evokes the sky before a Bangladeshi monsoon: deep, trustworthy, and intimately familiar to anyone who works outdoors.
 
-### Backend
-| Layer | Technology |
-|-------|------------|
-| Framework | Laravel 13 + PHP 8.3 |
-| Database | PostgreSQL 17 |
-| Cache/Queue/Session | Redis + Laravel Horizon |
-| Search | Database `LIKE` + indexes |
-| PDF Generation | Gotenberg (HTML-to-PDF via HTTP API) |
-| Auth | Laravel Passport (OAuth 2.0) + Socialite |
-| API Style | JSON-only, `/api/v1/`, cursor pagination |
+### Primary
+- **Deep Monsoon Navy** (`#000265`): The deepest anchor. Used for hero overlays, footer backgrounds, and moments that demand gravitas. Rare; its scarcity is the point.
+- **Primary Container** (`#050C9C`): The workhorse primary. Buttons, active navigation states, brand accents. Solid and dependable.
 
-### Frontend
-| Layer | Technology |
-|-------|------------|
-| Framework | Svelte 5 (runes mode) |
-| UI Components | shadcn/ui + Tailwind CSS |
-| Charts | LayerChart (Svelte-native, D3-based) |
-| State | Svelte 5 runes + ElectricSQL + PGlite |
-| HTTP | Native Fetch API |
-| Build | Vite |
-| Icons | Lucide (outlined style) |
+### Secondary
+- **Secondary Blue** (`#3572EF`): Links, secondary buttons, chart primary series, highlights. Brighter than the primary but still restrained. Used for interactive cues.
+- **Secondary Container** (`#2f6dea`): Hover states for secondary elements, filled secondary actions.
 
-### Infrastructure
-| Layer | Technology |
-|-------|------------|
-| Hosting | Local Bangladeshi VPS |
-| OS | Ubuntu 24.04 LTS |
-| Container | Docker Compose (app + db + redis + nginx + gotenberg) |
-| SSL | Let's Encrypt (Certbot) |
+### Tertiary
+- **Sky Accent** (`#3ABEF9`): Icons, badges, chart accents, hover border highlights. The lightest saturated tone. Used sparingly for energy and focus.
+- **Mist Light** (`#A7E6FF`): Background tints, skeleton shimmer, disabled states, icon container backgrounds. The palest breath of the palette.
 
----
+### Neutral
+- **Surface Base** (`#F0F9FF`): The default page background. A very light blue tint that keeps the interface airy without sterile white.
+- **Surface Bright** (`#f3fbff`): Brighter section backgrounds, elevated cards on surface base.
+- **Surface Container** (`#d6f2ff`), **Surface Container High** (`#c7eeff`), **Surface Container Low** (`#e5f6ff`): Tonal layering for cards, feature sections, and hover states. No shadows needed when tonal elevation does the work.
+- **Text Primary** (`#001f28`): Headings, primary text. Near-black with a subtle cool tint.
+- **Text Muted** (`#4a5568`): Body text, descriptions, secondary labels.
+- **Border Subtle** (`#c6c5d6`): Dividers, outlines, subtle borders.
+- **White** (`#FFFFFF`): Card backgrounds, input backgrounds. Never the page background.
 
-## 3. Directory Structure
+### Semantic
+- **Success Green** (`#10B981`): Profit indicators, paid status, positive trends.
+- **Danger Red** (`#DC2626`): Errors, unpaid status, mortality alerts, deletions.
+- **Warning Amber** (`#EAB308`): Low stock alerts, pending payments, offline banners.
 
-```
-deshi-fishery/
-├── backend/                    # Laravel 13 API
-│   ├── app/
-│   │   ├── Http/Controllers/Api/V1/   # API controllers only
-│   │   ├── Models/                    # Eloquent models
-│   │   ├── Services/                  # Business logic
-│   │   └── Policies/                  # Authorization
-│   ├── database/
-│   │   ├── migrations/
-│   │   └── seeders/
-│   ├── routes/
-│   │   └── api.php             # API routes only — no web routes
-│   ├── tests/
-│   │   └── Pest.php
-│   ├── resources/
-│   │   └── views/pdf/          # Blade templates for Gotenberg PDF generation
-│   ├── storage/
-│   │   ├── app/invoices/       # Generated PDFs
-│   │   └── oauth/*.key         # NEVER commit these
-│   └── composer.json
-├── frontend/                   # Svelte 5 SPA
-│   ├── src/
-│   │   ├── lib/
-│   │   │   ├── components/     # Reusable Svelte components
-│   │   │   │   └── ui/         # shadcn/ui components
-│   │   │   ├── stores/         # Svelte 5 runes-based state
-│   │   │   ├── api/            # API client functions
-│   │   │   └── utils/          # Helpers, formatters
-│   │   ├── routes/             # SvelteKit-style routes (or page-based)
-│   │   ├── app.html            # HTML entry point
-│   │   └── app.css             # Global styles + Tailwind
-│   ├── static/                 # PWA manifest, icons, service worker
-│   ├── tests/e2e/              # Playwright tests
-│   └── package.json
-├── specs/                      # OpenSpec documents
-│   ├── auth.md
-│   ├── farm.md
-│   ├── pond.md
-│   ├── stock.md
-│   ├── sales.md
-│   ├── feed.md
-│   ├── medicine.md
-│   ├── expenses.md
-│   ├── partners.md
-│   ├── dashboard.md
-│   └── sync.md
-├── docker/
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   └── php.ini
-├── docker-compose.yml
-├── docker-compose.prod.yml
-├── .env.example
-├── .opencode/
-│   └── agent-instructions.md   # Agent guardrails (sync with this file)
-├── docs/
-│   └── ui-design-system.md     # Visual design tokens and components
-├── bruno/                      # API documentation collections
-└── README.md
-```
+### Named Rules
+**The One Voice Rule.** The primary accent (`#050C9C`) is used on no more than 10% of any given screen. Its rarity signals importance. If everything is primary, nothing is.
 
----
+**The No Pure White Rule.** The page background is never `#FFFFFF`. Always use `Surface Base` (`#F0F9FF`) or a tonal variant. Pure white is reserved for cards and inputs to create lift through contrast.
 
-## 4. Development Methodology: OpenSpec / Spec-Driven
+## 3. Typography
 
-Every feature is specified in `specs/` before any code is written.
+**Display / Body / Label Font:** Roboto, with Noto Sans Bengali (Google Fonts, free)
+**Fallback:** system-ui sans-serif
 
-### Spec Format
+**Character:** Neutral, widely supported, and unpretentious. Roboto carries numbers and Latin text with clarity. Noto Sans Bengali ensures the Bengali interface feels as native as the English one. The pairing is functional, not decorative. It gets out of the way so the data can speak.
 
-```
-SPEC {ID}  {Title}
-  {Description of observable behaviour in present-tense declarative form}
+### Hierarchy
+- **Display** (700, clamp(1.875rem, 5vw, 3rem), 1.2): Hero headlines, dashboard big numbers. Used sparingly.
+- **Headline** (700, 1.5rem / 24px, 1.3): Page titles, section headings, card headlines.
+- **Title** (600, 1.125rem / 18px, 1.4): Subheadings, card titles, form section labels.
+- **Body** (400, 1rem / 16px, 1.5): Body text, descriptions, table content. Max line length 65–75ch.
+- **Label** (500, 0.875rem / 14px, 1.375): Buttons, navigation, badges, timestamps. Slightly heavier weight for scannability.
+- **Caption** (400, 0.75rem / 12px, 1.25): Timestamps, helper text, fine print.
 
-  PRECONDITION:  {what must be true before}
-  POSTCONDITION: {what is guaranteed after success}
-  INVARIANT:     {condition always true}
-  ERROR:         {named failure mode}
-```
+### Named Rules
+**The Number-First Rule.** In low-literacy contexts, numbers must be larger and bolder than their labels. A stock level of "4,250 kg" should read as a headline; the word "Stock Level" beneath it can be a caption.
 
-### Keywords
+## 4. Elevation
 
-| Keyword | Meaning |
-|---------|---------|
-| `MUST` | Non-negotiable requirement |
-| `MUST NOT` | Prohibited behaviour |
-| `SHOULD` | Strongly recommended default |
-| `MAY` | Optional behaviour |
-| `INVARIANT` | Always true; any violation is a bug |
-| `PRECONDITION` | Must be true before operation |
-| `POSTCONDITION` | Guaranteed after operation succeeds |
-| `ERROR` | Named failure mode surfaced explicitly |
+The system uses ambient shadows for breathing room and tonal layering for structural depth. Shadows are soft, diffuse, and never harsh. They create space, not hierarchy. The landing page hero uses a single glassmorphism card (`backdrop-filter: blur(12px)`) as a deliberate exception; it is the only glass element in the product interface.
 
-### Workflow
+### Shadow Vocabulary
+- **Resting** (`box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)`): Default card state. Barely perceptible; prevents floating.
+- **Hover** (`box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)`): Cards on hover. A gentle lift, not a leap.
+- **Elevated** (`box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)`): Modals, dropdowns, floating action buttons. Structural separation.
+- **Hero** (`box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25)`): Landing page dashboard preview only. Dramatic, but justified by context.
 
-1. **Write spec** in `specs/{module}.md`
-2. **Review** spec for completeness
-3. **Feed spec** to agent as context
-4. **Implement** code that satisfies the spec
-5. **Verify** with tests asserting POSTCONDITION and INVARIANT
-6. **Commit** spec + code together
+### Named Rules
+**The Flat-By-Default Rule.** Surfaces are flat at rest. Shadows appear only as a response to state (hover, elevation, focus) or context (hero section). If a screen feels busy, remove shadows before removing content.
 
----
+## 5. Components
 
-## 5. Critical Patterns
+### Buttons
+- **Character:** Solid and dependable. No ghosting, no transparency at rest.
+- **Shape:** Gently curved edges (8px radius, `rounded-lg`). Not pill-shaped (except for language toggles and landing page CTAs, which are exceptions).
+- **Primary:** Deep navy background (`#050C9C`), white text, 12px vertical / 24px horizontal padding, 56px minimum height. Elevated with `shadow-md`.
+- **Hover / Focus:** Background darkens to `#040a7a`. Active state scales to 0.98. Transition 150ms ease.
+- **Secondary:** Secondary blue background (`#3572EF`), white text, same sizing. `shadow-sm`.
+- **Outline:** 2px primary border, primary text, transparent background. Hover fills with primary and inverts text.
+- **Disabled:** Light tint background (`#A7E6FF`), primary text at 60% opacity.
+- **Icon Button:** 56x56px circle, sky accent background (`#3ABEF9`), white icon. For floating action buttons and toolbar actions.
 
-### 5.1 Multi-Tenancy
+### Cards / Containers
+- **Character:** Clean islands of white on a tinted sea.
+- **Corner Style:** 12px radius (`rounded-xl`) for summary cards, 8px (`rounded-lg`) for data cards.
+- **Background:** White (`#FFFFFF`) on surface base. Dark mode: `#1E293B` on slate-900.
+- **Shadow Strategy:** Resting shadow by default. Hover shadow on interaction.
+- **Border:** 1px `border-blue-100` (`#BFDBFE`) subtle border. Dark mode: `#334155`.
+- **Internal Padding:** 24px for summary cards, 16px for data cards.
 
-- Every query MUST be scoped by `farm_id`.
-- The `farm_id` is set from `X-Farm-ID` header or user's `current_farm_id`.
-- Use a global query scope on all farm-scoped models.
-- Never return data from a farm the user does not belong to.
+### Inputs / Fields
+- **Character:** Outlined, material-style. The field is a container, not a line.
+- **Style:** 2px border (`#BFDBFE`), white background, 8px radius, 12px vertical / 16px horizontal padding, 56px minimum height.
+- **Focus:** Border shifts to secondary blue (`#3572EF`), 2px ring in mist light (`#A7E6FF`). No outline removal without replacement.
+- **Error:** Border and text turn danger red (`#DC2626`). Error icon (`AlertCircle`) + message below field.
+- **Number inputs:** `inputmode="numeric"`, right-aligned text, Bengali numerals in Bangla mode.
 
-### 5.2 RBAC
+### Navigation
+- **Desktop:** Top bar, sticky, surface background (`#F0F9FF`), `shadow-sm`. Links are label-sized, muted by default, secondary blue on hover. Active page has a 2px secondary underline.
+- **Mobile:** Hamburger menu, slide-in sidebar from left. Brand header with icon + tagline. Navigation items with 20px Lucide icons. Current page highlighted with primary background tint (`#050C9C` at 10% opacity).
+- **Touch targets:** All nav items 56px minimum height.
 
-| Role | Permissions |
-|------|-------------|
-| **Owner** | Full CRUD, user management, farm settings |
-| **Manager** | Create/edit data, cannot delete, edits are audited |
-| **Worker** | View limited data, input new records only |
+### Badges
+- **Style:** Pill-shaped (`rounded-full`), 12px font, medium weight. Background tints matching semantic color.
+- **Variants:** Paid (green-100 / green-800), Pending (yellow-100 / yellow-800), Unpaid (red-100 / red-800), Info (blue-100 / blue-800).
 
-- Enforce via middleware on ALL API routes.
-- Return `403 Forbidden` for unauthorized actions.
+### Tables
+- **Style:** White container, rounded-xl, overflow-hidden. Header row in surface base (`#F0F9FF`). Rows divided by 1px blue-100 lines. Hover highlight in surface base.
+- **Amounts:** Green for positive, red for negative. Currency symbol (৳) always present.
 
-### 5.3 API Conventions
+### Offline Banner
+- **Style:** Fixed top, warning amber background (`#EAB308`), white text, 16px icon + message. Dismisses automatically when online.
 
-- Base path: `/api/v1/`
-- Resource names: plural nouns (`/ponds`, `/sales`, `/expenses`)
-- Pagination: cursor-based (`?cursor=xyz&per_page=20`)
-- Filtering: simple query params (`?status=paid&pond_id=1`)
-- Error envelope:
-  ```json
-  {
-    "success": false,
-    "error": {
-      "code": "InsufficientStock",
-      "message": "Not enough fish in stock for this sale.",
-      "details": { "available": 50, "requested": 100 }
-    }
-  }
-  ```
+## 6. Do's and Don'ts
 
-### 5.4 Frontend Conventions
+### Do:
+- **Do** use 56px minimum touch targets on every interactive element.
+- **Do** lead with the number or action in low-literacy contexts; labels can be smaller.
+- **Do** pair every icon with a text label in the navigation and primary actions.
+- **Do** use Bengali numerals (০-৯) throughout when the user selects Bangla.
+- **Do** format currency with the ৳ symbol always: `৳ 1,250.00` (English) or `৳ ১,২৫০.০০` (Bengali).
+- **Do** respect system font size for accessibility.
+- **Do** use high contrast mode for sunlight readability.
+- **Do** show skeleton screens during loading, not spinners.
+- **Do** handle empty states with friendly illustrations and a primary CTA.
+- **Do** make the app feel fully functional offline; sync status is informative, not alarming.
 
-- Use **Svelte 5 runes** (`$state`, `$derived`, `$effect`) — no Svelte 4 stores.
-- Use **native Fetch API** — no Axios.
-- Use **LayerChart** for all charts — no Chart.js wrappers.
-- Use **shadcn/ui components** where available; build custom only when necessary.
-- All API calls go through a central client in `src/lib/api/` that handles auth headers and error parsing.
-- Forms use outlined input style (Material Design).
-- Primary actions use elevated buttons with shadow.
-
-### 5.5 PDF Generation (Gotenberg)
-
-- Design invoice templates as Blade views in `resources/views/pdf/`.
-- Render HTML with Tailwind CSS (or inline styles for reliability).
-- Send HTML to Gotenberg via HTTP POST; receive PDF bytes.
-- Store generated PDFs in `storage/app/invoices/`.
-
----
-
-## 6. Code Quality Rules
-
-### PHP
-- PSR-12 coding standard
-- `declare(strict_types=1);` in every file
-- Return type hints on all methods
-- PHPStan level 8
-- Pest tests for all critical paths
-- PHPDoc blocks for public methods
-
-### TypeScript / Svelte
-- Strict mode enabled
-- ESLint + Prettier
-- Component props typed with interfaces
-
-### Never Modify
-- `.env` (after initial setup)
-- Migration files (after committed)
-- `docker-compose.yml` / `docker-compose.prod.yml`
-- Production configs
-- Passport OAuth keys
-
----
-
-## 7. Agent Guardrails
-
-### Allowed Commands
-- `php artisan make:*`
-- `php artisan migrate` (local only)
-- `php artisan test`
-- `vendor/bin/pest`
-- `vendor/bin/phpstan analyse --level=8`
-- `vendor/bin/pint`
-- `composer require`
-- `pnpm install/add`
-- `pnpm run dev/build/test/lint/check`
-- `git status`, `git diff`, `git log --oneline -10`
-
-### Blocked Commands
-- `php artisan migrate` on production/staging
-- `git push`, `git reset --hard`, `rm -rf`
-- `docker compose` on remote servers
-- Any command that modifies `.env` or production configs
-
----
-
-## 8. Localization
-
-- Default language: **English**
-- Toggle: visible in app bar (EN / বাংলা)
-- Bengali font: **Noto Sans Bengali**
-- English font: **Roboto**
-- When Bengali is selected: all numbers display as Bengali numerals (০-৯)
-- Currency: ৳ symbol always, numerals follow language setting
-- Respect system font size for accessibility
-
----
-
-## 9. UI/UX Principles (Summary)
-
-See `docs/ui-design-system.md` for full design tokens and component specs.
-
-- **Ocean blue color palette**: Primary `#050C9C`, secondary `#3572EF`, accent `#3ABEF9`, light `#A7E6FF`
-- **Light + Dark mode** supported
-- **Spacious layout**: large touch targets (56x56dp min), breathing room
-- **Mobile**: hamburger sidebar navigation
-- **Desktop**: top navigation bar
-- **Dashboard**: summary cards + quick actions + charts + today's activity
-- **Farm switching**: selector on dashboard
-- **Tables** for lists (compact, scannable)
-- **Skeleton screens** for loading
-- **Offline banner** at top when disconnected
-- **High contrast mode** for sunlight readability
-- **Friendly illustrations** for empty states
-- **Photo upload** supported in MVP
-
----
-
-## 10. Next Steps for Agent
-
-When starting a new session:
-
-1. Read this `DESIGN.md`.
-2. Read the relevant OpenSpec from `specs/`.
-3. Read `docs/ui-design-system.md` for visual guidance.
-4. Implement the feature.
-5. Write Pest tests verifying POSTCONDITION and INVARIANT.
-6. Run quality checklist before suggesting commit.
+### Don't:
+- **Don't** use generic government form patterns: dense tables, tiny fields, no visual hierarchy, bureaucratic language.
+- **Don't** use overly edgy or sci-fi aesthetics: neon accents, dark-mode-as-default-gimmick, futuristic icons, gradients-for-everything.
+- **Don't** create cluttered dashboards with information overload, competing CTAs, or nested cards.
+- **Don't** use corporate SaaS minimalism: sterile whites, abstract illustrations, impersonal copy.
+- **Don't** force complex onboarding: multi-step tutorials, tooltips everywhere, forced feature tours.
+- **Don't** use border-left or border-right greater than 1px as a colored stripe on cards, lists, or alerts.
+- **Don't** use gradient text (`background-clip: text`). Use a single solid color; emphasis via weight or size.
+- **Don't** use glassmorphism as a default. It is permitted only in the landing page hero dashboard preview.
+- **Don't** use the hero-metric template (big number, small label, supporting stats, gradient accent).
+- **Don't** create identical card grids (icon + heading + text, repeated endlessly).
+- **Don't** reach for a modal as the first solution. Exhaust inline and progressive alternatives first.
+- **Don't** use em dashes. Use commas, colons, semicolons, periods, or parentheses.

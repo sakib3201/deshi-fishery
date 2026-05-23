@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-23T11:18:00+06:00",
+  "title": "Design System: Deshi Fishery",
+  "extensions": {
+    "colorMeta": {
+      "deep-monsoon-navy": {
+        "role": "primary",
+        "displayName": "Deep Monsoon Navy",
+        "canonical": "oklch(18% 0.15 260)",
+        "tonalRamp": [
+          "#00010a",
+          "#00021f",
+          "#000265",
+          "#0205a3",
+          "#050C9C",
+          "#3572EF",
+          "#3ABEF9",
+          "#A7E6FF"
+        ]
+      },
+      "primary-container": {
+        "role": "primary",
+        "displayName": "Primary Container",
+        "canonical": "oklch(28% 0.22 260)",
+        "tonalRamp": [
+          "#00010a",
+          "#00021f",
+          "#000265",
+          "#0205a3",
+          "#050C9C",
+          "#3572EF",
+          "#3ABEF9",
+          "#A7E6FF"
+        ]
+      },
+      "secondary-blue": {
+        "role": "secondary",
+        "displayName": "Secondary Blue",
+        "canonical": "oklch(55% 0.18 260)",
+        "tonalRamp": [
+          "#001040",
+          "#002980",
+          "#0054cc",
+          "#3572EF",
+          "#5a8ef5",
+          "#82aefb",
+          "#a8c9fd",
+          "#d0e3fe"
+        ]
+      },
+      "sky-accent": {
+        "role": "tertiary",
+        "displayName": "Sky Accent",
+        "canonical": "oklch(75% 0.14 230)",
+        "tonalRamp": [
+          "#00334d",
+          "#005c8a",
+          "#008dc8",
+          "#3ABEF9",
+          "#68cdfb",
+          "#8edafc",
+          "#b2e6fd",
+          "#d6f2fe"
+        ]
+      },
+      "mist-light": {
+        "role": "tertiary",
+        "displayName": "Mist Light",
+        "canonical": "oklch(90% 0.06 230)",
+        "tonalRamp": [
+          "#00334d",
+          "#005c8a",
+          "#008dc8",
+          "#3ABEF9",
+          "#68cdfb",
+          "#8edafc",
+          "#A7E6FF",
+          "#d6f2fe"
+        ]
+      },
+      "surface-base": {
+        "role": "neutral",
+        "displayName": "Surface Base",
+        "canonical": "oklch(97% 0.02 230)",
+        "tonalRamp": [
+          "#0a1a24",
+          "#14354a",
+          "#1e506f",
+          "#286b94",
+          "#3286b9",
+          "#5ca3cc",
+          "#85c0df",
+          "#F0F9FF"
+        ]
+      },
+      "text-primary": {
+        "role": "neutral",
+        "displayName": "Text Primary",
+        "canonical": "oklch(15% 0.02 200)",
+        "tonalRamp": [
+          "#000000",
+          "#00050a",
+          "#001f28",
+          "#1a3a42",
+          "#33555c",
+          "#4d7076",
+          "#668b90",
+          "#80a6aa"
+        ]
+      },
+      "success-green": {
+        "role": "semantic",
+        "displayName": "Success Green",
+        "canonical": "oklch(65% 0.18 150)",
+        "tonalRamp": [
+          "#022c14",
+          "#055929",
+          "#09853d",
+          "#10B981",
+          "#3ec795",
+          "#6ad5af",
+          "#96e3c9",
+          "#c2f1e3"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines, dashboard big numbers. Used sparingly."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles, section headings, card headlines."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Subheadings, card titles, form section labels."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Body text, descriptions, table content. Max line length 65-75ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, navigation, badges, timestamps. Heavier weight for scannability."
+      }
+    },
+    "shadows": [
+      {
+        "name": "resting",
+        "value": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        "purpose": "Default card state. Barely perceptible; prevents floating."
+      },
+      {
+        "name": "hover",
+        "value": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+        "purpose": "Cards on hover. A gentle lift, not a leap."
+      },
+      {
+        "name": "elevated",
+        "value": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
+        "purpose": "Modals, dropdowns, floating action buttons. Structural separation."
+      },
+      {
+        "name": "hero",
+        "value": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        "purpose": "Landing page dashboard preview only. Dramatic, but justified by context."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing for state transitions."
+      },
+      {
+        "name": "ease-bounce",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "Reserved for playful micro-interactions only."
+      },
+      {
+        "name": "duration-fast",
+        "value": "100ms",
+        "purpose": "Button press active state."
+      },
+      {
+        "name": "duration-normal",
+        "value": "150ms",
+        "purpose": "Hover, color, and shadow transitions."
+      },
+      {
+        "name": "duration-slow",
+        "value": "200ms",
+        "purpose": "Page transitions and larger state changes."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main call-to-action. Solid, elevated, dependable. Used for save, submit, and primary actions.",
+      "html": "<button class=\"ds-btn-primary\">Save Sale</button>",
+      "css": ".ds-btn-primary { background: #050C9C; color: #ffffff; padding: 12px 24px; font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; font-size: 1rem; font-weight: 500; border: none; border-radius: 8px; min-height: 56px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; } .ds-btn-primary:hover { background: #040a7a; } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid #3572EF; outline-offset: 2px; } .ds-btn-primary:disabled { background: #A7E6FF; color: #050C9C; opacity: 0.6; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "For secondary actions: cancel, back, edit. Less elevation than primary.",
+      "html": "<button class=\"ds-btn-secondary\">Cancel</button>",
+      "css": ".ds-btn-secondary { background: #3572EF; color: #ffffff; padding: 12px 24px; font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; font-size: 1rem; font-weight: 500; border: none; border-radius: 8px; min-height: 56px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; } .ds-btn-secondary:hover { background: #2a5cd1; } .ds-btn-secondary:active { transform: scale(0.98); } .ds-btn-secondary:focus-visible { outline: 2px solid #050C9C; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Tertiary actions, destructive confirmations. Fills on hover for clear affordance.",
+      "html": "<button class=\"ds-btn-outline\">Delete</button>",
+      "css": ".ds-btn-outline { background: transparent; color: #050C9C; padding: 12px 24px; font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; font-size: 1rem; font-weight: 500; border: 2px solid #050C9C; border-radius: 8px; min-height: 56px; transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; } .ds-btn-outline:hover { background: #050C9C; color: #ffffff; } .ds-btn-outline:active { transform: scale(0.98); } .ds-btn-outline:focus-visible { outline: 2px solid #3572EF; outline-offset: 2px; }"
+    },
+    {
+      "name": "Icon Button (FAB)",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Floating action button or toolbar icon. Circular, sky accent, highly visible.",
+      "html": "<button class=\"ds-btn-icon\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"></line><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"></line></svg></button>",
+      "css": ".ds-btn-icon { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; background: #3ABEF9; color: #ffffff; border: none; border-radius: 9999px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 100ms cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; } .ds-btn-icon:hover { background: #2aa8e0; } .ds-btn-icon:active { transform: scale(0.95); } .ds-btn-icon:focus-visible { outline: 2px solid #050C9C; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outlined Input",
+      "kind": "input",
+      "refersTo": "input-outlined",
+      "description": "Material-style outlined text field. Container, not underline. Large touch target.",
+      "html": "<div class=\"ds-input-wrap\"><label class=\"ds-input-label\">Quantity (kg)</label><input class=\"ds-input\" type=\"text\" placeholder=\"0.00\" /></div>",
+      "css": ".ds-input-wrap { display: flex; flex-direction: column; gap: 4px; font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; } .ds-input-label { font-size: 0.875rem; font-weight: 500; color: #4a5568; } .ds-input { width: 100%; padding: 12px 16px; background: #ffffff; border: 2px solid #BFDBFE; border-radius: 8px; font-size: 1rem; color: #001f28; min-height: 56px; transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-input::placeholder { color: #94a3b8; } .ds-input:focus { border-color: #3572EF; box-shadow: 0 0 0 3px rgba(167, 230, 255, 0.5); outline: none; } .ds-input:disabled { background: #F0F9FF; color: #94a3b8; cursor: not-allowed; }"
+    },
+    {
+      "name": "Summary Card",
+      "kind": "card",
+      "refersTo": "card-summary",
+      "description": "Dashboard metric card. White island on tinted background. Icon + big number + optional trend.",
+      "html": "<div class=\"ds-card-summary\"><div class=\"ds-card-summary-header\"><span class=\"ds-card-summary-title\">Total Income</span><div class=\"ds-card-summary-icon\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#050C9C\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"7\" width=\"20\" height=\"14\" rx=\"2\" ry=\"2\"></rect><path d=\"M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16\"></path></svg></div></div><div class=\"ds-card-summary-value\">৳ 45,000</div><div class=\"ds-card-summary-trend\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#10B981\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"23 6 13.5 15.5 8.5 10.5 1 18\"></polyline><polyline points=\"17 6 23 6 23 12\"></polyline></svg><span>12%</span></div></div>",
+      "css": ".ds-card-summary { background: #ffffff; border-radius: 12px; padding: 24px; border: 1px solid #BFDBFE; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-card-summary:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); } .ds-card-summary-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; } .ds-card-summary-title { font-size: 0.875rem; font-weight: 500; color: #4a5568; } .ds-card-summary-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #A7E6FF; border-radius: 8px; } .ds-card-summary-value { font-size: 1.875rem; font-weight: 700; color: #001f28; margin-bottom: 4px; } .ds-card-summary-trend { display: flex; align-items: center; gap: 4px; font-size: 0.875rem; font-weight: 500; color: #10B981; }"
+    },
+    {
+      "name": "Data Card (List Item)",
+      "kind": "card",
+      "refersTo": "card-data",
+      "description": "Compact list item card for tables and feeds. Horizontal layout with icon, title, amount, and status.",
+      "html": "<div class=\"ds-card-data\"><div class=\"ds-card-data-left\"><div class=\"ds-card-data-icon\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#050C9C\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"></path></svg></div><div><div class=\"ds-card-data-title\">Pond 3 - Rui</div><div class=\"ds-card-data-subtitle\">Stocked 2 days ago</div></div></div><div class=\"ds-card-data-right\"><div class=\"ds-card-data-amount\">৳ 12,500</div><div class=\"ds-card-data-status\">Paid</div></div></div>",
+      "css": ".ds-card-data { background: #ffffff; border-radius: 8px; padding: 16px; border: 1px solid #BFDBFE; font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-card-data:hover { border-color: #3ABEF9; } .ds-card-data-left { display: flex; align-items: center; gap: 12px; } .ds-card-data-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #A7E6FF; border-radius: 9999px; } .ds-card-data-title { font-weight: 500; color: #001f28; } .ds-card-data-subtitle { font-size: 0.875rem; color: #4a5568; } .ds-card-data-right { text-align: right; } .ds-card-data-amount { font-weight: 600; color: #001f28; } .ds-card-data-status { font-size: 0.75rem; color: #10B981; font-weight: 500; }"
+    },
+    {
+      "name": "Navigation (Desktop Top Bar)",
+      "kind": "nav",
+      "refersTo": "nav-desktop",
+      "description": "Sticky top navigation for desktop. Surface background, secondary underline for active page.",
+      "html": "<nav class=\"ds-nav-desktop\"><span class=\"ds-nav-brand\">Deshi Fishery</span><div class=\"ds-nav-links\"><a href=\"#\" class=\"ds-nav-link ds-nav-link-active\">Dashboard</a><a href=\"#\" class=\"ds-nav-link\">Sales</a><a href=\"#\" class=\"ds-nav-link\">Expenses</a><a href=\"#\" class=\"ds-nav-link\">Reports</a></div></nav>",
+      "css": ".ds-nav-desktop { display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 40px; background: #F0F9FF; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; } .ds-nav-brand { font-size: 1.25rem; font-weight: 700; color: #050C9C; } .ds-nav-links { display: flex; align-items: center; gap: 32px; } .ds-nav-link { display: flex; align-items: center; min-height: 56px; font-size: 0.875rem; font-weight: 500; color: #4a5568; text-decoration: none; transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-nav-link:hover { color: #2f6dea; } .ds-nav-link-active { color: #3572EF; border-bottom: 2px solid #3572EF; } .ds-nav-link:focus-visible { outline: 2px solid #3572EF; outline-offset: 2px; border-radius: 4px; }"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Pill-shaped status indicator. Semantic color coding for paid, pending, unpaid, info states.",
+      "html": "<span class=\"ds-badge ds-badge-paid\">Paid</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; } .ds-badge-paid { background: #dcfce7; color: #166534; } .ds-badge-pending { background: #fef9c3; color: #854d0e; } .ds-badge-unpaid { background: #fee2e2; color: #991b1b; } .ds-badge-info { background: #dbeafe; color: #1e40af; }"
+    },
+    {
+      "name": "Offline Banner",
+      "kind": "custom",
+      "refersTo": "offline-banner",
+      "description": "Fixed-top warning banner when connectivity is lost. Informative, not alarming.",
+      "html": "<div class=\"ds-offline-banner\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"1\" y1=\"1\" x2=\"23\" y2=\"23\"></line><path d=\"M16.72 11.06A10.94 10.94 0 0 1 19 12.55\"></path><path d=\"M5 12.55a10.94 10.94 0 0 1 5.17-2.39\"></path><path d=\"M10.71 5.05A16 16 0 0 1 22.58 9\"></path><path d=\"M1.42 9a15.91 15.91 0 0 1 4.7-2.88\"></path><path d=\"M8.53 16.11a6 6 0 0 1 6.95 0\"></path><line x1=\"12\" y1=\"20\" x2=\"12.01\" y2=\"20\"></line></svg><span>You are offline. Changes will sync when you reconnect.</span></div>",
+      "css": ".ds-offline-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 16px; background: #EAB308; color: #ffffff; font-size: 0.875rem; font-weight: 500; font-family: 'Roboto', 'Noto Sans Bengali', system-ui, sans-serif; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Fisherman's Companion",
+    "overview": "Deshi Fishery is designed to feel like a trusted partner standing beside a fish farmer at the pond's edge. The interface is warm, unhurried, and rooted in the rural Bangladeshi context where it is used. Every element is sized for real hands, real sunlight, and real urgency. There is no corporate sterility here, no futuristic gloss. The design speaks the language of ledgers, water, and weather: clear numbers, solid surfaces, and a palette drawn from the monsoon sky. The system rejects everything that would alienate a 50-year-old farm owner using an entry-level Android phone outdoors. No tiny fields. No dense tables without hierarchy. No neon accents, sci-fi gradients, or glassmorphism as decoration. No government-form density. The interface must feel like a natural extension of the farm itself: dependable, local, and immediately understood.",
+    "keyCharacteristics": [
+      "Light mode by default for daylight readability; dark mode available for nighttime use",
+      "56px minimum touch targets on all interactive elements",
+      "Ocean blue palette rooted in water and sky, never cold or corporate",
+      "Bengali and English bilingual support with Bengali numerals in Bangla mode",
+      "Offline-first: the app feels fully functional without connectivity",
+      "Progressive disclosure: the essential number or action first, details one tap away"
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "The primary accent (#050C9C) is used on no more than 10% of any given screen. Its rarity signals importance. If everything is primary, nothing is.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Pure White Rule",
+        "body": "The page background is never #FFFFFF. Always use Surface Base (#F0F9FF) or a tonal variant. Pure white is reserved for cards and inputs to create lift through contrast.",
+        "section": "colors"
+      },
+      {
+        "name": "The Number-First Rule",
+        "body": "In low-literacy contexts, numbers must be larger and bolder than their labels. A stock level of '4,250 kg' should read as a headline; the word 'Stock Level' beneath it can be a caption.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces are flat at rest. Shadows appear only as a response to state (hover, elevation, focus) or context (hero section). If a screen feels busy, remove shadows before removing content.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use 56px minimum touch targets on every interactive element.",
+      "Do lead with the number or action in low-literacy contexts; labels can be smaller.",
+      "Do pair every icon with a text label in the navigation and primary actions.",
+      "Do use Bengali numerals (০-৯) throughout when the user selects Bangla.",
+      "Do format currency with the ৳ symbol always: ৳ 1,250.00 (English) or ৳ ১,২৫০.০০ (Bengali).",
+      "Do respect system font size for accessibility.",
+      "Do use high contrast mode for sunlight readability.",
+      "Do show skeleton screens during loading, not spinners.",
+      "Do handle empty states with friendly illustrations and a primary CTA.",
+      "Do make the app feel fully functional offline; sync status is informative, not alarming."
+    ],
+    "donts": [
+      "Don't use generic government form patterns: dense tables, tiny fields, no visual hierarchy, bureaucratic language.",
+      "Don't use overly edgy or sci-fi aesthetics: neon accents, dark-mode-as-default-gimmick, futuristic icons, gradients-for-everything.",
+      "Don't create cluttered dashboards with information overload, competing CTAs, or nested cards.",
+      "Don't use corporate SaaS minimalism: sterile whites, abstract illustrations, impersonal copy.",
+      "Don't force complex onboarding: multi-step tutorials, tooltips everywhere, forced feature tours.",
+      "Don't use border-left or border-right greater than 1px as a colored stripe on cards, lists, or alerts.",
+      "Don't use gradient text (background-clip: text). Use a single solid color; emphasis via weight or size.",
+      "Don't use glassmorphism as a default. It is permitted only in the landing page hero dashboard preview.",
+      "Don't use the hero-metric template (big number, small label, supporting stats, gradient accent).",
+      "Don't create identical card grids (icon + heading + text, repeated endlessly).",
+      "Don't reach for a modal as the first solution. Exhaust inline and progressive alternatives first.",
+      "Don't use em dashes. Use commas, colons, semicolons, periods, or parentheses."
+    ]
+  }
+}
