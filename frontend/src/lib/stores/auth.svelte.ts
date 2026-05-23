@@ -2,6 +2,7 @@ import { auth, type Farm } from '$lib/api/auth';
 import { api } from '$lib/api/client';
 
 const TOKEN_KEY = 'df_access_token';
+const FARM_ID_KEY = 'df_current_farm_id';
 
 interface User {
 	id: number;
@@ -14,11 +15,13 @@ interface User {
 
 const ERROR_MESSAGES: Record<string, string> = {
 	'The email has already been taken': 'This email is already registered. Please sign in instead.',
-	'The password field confirmation does not match': 'The two passwords do not match. Please type them again.',
+	'The password field confirmation does not match':
+		'The two passwords do not match. Please type them again.',
 	'Invalid credentials': 'Email or password is incorrect. Please try again.',
-	'Network error. Please check your connection.': 'Could not connect to the server. Please check your internet.',
+	'Network error. Please check your connection.':
+		'Could not connect to the server. Please check your internet.',
 	'Login failed': 'Unable to sign in. Please check your email and password.',
-	'Registration failed': 'Unable to create account. Please try again.',
+	'Registration failed': 'Unable to create account. Please try again.'
 };
 
 function getUserFriendlyError(err: unknown): string {
@@ -37,6 +40,19 @@ function createAuthStore() {
 	if (initialToken) {
 		api.setToken(initialToken);
 	}
+	const initialFarmId = typeof window !== 'undefined' ? localStorage.getItem(FARM_ID_KEY) : null;
+	if (initialFarmId) {
+		api.setFarmId(initialFarmId);
+	}
+
+	// Restore farm ID from localStorage immediately so currentFarmId is available
+	// before init() completes (needed for form submissions on hard refresh)
+	const initialFarmIdNum =
+		typeof window !== 'undefined'
+			? localStorage.getItem(FARM_ID_KEY)
+				? parseInt(localStorage.getItem(FARM_ID_KEY)!, 10)
+				: null
+			: null;
 
 	let user = $state<User | null>(null);
 	let loading = $state(false);
@@ -44,7 +60,7 @@ function createAuthStore() {
 	let requiresOnboarding = $state(false);
 
 	const isAuthenticated = $derived(!!accessToken && !!user);
-	const currentFarmId = $derived(user?.current_farm_id ?? null);
+	const currentFarmId = $derived(user?.current_farm_id ?? initialFarmIdNum ?? null);
 	const farms = $derived(user?.farms ?? []);
 
 	function setToken(token: string) {
@@ -55,11 +71,26 @@ function createAuthStore() {
 		api.setToken(token);
 	}
 
-	function setUserFromResponse(data: { user: User; access_token?: string; requires_onboarding?: boolean }) {
+	function setFarmId(farmId: number | null) {
+		if (typeof window !== 'undefined') {
+			if (farmId) {
+				localStorage.setItem(FARM_ID_KEY, String(farmId));
+			} else {
+				localStorage.removeItem(FARM_ID_KEY);
+			}
+		}
+		api.setFarmId(farmId ? String(farmId) : null);
+	}
+
+	function setUserFromResponse(data: {
+		user: User;
+		access_token?: string;
+		requires_onboarding?: boolean;
+	}) {
 		user = data.user;
 		requiresOnboarding = data.requires_onboarding ?? false;
 		if (data.user.current_farm_id) {
-			api.setFarmId(String(data.user.current_farm_id));
+			setFarmId(data.user.current_farm_id);
 		}
 		if (data.access_token) {
 			setToken(data.access_token);
@@ -86,7 +117,12 @@ function createAuthStore() {
 		}
 	}
 
-	async function register(name: string, email: string, password: string, passwordConfirmation: string) {
+	async function register(
+		name: string,
+		email: string,
+		password: string,
+		passwordConfirmation: string
+	) {
 		if (!navigator.onLine) {
 			error = 'No internet connection. Please check your network and try again.';
 			throw new Error('Offline');
@@ -117,6 +153,7 @@ function createAuthStore() {
 		requiresOnboarding = false;
 		if (typeof window !== 'undefined') {
 			localStorage.removeItem(TOKEN_KEY);
+			localStorage.removeItem(FARM_ID_KEY);
 		}
 		api.setToken(null);
 		api.setFarmId(null);
@@ -148,13 +185,21 @@ function createAuthStore() {
 		}
 	}
 
+	// Re-export for components that need to sync farm ID explicitly
+	function syncFarmId() {
+		const farmId = currentFarmId;
+		if (farmId) {
+			api.setFarmId(String(farmId));
+		}
+	}
+
 	async function init() {
 		try {
 			const response = await auth.me();
 			if (response.success) {
 				user = response.data;
 				if (user.current_farm_id) {
-					api.setFarmId(String(user.current_farm_id));
+					setFarmId(user.current_farm_id);
 				}
 			}
 		} catch {
@@ -164,20 +209,37 @@ function createAuthStore() {
 	}
 
 	return {
-		get user() { return user; },
-		get accessToken() { return accessToken; },
-		get loading() { return loading; },
-		get error() { return error; },
-		get isAuthenticated() { return isAuthenticated; },
-		get requiresOnboarding() { return requiresOnboarding; },
-		get currentFarmId() { return currentFarmId; },
-		get farms() { return farms; },
+		get user() {
+			return user;
+		},
+		get accessToken() {
+			return accessToken;
+		},
+		get loading() {
+			return loading;
+		},
+		get error() {
+			return error;
+		},
+		get isAuthenticated() {
+			return isAuthenticated;
+		},
+		get requiresOnboarding() {
+			return requiresOnboarding;
+		},
+		get currentFarmId() {
+			return currentFarmId;
+		},
+		get farms() {
+			return farms;
+		},
 		login,
 		register,
 		logout,
 		switchFarm,
 		init,
-		clearAuth
+		clearAuth,
+		syncFarmId
 	};
 }
 

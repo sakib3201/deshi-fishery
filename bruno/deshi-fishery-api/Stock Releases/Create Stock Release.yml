@@ -1,0 +1,37 @@
+meta {
+  name: Create Stock Release
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/{{apiVersion}}/stock-releases
+  body: json
+  auth: bearer
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "pond_id": {{pondId}},
+    "species": "Rui",
+    "quantity": 1000,
+    "avg_weight_gram": 2.5,
+    "cost_bdt": 5000,
+    "release_date": "2026-05-20",
+    "notes": "First fry release of the season"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("stockReleaseId", res.body.data.id);
+  }
+}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/api/client';
+	import { authStore } from '$lib/stores/auth.svelte';
 	import { ArrowLeft } from 'lucide-svelte';
 
 	let pondNumber = $state('');
@@ -13,6 +14,15 @@
 		loading = true;
 		error = '';
 
+		// Ensure farm ID is synced before posting (handles race on hard refresh)
+		const farmId = authStore.currentFarmId;
+		if (!farmId) {
+			error = 'Farm context not ready. Please wait a moment and try again.';
+			loading = false;
+			return;
+		}
+		api.setFarmId(String(farmId));
+
 		try {
 			const response = await api.post('/ponds', {
 				pond_number: pondNumber.trim(),
@@ -22,6 +32,7 @@
 				goto('/app/ponds');
 			}
 		} catch (err) {
+			console.error('Pond creation error:', err);
 			error = err instanceof Error ? err.message : 'Failed to create pond';
 		} finally {
 			loading = false;
@@ -40,20 +51,20 @@
 <div class="mx-auto max-w-2xl px-4 py-8 sm:py-10">
 	<button
 		onclick={goBack}
-		class="inline-flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors mb-6 min-h-[44px]"
+		class="text-on-surface-variant hover:text-on-surface mb-6 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium transition-colors"
 	>
 		<ArrowLeft size={18} aria-hidden="true" />
 		Back to Ponds
 	</button>
 
-	<h1 class="text-2xl sm:text-3xl font-bold text-on-surface mb-6">Add New Pond</h1>
+	<h1 class="text-on-surface mb-6 text-2xl font-bold sm:text-3xl">Add New Pond</h1>
 
 	<form
-		class="space-y-5 bg-surface-bright border border-outline-variant/30 rounded-xl p-6 sm:p-8"
+		class="bg-surface-bright border-outline-variant/30 space-y-5 rounded-xl border p-6 sm:p-8"
 		onsubmit={handleSubmit}
 	>
 		<div>
-			<label for="pond_number" class="block text-sm font-medium text-on-surface mb-1.5">
+			<label for="pond_number" class="text-on-surface mb-1.5 block text-sm font-medium">
 				Pond Number *
 			</label>
 			<input
@@ -61,13 +72,13 @@
 				type="text"
 				bind:value={pondNumber}
 				required
-				class="w-full px-4 py-3 min-h-[56px] bg-white dark:bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-mist-light text-on-surface placeholder:text-on-surface-variant/50"
+				class="dark:bg-surface-container border-outline-variant focus:border-secondary focus:ring-mist-light text-on-surface placeholder:text-on-surface-variant/50 min-h-[56px] w-full rounded-lg border bg-white px-4 py-3 focus:ring-2 focus:outline-none"
 				placeholder="e.g., Pond 1"
 			/>
 		</div>
 
 		<div>
-			<label for="size" class="block text-sm font-medium text-on-surface mb-1.5">
+			<label for="size" class="text-on-surface mb-1.5 block text-sm font-medium">
 				Size (acres)
 			</label>
 			<input
@@ -76,29 +87,29 @@
 				step="0.01"
 				min="0"
 				bind:value={size}
-				class="w-full px-4 py-3 min-h-[56px] bg-white dark:bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-mist-light text-on-surface placeholder:text-on-surface-variant/50"
+				class="dark:bg-surface-container border-outline-variant focus:border-secondary focus:ring-mist-light text-on-surface placeholder:text-on-surface-variant/50 min-h-[56px] w-full rounded-lg border bg-white px-4 py-3 focus:ring-2 focus:outline-none"
 				placeholder="e.g., 0.5"
 			/>
 		</div>
 
 		{#if error}
-			<div class="rounded-lg bg-error-container border border-error/20 p-3" role="alert">
+			<div class="bg-error-container border-error/20 rounded-lg border p-3" role="alert">
 				<p class="text-error text-sm font-medium">{error}</p>
 			</div>
 		{/if}
 
-		<div class="flex flex-col sm:flex-row gap-3 pt-2">
+		<div class="flex flex-col gap-3 pt-2 sm:flex-row">
 			<button
 				type="button"
 				onclick={goBack}
-				class="inline-flex items-center justify-center h-14 px-6 rounded-lg border border-outline-variant text-on-surface font-medium hover:bg-surface-container transition-colors min-h-[56px]"
+				class="border-outline-variant text-on-surface hover:bg-surface-container inline-flex h-14 min-h-[56px] items-center justify-center rounded-lg border px-6 font-medium transition-colors"
 			>
 				Cancel
 			</button>
 			<button
 				type="submit"
 				disabled={loading || !pondNumber.trim()}
-				class="inline-flex items-center justify-center h-14 px-6 rounded-lg bg-primary-container text-white font-medium hover:brightness-110 transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed min-h-[56px]"
+				class="bg-primary-container inline-flex h-14 min-h-[56px] items-center justify-center rounded-lg px-6 font-medium text-white transition-all duration-150 hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
 			>
 				{loading ? 'Creating...' : 'Create Pond'}
 			</button>

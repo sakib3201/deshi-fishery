@@ -26,4 +26,9 @@ class Farm extends Model
     {
         return $this->hasMany(Pond::class);
     }
+
+    public function stockReleases(): HasMany
+    {
+        return $this->hasMany(StockRelease::class);
+    }
 }

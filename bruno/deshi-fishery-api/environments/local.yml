@@ -8,3 +8,6 @@ variables:
   - name: pondId
     value: ''
     type: string
+  - name: stockReleaseId
+    value: ''
+    type: string

@@ -15,7 +15,8 @@
 		Fish,
 		Sun,
 		Moon,
-		Globe
+		Globe,
+		PackagePlus
 	} from 'lucide-svelte';
 
 	let mobileMenuOpen = $state(false);
@@ -26,6 +27,7 @@
 		{ label: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard },
 		{ label: 'Farms', href: '/app/farms', icon: Home },
 		{ label: 'Ponds', href: '/app/ponds', icon: Droplets },
+		{ label: 'Stock Releases', href: '/app/stock-releases', icon: PackagePlus }
 	];
 
 	function isActive(path: string) {
@@ -63,30 +65,40 @@
 <!-- Skip Link -->
 <a
 	href="#main-content"
-	class="sr-only focus:not-sr-only focus:absolute focus:z-[700] focus:bg-surface-bright focus:text-primary-container focus:px-4 focus:py-3 focus:rounded-lg focus:shadow-lg focus:top-2 focus:left-2"
+	class="focus:bg-surface-bright focus:text-primary-container sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[700] focus:rounded-lg focus:px-4 focus:py-3 focus:shadow-lg"
 >
 	Skip to main content
 </a>
 
-<header class="sticky top-0 z-sticky bg-surface border-b border-outline-variant/30 shadow-sm">
+<header class="z-sticky bg-surface border-outline-variant/30 sticky top-0 border-b shadow-sm">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6">
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo + Brand -->
 			<div class="flex items-center gap-3">
-				<a href="/app/dashboard" class="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 rounded-lg">
-					<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-container text-white">
+				<a
+					href="/app/dashboard"
+					class="focus:ring-primary-container flex items-center gap-2.5 rounded-lg focus:ring-2 focus:ring-offset-2 focus:outline-none"
+				>
+					<div
+						class="bg-primary-container flex h-9 w-9 items-center justify-center rounded-lg text-white"
+					>
 						<Fish size={20} aria-hidden="true" />
 					</div>
-					<span class="text-lg font-bold text-primary-container hidden sm:block">Deshi Fishery</span>
+					<span class="text-primary-container hidden text-lg font-bold sm:block">Deshi Fishery</span
+					>
 				</a>
 			</div>
 
 			<!-- Desktop Navigation -->
-			<nav class="hidden md:flex items-center gap-1" aria-label="Main navigation">
+			<nav class="hidden items-center gap-1 md:flex" aria-label="Main navigation">
 				{#each navItems as item}
 					<a
 						href={item.href}
-						class="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors duration-150 min-h-[44px] {isActive(item.href) ? 'bg-primary-container/10 text-primary-container' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}"
+						class="flex min-h-[44px] items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors duration-150 {isActive(
+							item.href
+						)
+							? 'bg-primary-container/10 text-primary-container'
+							: 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}"
 						aria-current={isActive(item.href) ? 'page' : undefined}
 					>
 						<item.icon size={18} aria-hidden="true" />
@@ -100,7 +112,7 @@
 				<!-- Theme Toggle -->
 				<button
 					onclick={() => themeStore.toggle()}
-					class="flex h-10 w-10 items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150"
+					class="text-on-surface-variant hover:bg-surface-container flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-150"
 					aria-label={themeStore.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
 					title={themeStore.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
 				>
@@ -114,7 +126,7 @@
 				<!-- Language Toggle -->
 				<button
 					onclick={() => langStore.toggle()}
-					class="flex h-10 items-center justify-center gap-1 rounded-lg px-2.5 text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150 min-w-[44px]"
+					class="text-on-surface-variant hover:bg-surface-container flex h-10 min-w-[44px] items-center justify-center gap-1 rounded-lg px-2.5 text-sm font-medium transition-colors duration-150"
 					aria-label={langStore.lang === 'bn' ? 'Switch to English' : 'Switch to Bengali'}
 					title={langStore.lang === 'bn' ? 'Switch to English' : 'Switch to Bengali'}
 				>
@@ -126,41 +138,55 @@
 				<div class="relative" bind:this={profileMenuRef}>
 					<button
 						onclick={toggleProfileMenu}
-						class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150 min-h-[44px]"
+						class="text-on-surface-variant hover:bg-surface-container flex min-h-[44px] items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150"
 						aria-expanded={profileMenuOpen}
 						aria-haspopup="menu"
 						aria-label="User menu for {authStore.user?.name || 'User'}"
 					>
-						<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-container/10 text-primary-container font-semibold text-sm">
+						<div
+							class="bg-primary-container/10 text-primary-container flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold"
+						>
 							{authStore.user?.name?.charAt(0)?.toUpperCase() || 'U'}
 						</div>
-						<span class="hidden sm:block max-w-[120px] truncate">{authStore.user?.name || 'User'}</span>
-						<ChevronDown size={16} class="transition-transform duration-150 {profileMenuOpen ? 'rotate-180' : ''}" aria-hidden="true" />
+						<span class="hidden max-w-[120px] truncate sm:block"
+							>{authStore.user?.name || 'User'}</span
+						>
+						<ChevronDown
+							size={16}
+							class="transition-transform duration-150 {profileMenuOpen ? 'rotate-180' : ''}"
+							aria-hidden="true"
+						/>
 					</button>
 
 					{#if profileMenuOpen}
 						<div
-							class="absolute right-0 top-full mt-2 w-56 rounded-xl bg-surface-bright shadow-elevated border border-outline-variant/30 py-1.5 z-dropdown"
+							class="bg-surface-bright shadow-elevated border-outline-variant/30 z-dropdown absolute top-full right-0 mt-2 w-56 rounded-xl border py-1.5"
 							role="menu"
 							aria-label="User menu"
 						>
-							<div class="px-4 py-2 border-b border-outline-variant/20 mb-1">
-								<p class="text-sm font-semibold text-on-surface truncate">{authStore.user?.name || 'User'}</p>
-								<p class="text-xs text-on-surface-variant truncate">{authStore.user?.email || ''}</p>
-								<p class="text-xs text-primary-container mt-0.5 capitalize">{authStore.user?.role || 'user'}</p>
+							<div class="border-outline-variant/20 mb-1 border-b px-4 py-2">
+								<p class="text-on-surface truncate text-sm font-semibold">
+									{authStore.user?.name || 'User'}
+								</p>
+								<p class="text-on-surface-variant truncate text-xs">
+									{authStore.user?.email || ''}
+								</p>
+								<p class="text-primary-container mt-0.5 text-xs capitalize">
+									{authStore.user?.role || 'user'}
+								</p>
 							</div>
 							<a
 								href="/app/farms"
-								class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container transition-colors"
+								class="text-on-surface-variant hover:bg-surface-container flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
 								role="menuitem"
-								onclick={() => profileMenuOpen = false}
+								onclick={() => (profileMenuOpen = false)}
 							>
 								<Settings size={16} aria-hidden="true" />
 								Manage Farms
 							</a>
 							<button
 								onclick={handleLogout}
-								class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-error hover:bg-error-container transition-colors"
+								class="text-error hover:bg-error-container flex w-full items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
 								role="menuitem"
 							>
 								<LogOut size={16} aria-hidden="true" />
@@ -173,7 +199,7 @@
 				<!-- Mobile Menu Toggle -->
 				<button
 					onclick={toggleMobileMenu}
-					class="md:hidden flex h-11 w-11 items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors"
+					class="text-on-surface-variant hover:bg-surface-container flex h-11 w-11 items-center justify-center rounded-lg transition-colors md:hidden"
 					aria-expanded={mobileMenuOpen}
 					aria-controls="mobile-menu"
 					aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -192,7 +218,7 @@
 	{#if mobileMenuOpen}
 		<div
 			id="mobile-menu"
-			class="md:hidden border-t border-outline-variant/30 bg-surface"
+			class="border-outline-variant/30 bg-surface border-t md:hidden"
 			role="navigation"
 			aria-label="Mobile navigation"
 		>
@@ -200,7 +226,11 @@
 				{#each navItems as item}
 					<a
 						href={item.href}
-						class="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors duration-150 min-h-[56px] {isActive(item.href) ? 'bg-primary-container/10 text-primary-container' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}"
+						class="flex min-h-[56px] items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors duration-150 {isActive(
+							item.href
+						)
+							? 'bg-primary-container/10 text-primary-container'
+							: 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}"
 						aria-current={isActive(item.href) ? 'page' : undefined}
 						onclick={closeMobileMenu}
 					>
@@ -208,11 +238,13 @@
 						{item.label}
 					</a>
 				{/each}
-				<div class="border-t border-outline-variant/20 pt-2 mt-2 space-y-1">
+				<div class="border-outline-variant/20 mt-2 space-y-1 border-t pt-2">
 					<!-- Mobile Theme Toggle -->
 					<button
-						onclick={() => { themeStore.toggle(); }}
-						class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150 min-h-[56px]"
+						onclick={() => {
+							themeStore.toggle();
+						}}
+						class="text-on-surface-variant hover:bg-surface-container flex min-h-[56px] w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors duration-150"
 					>
 						{#if themeStore.theme === 'dark'}
 							<Sun size={22} aria-hidden="true" />
@@ -224,15 +256,17 @@
 					</button>
 					<!-- Mobile Language Toggle -->
 					<button
-						onclick={() => { langStore.toggle(); }}
-						class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150 min-h-[56px]"
+						onclick={() => {
+							langStore.toggle();
+						}}
+						class="text-on-surface-variant hover:bg-surface-container flex min-h-[56px] w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors duration-150"
 					>
 						<Globe size={22} aria-hidden="true" />
 						{langStore.lang === 'bn' ? 'Switch to English' : 'Switch to Bengali (বাংলা)'}
 					</button>
 					<button
 						onclick={handleLogout}
-						class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-error hover:bg-error-container transition-colors duration-150 min-h-[56px]"
+						class="text-error hover:bg-error-container flex min-h-[56px] w-full items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors duration-150"
 					>
 						<LogOut size={22} aria-hidden="true" />
 						Log Out

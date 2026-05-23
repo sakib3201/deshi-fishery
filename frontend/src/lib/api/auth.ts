@@ -17,6 +17,32 @@ export interface Farm {
 	role: string;
 }
 
+export interface Pond {
+	id: number;
+	farm_id: number;
+	pond_number: string;
+	size: number;
+	current_stock_quantity: number;
+	current_stock_weight_kg: number;
+	created_at: string;
+}
+
+export interface StockRelease {
+	id: number;
+	farm_id: number;
+	pond_id: number;
+	species: string;
+	quantity: number;
+	avg_weight_gram: number;
+	cost_bdt: number;
+	release_date: string;
+	notes: string | null;
+	created_by: number;
+	created_at: string;
+	updated_at: string;
+	pond?: Pond;
+}
+
 export interface AuthResponse {
 	success: boolean;
 	data: {
@@ -63,8 +89,7 @@ export interface SwitchFarmResponse {
 export const auth = {
 	login: (credentials: LoginCredentials) =>
 		api.post('/auth/login', credentials) as Promise<AuthResponse>,
-	register: (data: RegisterData) =>
-		api.post('/auth/register', data) as Promise<AuthResponse>,
+	register: (data: RegisterData) => api.post('/auth/register', data) as Promise<AuthResponse>,
 	logout: () => api.post('/auth/logout', {}),
 	me: () => api.get('/auth/me') as Promise<MeResponse>,
 	refresh: () => api.post('/auth/refresh', {}),

@@ -1,0 +1,27 @@
+meta {
+  name: Update Stock Release
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/api/{{apiVersion}}/stock-releases/{{stockReleaseId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  X-Farm-ID: {{farmId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "quantity": 1200,
+    "cost_bdt": 5500,
+    "notes": "Updated quantity after recount"
+  }
+}

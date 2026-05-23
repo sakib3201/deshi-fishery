@@ -53,14 +53,14 @@
 
 | # | Feature | OpenSpec ID | Status | Change Name | Notes |
 |---|---------|-------------|--------|-------------|-------|
-| 5 | Fry Release | `STOCK-001` | ⏳ Pending | — | Increments stock biomass |
+| 5 | Fry Release | `STOCK-001` | ✅ Complete | `stock-001-fry-release` | Archived 2026-05-23. All 59 tasks done. 15 PHPUnit + 4 Playwright tests pass. |
 | 6 | Record Sale | `SALE-001` | ⏳ Pending | — | Decrements stock, payment tracking |
 | 7 | Payment Tracking | `SALE-002` | ⏳ Pending | — | Partial payments, status auto-update |
 | 8 | General Expenses | `EXP-001` | ⏳ Pending | — | Cash-basis expense entry |
 | 9 | Daily Ledger | `EXP-005` | ⏳ Pending | — | Income/expense daily view with running balance |
 
 **Sprint 2 Definition of Done**:
-- [ ] User can record fish fry releases per pond
+- [x] User can record fish fry releases per pond
 - [ ] User can record wholesale/retail sales
 - [ ] User can track partial payments on sales
 - [ ] User can add expenses by category
@@ -207,10 +207,11 @@ After completing each feature via the OpenSpec workflow:
 **Sprint 2 — Core Operations**
 
 > ✅ Completed: Sprint 1 — Foundation (all 4 features done)
-> 🔄 Next up: `STOCK-001` Fry Release
+> ✅ Completed: `STOCK-001` Fry Release
+> 🔄 Next: `SALE-001` Record Sale
 > Blocked by: Nothing
 
 ---
 
 *Last updated: 2026-05-23*
-*Next review: After STOCK-001 implementation complete*
+*Next review: After SALE-001 implementation complete*

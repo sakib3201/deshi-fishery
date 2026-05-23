@@ -145,12 +145,14 @@
 					<div class="flex flex-col sm:flex-row gap-2">
 						<button
 							onclick={() => navigateToEditPond(pond.id)}
+							data-testid="pond-edit-{pond.id}"
 							class="inline-flex items-center justify-center gap-1.5 h-11 px-4 rounded-lg border border-outline-variant text-sm font-medium text-on-surface hover:bg-surface-container transition-colors min-h-[44px]"
 						>
 							Edit
 						</button>
 						<button
 							onclick={() => handleDelete(pond.id, pond.pond_number)}
+							data-testid="pond-delete-{pond.id}"
 							class="inline-flex items-center justify-center gap-1.5 h-11 px-4 rounded-lg border border-error/30 text-sm font-medium text-error hover:bg-error-container transition-colors min-h-[44px]"
 						>
 							Delete

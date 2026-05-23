@@ -7,6 +7,9 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -33,15 +36,20 @@ class User extends Authenticatable
         ];
     }
 
-    public function farms(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function farms(): BelongsToMany
     {
         return $this->belongsToMany(Farm::class)
             ->withPivot('role')
             ->withTimestamps();
     }
 
-    public function currentFarm(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function currentFarm(): BelongsTo
     {
         return $this->belongsTo(Farm::class, 'current_farm_id');
+    }
+
+    public function stockReleases(): HasMany
+    {
+        return $this->hasMany(StockRelease::class, 'created_by');
     }
 }

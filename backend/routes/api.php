@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CurrentFarmController;
 use App\Http\Controllers\Api\V1\FarmController;
 use App\Http\Controllers\Api\V1\FarmMemberController;
 use App\Http\Controllers\Api\V1\PondController;
+use App\Http\Controllers\Api\V1\StockReleaseController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,10 @@ Route::prefix('v1')->middleware('auth:api')->group(function (): void {
     Route::post('farms/{farm}/members', [FarmMemberController::class, 'store']);
     Route::delete('farms/{farm}/members/{user}', [FarmMemberController::class, 'destroy']);
     Route::patch('users/current-farm', [CurrentFarmController::class, 'update']);
+
+    Route::get('stock-releases', [StockReleaseController::class, 'index']);
+    Route::get('stock-releases/{stockRelease}', [StockReleaseController::class, 'show']);
+    Route::post('stock-releases', [StockReleaseController::class, 'store'])->middleware('farm.role:owner,manager');
+    Route::patch('stock-releases/{stockRelease}', [StockReleaseController::class, 'update'])->middleware('farm.role:owner,manager');
+    Route::delete('stock-releases/{stockRelease}', [StockReleaseController::class, 'destroy'])->middleware('farm.role:owner,manager');
 });

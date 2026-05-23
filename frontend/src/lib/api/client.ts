@@ -34,6 +34,11 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
 			throw new Error(error.error?.message || `HTTP ${response.status}`);
 		}
 
+		// Handle 204 No Content — don't try to parse JSON body
+		if (response.status === 204) {
+			return { success: true };
+		}
+
 		return response.json();
 	} catch (err) {
 		if (err instanceof TypeError) {
@@ -70,4 +75,51 @@ export const api = {
 	patch: (endpoint: string, body: unknown) =>
 		fetchApi(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
 	delete: (endpoint: string) => fetchApi(endpoint, { method: 'DELETE' })
+};
+
+export const stockReleases = {
+	list: (params?: { pond_id?: number; species?: string; cursor?: string; per_page?: number }) => {
+		const searchParams = new URLSearchParams();
+		if (params?.pond_id) searchParams.set('pond_id', String(params.pond_id));
+		if (params?.species) searchParams.set('species', params.species);
+		if (params?.cursor) searchParams.set('cursor', params.cursor);
+		if (params?.per_page) searchParams.set('per_page', String(params.per_page));
+		const query = searchParams.toString();
+		return api.get(`/stock-releases${query ? `?${query}` : ''}`) as Promise<{
+			success: boolean;
+			data: {
+				data: import('./auth').StockRelease[];
+				next_cursor: string | null;
+			};
+		}>;
+	},
+	create: (
+		data: Omit<
+			import('./auth').StockRelease,
+			'id' | 'created_at' | 'updated_at' | 'farm_id' | 'created_by'
+		>
+	) =>
+		api.post('/stock-releases', data) as Promise<{
+			success: boolean;
+			data: import('./auth').StockRelease;
+		}>,
+	get: (id: number) =>
+		api.get(`/stock-releases/${id}`) as Promise<{
+			success: boolean;
+			data: import('./auth').StockRelease;
+		}>,
+	update: (
+		id: number,
+		data: Partial<
+			Omit<
+				import('./auth').StockRelease,
+				'id' | 'created_at' | 'updated_at' | 'farm_id' | 'created_by'
+			>
+		>
+	) =>
+		api.patch(`/stock-releases/${id}`, data) as Promise<{
+			success: boolean;
+			data: import('./auth').StockRelease;
+		}>,
+	delete: (id: number) => api.delete(`/stock-releases/${id}`) as Promise<{ success: boolean }>
 };
