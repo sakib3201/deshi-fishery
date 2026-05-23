@@ -1,0 +1,42 @@
+info:
+  name: Register
+  type: http
+  seq: 1
+  tags:
+    - auth
+    - public
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/auth/register"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Test User",
+        "email": "test@example.com",
+        "password": "password123",
+        "password_confirmation": "password123"
+      }
+runtime:
+  tests:
+    - name: returns 201 Created
+      expr: res.getStatus() === 201
+    - name: has access_token
+      expr: res.getBody().data.access_token !== undefined
+    - name: has user object
+      expr: res.getBody().data.user !== undefined
+    - name: requires_onboarding is boolean
+      expr: typeof res.getBody().data.requires_onboarding === "boolean"
+  scripts:
+    - type: post-response
+      script: |-
+        const body = res.getBody();
+        if (body.data && body.data.access_token) {
+          bru.setEnvVar("authToken", body.data.access_token);
+        }
+        if (body.data && body.data.user) {
+          bru.setEnvVar("userId", body.data.user.id);
+        }

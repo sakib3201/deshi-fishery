@@ -1,0 +1,23 @@
+info:
+  name: Remove Member
+  type: http
+  seq: 3
+  tags:
+    - farm-members
+    - protected
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/v1/farms/{{farmId}}/members/{{memberId}}"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+runtime:
+  tests:
+    - name: returns 204 No Content
+      expr: res.getStatus() === 204

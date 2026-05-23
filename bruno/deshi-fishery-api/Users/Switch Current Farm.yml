@@ -1,0 +1,43 @@
+info:
+  name: Switch Current Farm
+  type: http
+  seq: 1
+  tags:
+    - users
+    - protected
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/v1/users/current-farm"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "farm_id": {{farmId}}
+      }
+runtime:
+  tests:
+    - name: returns 200 OK
+      expr: res.getStatus() === 200
+    - name: has user data
+      expr: res.getBody().data.user !== undefined
+    - name: has new access_token
+      expr: res.getBody().data.access_token !== undefined
+  scripts:
+    - type: post-response
+      script: |-
+        const body = res.getBody();
+        if (body.data && body.data.access_token) {
+          bru.setEnvVar("authToken", body.data.access_token);
+        }
+        if (body.data && body.data.user && body.data.user.current_farm_id) {
+          bru.setEnvVar("currentFarmId", body.data.user.current_farm_id);
+        }

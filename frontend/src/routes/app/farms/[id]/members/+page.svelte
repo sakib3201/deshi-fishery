@@ -1,20 +1,21 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { api } from '$lib/api/client';
-	import { onMount } from 'svelte';
+
+	interface Member {
+		id: number;
+		name: string;
+		email: string;
+		role: string;
+	}
 
 	let farmId = $state(0);
-	let members = $state<Array<{ id: number; name: string; email: string; role: string }>>([]);
+	let members = $state<Member[]>([]);
 	let newMemberEmail = $state('');
 	let loading = $state(false);
 	let error = $state('');
 	let initialLoading = $state(true);
-
-	onMount(() => {
-		farmId = parseInt($page.params.id);
-		loadMembers();
-	});
 
 	async function loadMembers() {
 		try {
@@ -29,7 +30,15 @@
 		}
 	}
 
-	async function addMember(e: Event) {
+	$effect(() => {
+		const idParam = page.params.id;
+		if (idParam) {
+			farmId = parseInt(idParam, 10);
+			loadMembers();
+		}
+	});
+
+	async function addMember(e: SubmitEvent) {
 		e.preventDefault();
 		loading = true;
 		error = '';
@@ -84,7 +93,7 @@
 		/>
 		<button
 			type="submit"
-			disabled={loading || !newMemberEmail}
+			disabled={loading || !newMemberEmail.trim()}
 			class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 		>
 			{loading ? 'Adding...' : 'Add Member'}
@@ -92,7 +101,7 @@
 	</form>
 
 	{#if error}
-		<p class="text-red-600 text-sm mb-4">{error}</p>
+		<p class="text-red-600 text-sm mb-4" role="alert">{error}</p>
 	{/if}
 
 	{#if initialLoading}
@@ -101,7 +110,7 @@
 		<p class="text-slate-600">No members yet.</p>
 	{:else}
 		<div class="space-y-2">
-			{#each members as member}
+			{#each members as member (member.id)}
 				<div class="flex justify-between items-center bg-white border border-slate-200 rounded-lg p-4">
 					<div>
 						<p class="font-medium">{member.name}</p>

@@ -1,0 +1,32 @@
+info:
+  name: Refresh Token
+  type: http
+  seq: 4
+  tags:
+    - auth
+    - protected
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/auth/refresh"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+runtime:
+  tests:
+    - name: returns 200 OK
+      expr: res.getStatus() === 200
+    - name: has access_token
+      expr: res.getBody().data.access_token !== undefined
+  scripts:
+    - type: post-response
+      script: |-
+        const body = res.getBody();
+        if (body.data && body.data.access_token) {
+          bru.setEnvVar("authToken", body.data.access_token);
+        }

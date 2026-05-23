@@ -2,13 +2,19 @@
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/stores/auth.svelte';
 	import { api } from '$lib/api/client';
-	import { onMount } from 'svelte';
 
-	let farms = $state<Array<{ id: number; name: string; location: string | null; role: string }>>([]);
+	interface Farm {
+		id: number;
+		name: string;
+		location: string | null;
+		role: string;
+	}
+
+	let farms = $state<Farm[]>([]);
 	let loading = $state(true);
 	let error = $state('');
 
-	onMount(async () => {
+	async function loadFarms() {
 		try {
 			const response = await api.get('/farms');
 			if (response.success) {
@@ -19,7 +25,9 @@
 		} finally {
 			loading = false;
 		}
-	});
+	}
+
+	loadFarms();
 
 	function navigateToNewFarm() {
 		goto('/app/farms/new');
@@ -52,7 +60,7 @@
 	{#if loading}
 		<p class="text-slate-600">Loading farms...</p>
 	{:else if error}
-		<p class="text-red-600">{error}</p>
+		<p class="text-red-600" role="alert">{error}</p>
 	{:else if farms.length === 0}
 		<div class="text-center py-12 bg-slate-50 rounded-lg">
 			<p class="text-slate-600 mb-4">You don't have any farms yet.</p>
@@ -65,7 +73,7 @@
 		</div>
 	{:else}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-			{#each farms as farm}
+			{#each farms as farm (farm.id)}
 				<div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
 					<div class="flex justify-between items-start mb-2">
 						<h2 class="text-lg font-semibold">{farm.name}</h2>
@@ -74,7 +82,7 @@
 						</span>
 					</div>
 					{#if farm.location}
-						<p class="text-slate-600 text-sm mb-4">📍 {farm.location}</p>
+						<p class="text-slate-600 text-sm mb-4">{farm.location}</p>
 					{/if}
 					<div class="flex gap-2">
 						<button

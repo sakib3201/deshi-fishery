@@ -1,0 +1,41 @@
+info:
+  name: Create Farm
+  type: http
+  seq: 2
+  tags:
+    - farms
+    - protected
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/farms"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "My Fish Farm",
+        "location": "Dhaka, Bangladesh"
+      }
+runtime:
+  tests:
+    - name: returns 201 Created
+      expr: res.getStatus() === 201
+    - name: has farm id
+      expr: res.getBody().data.id !== undefined
+    - name: has farm name
+      expr: res.getBody().data.name !== undefined
+  scripts:
+    - type: post-response
+      script: |-
+        const body = res.getBody();
+        if (body.data && body.data.id) {
+          bru.setEnvVar("farmId", body.data.id);
+        }

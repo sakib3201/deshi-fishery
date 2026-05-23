@@ -1,0 +1,7 @@
+variables:
+  - name: baseUrl
+    value: https://staging.deshifishery.com
+    type: string
+  - name: apiVersion
+    value: v1
+    type: string

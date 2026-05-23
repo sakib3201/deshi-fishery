@@ -1,0 +1,23 @@
+info:
+  name: Logout
+  type: http
+  seq: 3
+  tags:
+    - auth
+    - protected
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/auth/logout"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+runtime:
+  tests:
+    - name: returns 204 No Content
+      expr: res.getStatus() === 204

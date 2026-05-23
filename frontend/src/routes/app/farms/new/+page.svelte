@@ -7,7 +7,7 @@
 	let loading = $state(false);
 	let error = $state('');
 
-	async function handleSubmit(e: Event) {
+	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		loading = true;
 		error = '';
@@ -63,7 +63,7 @@
 		</div>
 
 		{#if error}
-			<p class="text-red-600 text-sm">{error}</p>
+			<p class="text-red-600 text-sm" role="alert">{error}</p>
 		{/if}
 
 		<div class="flex gap-3 pt-2">
@@ -76,7 +76,7 @@
 			</button>
 			<button
 				type="submit"
-				disabled={loading || !name}
+				disabled={loading || !name.trim()}
 				class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 			>
 				{loading ? 'Creating...' : 'Create Farm'}

@@ -28,8 +28,8 @@
 |---|---------|-------------|--------|-------------|-------|
 | 1 | Email/Password Auth | `AUTH-001` | ✅ Complete | `auth-001-email-password-auth` | Archived 2026-05-22. All 73 tasks done. 14 PHPUnit tests pass. |
 | 2 | Multi-Farm Tenancy | `AUTH-004` | ✅ Complete | `auth-004-multi-farm-tenancy` | Archived 2026-05-22. All 77 tasks done. 28 PHPUnit tests pass. |
-| 3 | Farm CRUD | `FARM-001` | 🔄 Ready to start | — | Next feature. No blockers. |
-| 4 | Pond CRUD | `POND-001` | ⏳ Pending | — | Blocked until FARM-001 complete |
+| 3 | Farm CRUD | `FARM-001` | ✅ Complete | `farm-001-farm-crud` | Implemented 2026-05-23. All 24 tasks done. 17 PHPUnit tests pass. |
+| 4 | Pond CRUD | `POND-001` | 🔄 Ready to start | — | Next feature. No blockers. |
 
 **Sprint 1 Definition of Done**:
 - [x] User can register with email/password
@@ -205,10 +205,11 @@ After completing each feature via the OpenSpec workflow:
 
 > ✅ Completed: `AUTH-001` Email/Password Auth (archived 2026-05-22)
 > ✅ Completed: `AUTH-004` Multi-Farm Tenancy (archived 2026-05-22)
-> 🔄 Next up: `FARM-001` Farm CRUD
+> ✅ Completed: `FARM-001` Farm CRUD (implemented 2026-05-23)
+> 🔄 Next up: `POND-001` Pond CRUD
 > Blocked by: Nothing
 
 ---
 
-*Last updated: 2026-05-22*
-*Next review: After FARM-001 implementation complete*
+*Last updated: 2026-05-23*
+*Next review: After POND-001 implementation complete*

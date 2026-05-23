@@ -1,0 +1,7 @@
+variables:
+  - name: baseUrl
+    value: http://localhost:8080
+    type: string
+  - name: apiVersion
+    value: v1
+    type: string

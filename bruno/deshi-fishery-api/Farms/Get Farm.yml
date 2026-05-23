@@ -1,0 +1,27 @@
+info:
+  name: Get Farm
+  type: http
+  seq: 3
+  tags:
+    - farms
+    - protected
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/farms/{{farmId}}"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+runtime:
+  tests:
+    - name: returns 200 OK
+      expr: res.getStatus() === 200
+    - name: has farm data
+      expr: res.getBody().data !== undefined
+    - name: farm has id
+      expr: res.getBody().data.id !== undefined

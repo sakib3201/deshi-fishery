@@ -1,0 +1,25 @@
+info:
+  name: List Members
+  type: http
+  seq: 1
+  tags:
+    - farm-members
+    - protected
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/farms/{{farmId}}/members"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+runtime:
+  tests:
+    - name: returns 200 OK
+      expr: res.getStatus() === 200
+    - name: returns array
+      expr: Array.isArray(res.getBody().data)

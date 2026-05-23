@@ -5,16 +5,21 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\StoreFarmRequest;
+use App\Http\Requests\Api\V1\UpdateFarmRequest;
 use App\Models\Farm;
+use App\Traits\ApiResponse;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class FarmController extends Controller
 {
+    use ApiResponse;
+
     public function index(Request $request): JsonResponse
     {
-        $farms = $request->user()->farms->map(function ($farm) {
+        $farms = $request->user()->farms->map(static function (Farm $farm): array {
             return [
                 'id' => $farm->id,
                 'name' => $farm->name,
@@ -23,138 +28,95 @@ class FarmController extends Controller
             ];
         });
 
-        return response()->json([
-            'success' => true,
-            'data' => $farms,
-        ]);
+        return $this->successResponse($farms);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreFarmRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'ValidationError',
-                    'message' => 'The given data was invalid.',
-                    'details' => $validator->errors(),
-                ],
-            ], 422);
-        }
-
         $user = $request->user();
 
-        $existingFarm = $user->farms()->where('name', $request->input('name'))->first();
-        if ($existingFarm) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'DuplicateFarmName',
-                    'message' => 'You already have a farm with this name.',
-                    'details' => [],
-                ],
-            ], 422);
+        if ($this->farmNameExistsForUser($user, $request->validated('name'))) {
+            return $this->errorResponse('DuplicateFarmName', 'You already have a farm with this name.', 422);
         }
 
-        $farm = Farm::create([
-            'name' => $request->input('name'),
-            'location' => $request->input('location'),
-        ]);
+        $farm = Farm::create($request->validated());
 
         $farm->users()->attach($user->id, ['role' => 'owner']);
-
         $user->update(['current_farm_id' => $farm->id]);
 
-        return response()->json([
-            'success' => true,
-            'data' => $farm,
-        ], 201);
+        return $this->successResponse($farm, 201);
     }
 
     public function show(Request $request, string $id): JsonResponse
     {
-        $farm = $request->user()->farms()->where('farms.id', $id)->first();
+        $farm = $this->resolveUserFarm($request, $id);
 
         if (! $farm) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'NotFound',
-                    'message' => 'Farm not found.',
-                    'details' => [],
-                ],
-            ], 404);
+            return $this->notFoundResponse('Farm not found.');
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => $farm,
-        ]);
+        return $this->successResponse($farm);
     }
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(UpdateFarmRequest $request, string $id): JsonResponse
     {
-        $farm = $request->user()->farms()->where('farms.id', $id)->wherePivot('role', 'owner')->first();
+        $farm = $this->resolveOwnedFarm($request, $id);
 
         if (! $farm) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'Forbidden',
-                    'message' => 'You do not have permission to update this farm.',
-                    'details' => [],
-                ],
-            ], 403);
+            return $this->forbiddenResponse('You do not have permission to update this farm.');
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => ['sometimes', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
-        ]);
+        $newName = $request->validated('name');
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'ValidationError',
-                    'message' => 'The given data was invalid.',
-                    'details' => $validator->errors(),
-                ],
-            ], 422);
+        if ($newName !== null && $newName !== $farm->name) {
+            if ($this->farmNameExistsForUser($request->user(), $newName, $farm->id)) {
+                return $this->errorResponse('DuplicateFarmName', 'You already have a farm with this name.', 422);
+            }
         }
 
-        $farm->update($request->only(['name', 'location']));
+        $farm->update($request->validated());
 
-        return response()->json([
-            'success' => true,
-            'data' => $farm,
-        ]);
+        return $this->successResponse($farm);
     }
 
     public function destroy(Request $request, string $id): JsonResponse
     {
-        $farm = $request->user()->farms()->where('farms.id', $id)->wherePivot('role', 'owner')->first();
+        $farm = $this->resolveOwnedFarm($request, $id);
 
         if (! $farm) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'Forbidden',
-                    'message' => 'You do not have permission to delete this farm.',
-                    'details' => [],
-                ],
-            ], 403);
+            return $this->forbiddenResponse('You do not have permission to delete this farm.');
         }
 
         $farm->delete();
 
-        return response()->json([
-            'success' => true,
-        ], 204);
+        return $this->successResponse(null, 204);
+    }
+
+    private function resolveUserFarm(Request $request, string $id): ?Farm
+    {
+        return $request->user()
+            ->farms()
+            ->where('farms.id', $id)
+            ->first();
+    }
+
+    private function resolveOwnedFarm(Request $request, string $id): ?Farm
+    {
+        return $request->user()
+            ->farms()
+            ->where('farms.id', $id)
+            ->wherePivot('role', 'owner')
+            ->first();
+    }
+
+    private function farmNameExistsForUser(User $user, string $name, ?int $excludeId = null): bool
+    {
+        $query = $user->farms()->where('name', $name);
+
+        if ($excludeId !== null) {
+            $query->where('farms.id', '!=', $excludeId);
+        }
+
+        return $query->exists();
     }
 }

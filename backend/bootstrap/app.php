@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Middleware\EnsureFarmContext;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,9 +15,22 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api(prepend: [
-            \App\Http\Middleware\EnsureFarmContext::class,
+            EnsureFarmContext::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->renderable(function (ValidationException $e, $request) {
+            if ($request->is('api/*') || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => [
+                        'code' => 'ValidationError',
+                        'message' => $e->getMessage(),
+                        'details' => $e->errors(),
+                    ],
+                ], $e->status);
+            }
+
+            return null;
+        });
     })->create();

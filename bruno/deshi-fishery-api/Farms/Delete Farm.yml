@@ -1,0 +1,23 @@
+info:
+  name: Delete Farm
+  type: http
+  seq: 5
+  tags:
+    - farms
+    - protected
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/v1/farms/{{farmId}}"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+runtime:
+  tests:
+    - name: returns 204 No Content
+      expr: res.getStatus() === 204

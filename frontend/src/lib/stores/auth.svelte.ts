@@ -23,7 +23,6 @@ function createAuthStore() {
 
 	function setToken(token: string) {
 		accessToken = token;
-		localStorage.setItem('access_token', token);
 		api.setToken(token);
 	}
 
@@ -79,7 +78,6 @@ function createAuthStore() {
 		accessToken = null;
 		user = null;
 		requiresOnboarding = false;
-		localStorage.removeItem('access_token');
 		api.setToken(null);
 		api.setFarmId(null);
 	}
@@ -111,22 +109,17 @@ function createAuthStore() {
 	}
 
 	async function init() {
-		const token = localStorage.getItem('access_token');
-		if (token) {
-			accessToken = token;
-			api.setToken(token);
-			try {
-				const response = await auth.me();
-				if (response.success) {
-					user = response.data;
-					if (user.current_farm_id) {
-						api.setFarmId(String(user.current_farm_id));
-					}
+		try {
+			const response = await auth.me();
+			if (response.success) {
+				user = response.data;
+				if (user.current_farm_id) {
+					api.setFarmId(String(user.current_farm_id));
 				}
-			} catch {
-				// Token invalid, clear it
-				clearAuth();
 			}
+		} catch {
+			// Token invalid, clear it
+			clearAuth();
 		}
 	}
 

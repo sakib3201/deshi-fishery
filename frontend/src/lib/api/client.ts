@@ -18,7 +18,7 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
 		headers.set('Authorization', `Bearer ${currentToken}`);
 	}
 
-	const farmId = localStorage.getItem('current_farm_id');
+	const farmId = api.getFarmId();
 	if (farmId) {
 		headers.set('X-Farm-ID', farmId);
 	}
@@ -33,17 +33,20 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
 	return response.json();
 }
 
+let currentFarmId: string | null = null;
+
 export function setFarmId(farmId: string | null) {
-	if (farmId) {
-		localStorage.setItem('current_farm_id', farmId);
-	} else {
-		localStorage.removeItem('current_farm_id');
-	}
+	currentFarmId = farmId;
+}
+
+export function getFarmId(): string | null {
+	return currentFarmId;
 }
 
 export const api = {
 	setToken,
 	setFarmId,
+	getFarmId,
 	get: (endpoint: string) => fetchApi(endpoint, { method: 'GET' }),
 	post: (endpoint: string, body: unknown) =>
 		fetchApi(endpoint, { method: 'POST', body: JSON.stringify(body) }),

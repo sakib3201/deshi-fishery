@@ -1,0 +1,40 @@
+info:
+  name: Add Member
+  type: http
+  seq: 2
+  tags:
+    - farm-members
+    - protected
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/farms/{{farmId}}/members"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "worker@example.com"
+      }
+runtime:
+  tests:
+    - name: returns 201 Created
+      expr: res.getStatus() === 201
+    - name: has member id
+      expr: res.getBody().data.id !== undefined
+    - name: role is worker
+      expr: res.getBody().data.role === "worker"
+  scripts:
+    - type: post-response
+      script: |-
+        const body = res.getBody();
+        if (body.data && body.data.id) {
+          bru.setEnvVar("memberId", body.data.id);
+        }

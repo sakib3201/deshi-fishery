@@ -1,0 +1,32 @@
+info:
+  name: Update Farm
+  type: http
+  seq: 4
+  tags:
+    - farms
+    - protected
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/v1/farms/{{farmId}}"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Updated Farm Name",
+        "location": "Updated Location"
+      }
+runtime:
+  tests:
+    - name: returns 200 OK
+      expr: res.getStatus() === 200
+    - name: farm name updated
+      expr: res.getBody().data.name === "Updated Farm Name"

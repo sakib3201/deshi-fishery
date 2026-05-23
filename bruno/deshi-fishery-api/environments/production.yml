@@ -1,0 +1,7 @@
+variables:
+  - name: baseUrl
+    value: https://api.deshifishery.com
+    type: string
+  - name: apiVersion
+    value: v1
+    type: string

@@ -1,0 +1,40 @@
+info:
+  name: Me
+  type: http
+  seq: 5
+  tags:
+    - auth
+    - protected
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/auth/me"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    bearer:
+      token: "{{authToken}}"
+runtime:
+  tests:
+    - name: returns 200 OK
+      expr: res.getStatus() === 200
+    - name: has user data
+      expr: res.getBody().data !== undefined
+    - name: user has farms array
+      expr: Array.isArray(res.getBody().data.farms)
+  scripts:
+    - type: post-response
+      script: |-
+        const body = res.getBody();
+        if (body.data && body.data.id) {
+          bru.setEnvVar("userId", body.data.id);
+        }
+        if (body.data && body.data.current_farm_id) {
+          bru.setEnvVar("currentFarmId", body.data.current_farm_id);
+        }
+        if (body.data && body.data.farms && body.data.farms.length > 0) {
+          bru.setEnvVar("farmId", body.data.farms[0].id);
+        }

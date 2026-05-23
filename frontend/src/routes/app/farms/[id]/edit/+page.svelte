@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { api } from '$lib/api/client';
-	import { onMount } from 'svelte';
 
 	let farmId = $state(0);
 	let name = $state('');
@@ -10,11 +9,6 @@
 	let loading = $state(false);
 	let error = $state('');
 	let initialLoading = $state(true);
-
-	onMount(() => {
-		farmId = parseInt($page.params.id);
-		loadFarm();
-	});
 
 	async function loadFarm() {
 		try {
@@ -30,7 +24,15 @@
 		}
 	}
 
-	async function handleSubmit(e: Event) {
+	$effect(() => {
+		const idParam = page.params.id;
+		if (idParam) {
+			farmId = parseInt(idParam, 10);
+			loadFarm();
+		}
+	});
+
+	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		loading = true;
 		error = '';
@@ -100,7 +102,7 @@
 			</div>
 
 			{#if error}
-				<p class="text-red-600 text-sm">{error}</p>
+				<p class="text-red-600 text-sm" role="alert">{error}</p>
 			{/if}
 
 			<div class="flex gap-3 pt-2">
@@ -113,7 +115,7 @@
 				</button>
 				<button
 					type="submit"
-					disabled={loading || !name}
+					disabled={loading || !name.trim()}
 					class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 				>
 					{loading ? 'Saving...' : 'Save Changes'}

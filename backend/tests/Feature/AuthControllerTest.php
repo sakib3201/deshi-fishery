@@ -89,7 +89,8 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['email']);
+            ->assertJsonPath('error.code', 'ValidationError')
+            ->assertJsonPath('error.details.email', fn ($errors) => is_array($errors) && count($errors) > 0);
     }
 
     public function test_registration_with_invalid_password_returns_422(): void
@@ -102,7 +103,8 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['password']);
+            ->assertJsonPath('error.code', 'ValidationError')
+            ->assertJsonPath('error.details.password', fn ($errors) => is_array($errors) && count($errors) > 0);
     }
 
     public function test_registration_with_mismatched_password_confirmation_returns_422(): void
@@ -115,7 +117,8 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['password']);
+            ->assertJsonPath('error.code', 'ValidationError')
+            ->assertJsonPath('error.details.password', fn ($errors) => is_array($errors) && count($errors) > 0);
     }
 
     public function test_successful_login_returns_200_with_tokens(): void
